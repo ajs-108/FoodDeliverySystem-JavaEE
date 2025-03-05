@@ -15,6 +15,16 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>logout</servlet-name>
+        <servlet-class>servlet.LogoutServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>logout</servlet-name>
+        <url-pattern>/logoutServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>SignUp</servlet-name>
         <servlet-class>servlet.SignUpServlet</servlet-class>
     </servlet>
@@ -22,10 +32,18 @@
     <servlet-mapping>
         <servlet-name>SignUp</servlet-name>
         <url-pattern>/customerSignUp</url-pattern>
+        <url-pattern>/deliveryPersonSignUp</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>userController</servlet-name>
+        <servlet-class>servlet.UserControllerServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
-        <servlet-name>SignUp</servlet-name>
-        <url-pattern>/deliveryPersonSignUp</url-pattern>
+        <servlet-name>userController</servlet-name>
+        <url-pattern>/customer</url-pattern>
+        <url-pattern>/deliveryPerson</url-pattern>
+        <url-pattern>/admin</url-pattern>
     </servlet-mapping>
 </web-app>

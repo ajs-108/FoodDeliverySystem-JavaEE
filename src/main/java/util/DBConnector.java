@@ -1,10 +1,12 @@
-package dbUtil;
+package util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * The DBConnector class is used for establishing the connection with MySQL database food_delivery_db
+ */
 public class DBConnector {
 
     public static final String url = "jdbc:mysql://localhost:3306/food_delivery_db";
@@ -31,19 +33,5 @@ public class DBConnector {
             connection.close();
             System.out.println("Connection closed Successfully...");
         }
-
-    }
-
-    public static void main(String[] args) throws SQLException {
-
-
-        Connection connection = getConnection();
-        ResultSet rs = connection.prepareStatement("Select * from user_role").executeQuery();
-        while (rs.next()) {
-            System.out.println("role id: " + rs.getInt("role_id"));
-            System.out.println("role: " + rs.getString("user_role"));
-        }
-
-        closeConnection();
     }
 }
