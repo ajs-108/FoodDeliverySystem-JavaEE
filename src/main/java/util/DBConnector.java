@@ -34,4 +34,9 @@ public class DBConnector {
             System.out.println("Connection closed Successfully...");
         }
     }
+
+    public static void main(String[] args) throws SQLException {
+
+        getConnection();
+    }
 }

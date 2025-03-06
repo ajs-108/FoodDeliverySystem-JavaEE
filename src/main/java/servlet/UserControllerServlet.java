@@ -22,6 +22,7 @@ public class UserControllerServlet extends HttpServlet {
 
         objectMapper = new ObjectMapper();
         apiResponse = new APIResponse();
+
         try {
             userServices = new UserServices();
         } catch (SQLException e) {
@@ -45,15 +46,13 @@ public class UserControllerServlet extends HttpServlet {
         }
 
         try {
-
             apiResponse.setData(userServices.fetchAllRecords(roleId));
 
         } catch (SQLException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
             e.printStackTrace();
         }
-
+        System.out.println(apiResponse);
         resp.getWriter().println(objectMapper.writeValueAsString(apiResponse));
 
     }

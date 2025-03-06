@@ -9,6 +9,8 @@ public class User {
     private String password;
     private String phoneNumber;
     private String address;
+//    private LocalDateTime createdOn;
+//    private LocalDateTime updatedOn;
     private int roleId;
 
     public User() {
@@ -85,8 +87,8 @@ public class User {
         return roleId;
     }
 
-    public void setRoleId(int role_id) {
-        this.roleId = role_id;
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
     }
 
     @Override
@@ -99,7 +101,7 @@ public class User {
                 ", password='" + password + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", address='" + address + '\'' +
-                ", role_id=" + roleId +
+                ", roleId=" + roleId +
                 '}';
     }
 }

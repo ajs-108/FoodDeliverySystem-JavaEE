@@ -12,15 +12,16 @@ public class FoodItem {
     private String size;
     private double discount;
     private boolean isAvailable;
-    private LocalDateTime createdOn;
-    private LocalDateTime updatedOn;
+    private Category category;
+//    private LocalDateTime createdOn;
+//    private LocalDateTime updatedOn;
     private String imagePath;
     private double rating;
 
     public FoodItem() {
     }
 
-    public FoodItem(int foodItemId, String foodName, String foodDescription, double price, int gram, String size, double discount, boolean isAvailable, LocalDateTime createdOn, LocalDateTime updatedOn, String imagePath, double rating) {
+    public FoodItem(int foodItemId, String foodName, String foodDescription, double price, int gram, String size, double discount, boolean isAvailable, Category category, String imagePath, double rating) {
         this.foodItemId = foodItemId;
         this.foodName = foodName;
         this.foodDescription = foodDescription;
@@ -29,8 +30,7 @@ public class FoodItem {
         this.size = size;
         this.discount = discount;
         this.isAvailable = isAvailable;
-        this.createdOn = createdOn;
-        this.updatedOn = updatedOn;
+        this.category = category;
         this.imagePath = imagePath;
         this.rating = rating;
     }
@@ -99,22 +99,6 @@ public class FoodItem {
         isAvailable = available;
     }
 
-    public LocalDateTime getCreatedOn() {
-        return createdOn;
-    }
-
-    public void setCreatedOn(LocalDateTime createdOn) {
-        this.createdOn = createdOn;
-    }
-
-    public LocalDateTime getUpdatedOn() {
-        return updatedOn;
-    }
-
-    public void setUpdatedOn(LocalDateTime updatedOn) {
-        this.updatedOn = updatedOn;
-    }
-
     public String getImagePath() {
         return imagePath;
     }
@@ -142,8 +126,6 @@ public class FoodItem {
                 ", size='" + size + '\'' +
                 ", discount=" + discount +
                 ", isAvailable=" + isAvailable +
-                ", createdOn=" + createdOn +
-                ", updatedOn=" + updatedOn +
                 ", imagePath='" + imagePath + '\'' +
                 ", rating=" + rating +
                 '}';
