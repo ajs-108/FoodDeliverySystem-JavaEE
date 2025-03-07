@@ -1,12 +1,12 @@
-package util;
+package common;
 
 /**
  * APIResponse Contains the Response that is to be sent over as HttpResponse
  */
 public class APIResponse {
 
-    String message;
-    Object data;
+    private String message;
+    private Object data;
 
     public APIResponse() {
     }

@@ -1,59 +1,92 @@
 package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import common.Roles;
+import entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import services.UserServices;
-import util.APIResponse;
+import common.APIResponse;
+import validation.Validation;
+import validation.ValidationException;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
 public class UserControllerServlet extends HttpServlet {
-
-    UserServices userServices;
-    ObjectMapper objectMapper;
-    APIResponse apiResponse;
+    private UserServices userServices;
+    private ObjectMapper objectMapper;
+    private APIResponse apiResponse;
 
     @Override
     public void init() throws ServletException {
-
         objectMapper = new ObjectMapper();
         apiResponse = new APIResponse();
-
-        try {
-            userServices = new UserServices();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        userServices = new UserServices();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         resp.setContentType("application/json");
-
         int roleId = 0;
 
         if (req.getServletPath().equals("/customer")) {
-            roleId = 1002;
+            roleId = Roles.ROLE_CUSTOMER.getId();
         } else if (req.getServletPath().equals("/deliveryPerson")) {
-            roleId = 1003;
+            roleId = Roles.ROLE_DELIVERY_PERSON.getId();
         } else if (req.getServletPath().equals("/admin")) {
-            roleId = 1001;
+            roleId = Roles.ROLE_SUPER_ADMIN.getId();
         }
 
         try {
-            apiResponse.setData(userServices.fetchAllRecords(roleId));
-
+            apiResponse.setData(userServices.getAllUsers(roleId));
         } catch (SQLException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             e.printStackTrace();
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            apiResponse.setMessage(e.getMessage());
+            resp.getWriter().println(objectMapper.writeValueAsString(apiResponse));
+            return;
         }
-        System.out.println(apiResponse);
         resp.getWriter().println(objectMapper.writeValueAsString(apiResponse));
+    }
 
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        User user = objectMapper.readValue(req.getReader(), User.class);
+        int flag;
+
+        if (req.getServletPath().equals("/customer")) {
+            user.setRole(Roles.ROLE_CUSTOMER);
+        } else if (req.getServletPath().equals("/deliveryPerson")) {
+            user.setRole(Roles.ROLE_DELIVERY_PERSON);
+        } else if (req.getServletPath().equals("/admin")) {
+            user.setRole(Roles.ROLE_SUPER_ADMIN);
+        }
+
+        try {
+            Validation.validateSignUp(user);
+            flag = userServices.updateUser(user);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            apiResponse.setMessage(e.getMessage());
+            resp.getWriter().println(objectMapper.writeValueAsString(apiResponse));
+            return;
+        } catch (ValidationException e) {
+            e.printStackTrace();
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            apiResponse.setMessage(e.getMessage());
+            resp.getWriter().println(objectMapper.writeValueAsString(apiResponse));
+            return;
+        }
+
+        if (flag == 1) {
+            resp.setStatus(HttpServletResponse.SC_OK);
+            apiResponse.setMessage("Account Details Updated Successfully");
+        }
+        resp.getWriter().println(objectMapper.writeValueAsString(apiResponse));
     }
 }
