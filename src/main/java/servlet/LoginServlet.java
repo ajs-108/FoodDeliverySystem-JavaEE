@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import common.APIResponse;
 import validation.Validation;
-import validation.ValidationException;
+import exception.ValidationException;
 
 import java.io.IOException;
 import java.sql.SQLException;

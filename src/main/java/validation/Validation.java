@@ -1,6 +1,7 @@
 package validation;
 
 import entity.User;
+import exception.ValidationException;
 import services.UserServices;
 
 import java.sql.SQLException;

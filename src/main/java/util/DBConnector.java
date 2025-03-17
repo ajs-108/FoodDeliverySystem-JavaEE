@@ -9,7 +9,7 @@ import java.sql.SQLException;
  */
 public class DBConnector {
     public static final String url = "jdbc:mysql://localhost:3306/food_delivery_db";
-    public static Connection connection;
+    private static Connection connection;
 
     public static Connection getConnection() throws SQLException {
         try {

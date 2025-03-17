@@ -2,19 +2,14 @@ package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.Roles;
-import common.APIResponse;
 import util.SignUp;
-import validation.Validation;
-import validation.ValidationException;
 import entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import services.UserServices;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 /**
  * Sign up Servlet is used for creating an account for the user.

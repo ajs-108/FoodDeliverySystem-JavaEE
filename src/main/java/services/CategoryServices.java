@@ -36,9 +36,12 @@ public class CategoryServices {
         Connection connect = DBConnector.getConnection();
         List<Category> categoryList = new LinkedList<>();
         Category category;
+        Statement s = null;
+        ResultSet rs = null;
         String sql = "Select * from category";
-        try (Statement s = connect.createStatement(); ResultSet rs = s.executeQuery(sql)) {
-
+        try {
+            s = connect.createStatement();
+            rs = s.executeQuery(sql);
             while (rs.next()) {
                 category = new Category();
                 category.setCategoryId(rs.getInt("category_id"));
@@ -46,6 +49,12 @@ public class CategoryServices {
                 categoryList.add(category);
             }
         } finally {
+            if (s != null) {
+                s.close();
+            }
+            if (rs != null) {
+                rs.close();
+            }
             DBConnector.closeConnection();
         }
         return categoryList;
