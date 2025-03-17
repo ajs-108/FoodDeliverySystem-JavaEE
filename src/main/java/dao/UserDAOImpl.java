@@ -1,8 +1,6 @@
-package services;
+package dao;
 
-import common.APIResponse;
-import entity.User;
-import jakarta.servlet.http.HttpServletResponse;
+import model.User;
 import util.DBConnector;
 
 import java.sql.Connection;
@@ -12,25 +10,17 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * User Service class contains the methods to handle the operation of database such as insert, fetch, update
- */
-public class UserServices {
-
-    /**
-     * Insert Record method is used for saving the data of User in the Database
-     * @param user User object used to take data of User.
-     */
-    public APIResponse saveUser(User user) throws SQLException {
-        Connection connect = DBConnector.getConnection();
-        APIResponse apiResponse = new APIResponse();
+public class UserDAOImpl implements IUserDAO {
+    @Override
+    public void saveUser(User user) throws SQLException {
+        Connection connect = null;
         PreparedStatement ps = null;
         String sql = """
                 insert into user_ (first_name, last_name, email, password_, phone_number, address, role_id)
                 values (?,?,?,?,?,?,?);
                 """;
-        int flag;
         try {
+            connect = DBConnector.getInstance().getConnection();
             ps = connect.prepareStatement(sql);
             ps.setString(1, user.getFirstName());
             ps.setString(2, user.getLastName());
@@ -39,34 +29,31 @@ public class UserServices {
             ps.setString(5, user.getPhoneNumber());
             ps.setString(6, user.getAddress());
             ps.setInt(7, user.getRole().getId());
-            flag = ps.executeUpdate();
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             if (ps != null) {
                 ps.close();
             }
-            DBConnector.closeConnection();
+            if (connect != null) {
+                connect.close();
+            }
         }
-        if (flag == 1) {
-            apiResponse.setMessage("Account Created Successfully");
-        }
-        return apiResponse;
     }
 
-    /**
-     * This method is used for retrieving the data of user by email address of the user
-     * @param email - User email address to retrieve data
-     */
+    @Override
     public User getUser(String email) throws SQLException {
-        Connection connect = DBConnector.getConnection();
+        Connection connect = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         User user = null;
         String sql = "Select * from user_ where email = ?";
         try {
+            connect = DBConnector.getInstance().getConnection();
             ps = connect.prepareStatement(sql);
             ps.setString(1, email);
             rs = ps.executeQuery();
-
             if (rs.next()) {
                 user = new User();
                 user.setUserId(rs.getInt("user_id"));
@@ -77,6 +64,8 @@ public class UserServices {
                 user.setPhoneNumber(rs.getString("phone_number"));
                 user.setAddress(rs.getString("address"));
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             if (ps != null) {
                 ps.close();
@@ -84,22 +73,25 @@ public class UserServices {
             if (rs != null) {
                 rs.close();
             }
-            DBConnector.closeConnection();
+            if (connect != null) {
+                connect.close();
+            }
         }
         return user;
     }
 
+    @Override
     public List<User> getAllUsers(int role_id) throws SQLException {
+        Connection connect = null;
         List<User> userList = new LinkedList<>();
-        Connection connect = DBConnector.getConnection();
         PreparedStatement ps = null;
         ResultSet rs = null;
         String sql = "Select * from user_ where role_id = ?";
         try {
+            connect = DBConnector.getInstance().getConnection();
             ps = connect.prepareStatement(sql);
             ps.setInt(1, role_id);
             rs = ps.executeQuery();
-
             while (rs.next()) {
                 User user = new User();
                 user.setUserId(rs.getInt("user_id"));
@@ -110,6 +102,8 @@ public class UserServices {
                 user.setFirstName(rs.getString("address"));
                 userList.add(user);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             if (ps != null) {
                 ps.close();
@@ -117,34 +111,40 @@ public class UserServices {
             if (rs != null) {
                 rs.close();
             }
-            DBConnector.closeConnection();
+            if (connect != null) {
+                connect.close();
+            }
         }
         return userList;
     }
 
-    public int updateUser(User user) throws SQLException {
-        Connection connect = DBConnector.getConnection();
+    @Override
+    public void updateUser(User user, int userID) throws SQLException {
+        Connection connect = null;
         PreparedStatement ps = null;
         String sql1 = """
                 update user_ set first_name = ?, last_name = ?, password_ = ?, phone_number = ?, address = ?
                 where user_id = ?;
                 """;
-        int i;
         try {
+            connect = DBConnector.getInstance().getConnection();
             ps = connect.prepareStatement(sql1);
             ps.setString(1, user.getFirstName());
             ps.setString(2, user.getLastName());
             ps.setString(3, user.getPassword());
             ps.setString(4, user.getPhoneNumber());
             ps.setString(5, user.getAddress());
-            ps.setInt(6, user.getUserId());
-            i = ps.executeUpdate();
+            ps.setInt(6, userID);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             if (ps != null) {
                 ps.close();
             }
-            DBConnector.closeConnection();
+            if (connect != null) {
+                connect.close();
+            }
         }
-        return i;
     }
 }

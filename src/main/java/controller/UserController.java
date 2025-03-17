@@ -2,7 +2,7 @@ package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.Roles;
-import entity.User;
+import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +15,7 @@ import exception.ValidationException;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class UserControllerServlet extends HttpServlet {
+public class UserController extends HttpServlet {
     private UserServices userServices;
     private ObjectMapper objectMapper;
     private APIResponse apiResponse;
@@ -68,7 +68,7 @@ public class UserControllerServlet extends HttpServlet {
 
         try {
             Validation.validateSignUp(user);
-            flag = userServices.updateUser(user);
+            userServices.modifyUser(user);
         } catch (SQLException e) {
             e.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -83,10 +83,8 @@ public class UserControllerServlet extends HttpServlet {
             return;
         }
 
-        if (flag == 1) {
-            resp.setStatus(HttpServletResponse.SC_OK);
-            apiResponse.setMessage("Account Details Updated Successfully");
-        }
+        resp.setStatus(HttpServletResponse.SC_OK);
+        apiResponse.setMessage("Account Details Updated Successfully");
         resp.getWriter().println(objectMapper.writeValueAsString(apiResponse));
     }
 }

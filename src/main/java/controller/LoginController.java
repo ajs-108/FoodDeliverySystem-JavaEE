@@ -1,7 +1,7 @@
 package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import entity.User;
+import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +18,7 @@ import java.sql.SQLException;
  * Login Servlet ensures that a valid user is accessing the application.
  */
 
-public class LoginServlet extends HttpServlet {
+public class LoginController extends HttpServlet {
     /**
      * The doPost method is used to get the login credentials through request and check if provided login credentials are correct or not.
      * If correct it gives access to the application.
