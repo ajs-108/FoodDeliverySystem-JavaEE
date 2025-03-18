@@ -1,6 +1,8 @@
-package dto;
+package dto.user_dto;
 
-public class UserCreationDTO {
+import common.Roles;
+
+public class UserSignUpDTO {
 
     private String firstName;
     private String lastName;
@@ -8,6 +10,7 @@ public class UserCreationDTO {
     private String password;
     private String phoneNumber;
     private String address;
+    private Roles role;
 
     public String getFirstName() {
         return firstName;
@@ -57,9 +60,17 @@ public class UserCreationDTO {
         this.address = address;
     }
 
+    public Roles getRole() {
+        return role;
+    }
+
+    public void setRole(Roles role) {
+        this.role = role;
+    }
+
     @Override
     public String toString() {
-        return "UserCreationDTO{" +
+        return "UserSignUpDTO{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +

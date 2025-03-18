@@ -1,15 +1,19 @@
-package servlet;
+package controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import model.User;
+import dto.APIResponse;
+import common.Mapper;
+import dao.impl.UserDAOImpl;
+import dto.user_dto.UserDTO;
+import dto.user_dto.UserLoginDTO;
+import common.exception.ValidationException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import common.APIResponse;
-import validation.Validation;
-import exception.ValidationException;
+import model.User;
+import controller.validation.LoginValidator;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -17,7 +21,6 @@ import java.sql.SQLException;
 /**
  * Login Servlet ensures that a valid user is accessing the application.
  */
-
 public class LoginController extends HttpServlet {
     /**
      * The doPost method is used to get the login credentials through request and check if provided login credentials are correct or not.
@@ -31,10 +34,11 @@ public class LoginController extends HttpServlet {
         response.setContentType("application/json");
         APIResponse apiResponse = new APIResponse();
         ObjectMapper objectMapper = new ObjectMapper();
-        User user = objectMapper.readValue(request.getReader(), User.class);
-
+        Mapper mapper = new Mapper();
+        UserLoginDTO userLogin = objectMapper.readValue(request.getReader(), UserLoginDTO.class);
+        User user = mapper.toUser(userLogin);
         try {
-            Validation.validateLogin(user);
+            LoginValidator.validateLogin(user);
         } catch (ValidationException e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -50,7 +54,15 @@ public class LoginController extends HttpServlet {
         }
 
         HttpSession session = request.getSession();
+        UserDAOImpl userDAO = new UserDAOImpl();
+        UserDTO userDTO = mapper.toDTO(user);
+        try {
+            userDTO = mapper.toDTO(userDAO.getUser(user.getEmail()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         session.setAttribute("user", user.getEmail());
+        session.setAttribute("userId", userDTO.getUserId());
         response.setStatus(HttpServletResponse.SC_OK);
         apiResponse.setMessage("You are logged in.");
         response.getWriter().println(objectMapper.writeValueAsString(apiResponse));

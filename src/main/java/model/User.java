@@ -1,9 +1,11 @@
-package entity;
+package model;
 
 import common.Roles;
 
-public class User {
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
+public class User {
     private int userId;
     private String firstName;
     private String lastName;
@@ -11,8 +13,8 @@ public class User {
     private String password;
     private String phoneNumber;
     private String address;
-//    private LocalDateTime createdOn;
-//    private LocalDateTime updatedOn;
+    private LocalDateTime createdOn;
+    private LocalDateTime updatedOn;
     private Roles role;
 
     public int getUserId() {
@@ -69,6 +71,22 @@ public class User {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Timestamp createdOn) {
+        this.createdOn = createdOn == null ? null : createdOn.toLocalDateTime();
+    }
+
+    public LocalDateTime getUpdatedOn() {
+        return updatedOn;
+    }
+
+    public void setUpdatedOn(Timestamp updatedOn) {
+        this.updatedOn = updatedOn == null ? null : updatedOn.toLocalDateTime();
     }
 
     public Roles getRole() {

@@ -1,13 +1,14 @@
-package services;
+package service;
 
-import dao.FoodItemDAOImpl;
+import dao.impl.FoodItemDAOImpl;
+import dao.IFoodItemDAO;
 import model.FoodItem;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class FoodItemServices {
-    private FoodItemDAOImpl foodItemDAO;
+    private IFoodItemDAO foodItemDAO;
 
     public FoodItemServices() {
         this.foodItemDAO = new FoodItemDAOImpl();
@@ -23,5 +24,9 @@ public class FoodItemServices {
 
     public FoodItem getFoodItem(int foodItemId) throws SQLException {
         return foodItemDAO.getFoodItem(foodItemId);
+    }
+
+    public void updateFoodItem(FoodItem foodItem, int foodItemId) throws SQLException {
+        foodItemDAO.updateFoodItem(foodItem, foodItemId);
     }
 }

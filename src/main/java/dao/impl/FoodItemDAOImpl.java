@@ -1,8 +1,8 @@
-package dao;
+package dao.impl;
 
-import controller.DBConnectionController;
+import dao.IFoodItemDAO;
 import model.FoodItem;
-import util.DBConnector;
+import common.config.DBConnector;
 
 import java.sql.*;
 import java.util.LinkedList;
@@ -14,21 +14,18 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
         Connection connect = null;
         PreparedStatement ps = null;
         String sql = """
-                insert into food_item(food_item_id, food_name, food_description, price, discount, is_available, category_id, image_path, rating)
-                values (?,?,?,?,?,?,?,?,?);
+                insert into food_item(food_name, food_description, price, discount, category_id, image_path)
+                values (?,?,?,?,?,?,?,?);
                 """;
         try {
             connect = DBConnector.getInstance().getConnection();
             ps = connect.prepareStatement(sql);
-            ps.setInt(1, foodItem.getFoodItemId());
-            ps.setString(2, foodItem.getFoodName());
-            ps.setString(3, foodItem.getFoodDescription());
-            ps.setDouble(4, foodItem.getPrice());
-            ps.setDouble(5, foodItem.getDiscount());
-            ps.setBoolean(6, foodItem.isAvailable());
-            ps.setInt(7, foodItem.getCategoryId());
-            ps.setString(8, foodItem.getImagePath());
-            ps.setDouble(9, foodItem.getRating());
+            ps.setString(1, foodItem.getFoodName());
+            ps.setString(2, foodItem.getFoodDescription());
+            ps.setDouble(3, foodItem.getPrice());
+            ps.setDouble(4, foodItem.getDiscount());
+            ps.setInt(5, foodItem.getCategoryId());
+            ps.setString(6, foodItem.getImagePath());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -124,7 +121,32 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
     }
 
     @Override
-    public void updateFoodItem(FoodItem foodItem) throws SQLException {
-
+    public void updateFoodItem(FoodItem foodItem, int foodItemId) throws SQLException {
+        Connection connect = null;
+        PreparedStatement ps = null;
+        String sql1 = """
+                update food_item set food_description = ?, discount = ?, price = ?, is_available = ?, image_path = ?
+                where food_item_id = ?;
+                """;
+        try {
+            connect = DBConnector.getInstance().getConnection();
+            ps = connect.prepareStatement(sql1);
+            ps.setString(1, foodItem.getFoodDescription());
+            ps.setDouble(2, foodItem.getDiscount());
+            ps.setDouble(3, foodItem.getPrice());
+            ps.setBoolean(4, foodItem.isAvailable());
+            ps.setString(5, foodItem.getImagePath());
+            ps.setInt(6, foodItemId);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (ps != null) {
+                ps.close();
+            }
+            if (connect != null) {
+                connect.close();
+            }
+        }
     }
 }

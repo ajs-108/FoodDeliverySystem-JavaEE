@@ -1,18 +1,18 @@
-package servlet;
+package controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import common.Mapper;
 import common.Roles;
-import model.User;
+import dto.user_dto.UserSignUpDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import util.SignUp;
+import service.SignUp;
 
 import java.io.IOException;
 
 public class DeliveryPersonSignUpController extends HttpServlet {
-
     /**
      * The doPost method is used by Servlet to receive the form data from the Sign-Up form and store it in the database
      * after verifying the data that has come.
@@ -24,9 +24,9 @@ public class DeliveryPersonSignUpController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
         ObjectMapper objectMapper = new ObjectMapper();
-        User user = objectMapper.readValue(request.getReader(), User.class);
-
-        user.setRole(Roles.ROLE_DELIVERY_PERSON);
-        SignUp.signUp(response, user, objectMapper);
+        Mapper mapper = new Mapper();
+        UserSignUpDTO userSignUpDTO = objectMapper.readValue(request.getReader(), UserSignUpDTO.class);
+        userSignUpDTO.setRole(Roles.ROLE_DELIVERY_PERSON);
+        SignUp.signUp(response, mapper.toUser(userSignUpDTO), objectMapper);
     }
 }

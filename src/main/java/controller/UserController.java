@@ -1,16 +1,21 @@
-package servlet;
+package controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import controller.validation.SignUpValidator;
+import dto.APIResponse;
+import dto.user_dto.UserSignUpDTO;
+import common.Mapper;
 import common.Roles;
-import model.User;
+import dto.user_dto.UserDTO;
+import common.exception.ValidationException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import services.UserServices;
-import common.APIResponse;
-import validation.Validation;
-import exception.ValidationException;
+import jakarta.servlet.http.HttpSession;
+import model.User;
+import service.UserServices;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -19,29 +24,25 @@ public class UserController extends HttpServlet {
     private UserServices userServices;
     private ObjectMapper objectMapper;
     private APIResponse apiResponse;
+    private Mapper mapper;
 
     @Override
     public void init() throws ServletException {
         objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         apiResponse = new APIResponse();
         userServices = new UserServices();
+        mapper = new Mapper();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-        int roleId = 0;
-
-        if (req.getServletPath().equals("/customer")) {
-            roleId = Roles.ROLE_CUSTOMER.getId();
-        } else if (req.getServletPath().equals("/deliveryPerson")) {
-            roleId = Roles.ROLE_DELIVERY_PERSON.getId();
-        } else if (req.getServletPath().equals("/admin")) {
-            roleId = Roles.ROLE_SUPER_ADMIN.getId();
-        }
+        HttpSession session = req.getSession(false);
 
         try {
-            apiResponse.setData(userServices.getAllUsers(roleId));
+            UserDTO user = mapper.toDTO(userServices.getUser((String) session.getAttribute("user")));
+            apiResponse.setData(user);
         } catch (SQLException e) {
             e.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -55,20 +56,20 @@ public class UserController extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-        User user = objectMapper.readValue(req.getReader(), User.class);
-        int flag;
+        UserSignUpDTO userDTO = objectMapper.readValue(req.getReader(), UserSignUpDTO.class);
+        HttpSession session = req.getSession(false);
 
         if (req.getServletPath().equals("/customer")) {
-            user.setRole(Roles.ROLE_CUSTOMER);
+            userDTO.setRole(Roles.ROLE_CUSTOMER);
         } else if (req.getServletPath().equals("/deliveryPerson")) {
-            user.setRole(Roles.ROLE_DELIVERY_PERSON);
+            userDTO.setRole(Roles.ROLE_DELIVERY_PERSON);
         } else if (req.getServletPath().equals("/admin")) {
-            user.setRole(Roles.ROLE_SUPER_ADMIN);
+            userDTO.setRole(Roles.ROLE_SUPER_ADMIN);
         }
-
+        User user = mapper.toUser(userDTO);
         try {
-            Validation.validateSignUp(user);
-            userServices.modifyUser(user);
+            SignUpValidator.validate(user);
+            userServices.updateUser(user, (int) session.getAttribute("userId"));
         } catch (SQLException e) {
             e.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -84,7 +85,7 @@ public class UserController extends HttpServlet {
         }
 
         resp.setStatus(HttpServletResponse.SC_OK);
-        apiResponse.setMessage("Account Details Updated Successfully");
+        apiResponse.setMessage("Your details are updated Successfully");
         resp.getWriter().println(objectMapper.writeValueAsString(apiResponse));
     }
 }

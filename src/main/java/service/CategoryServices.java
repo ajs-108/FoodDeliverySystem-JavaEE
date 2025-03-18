@@ -1,15 +1,14 @@
-package services;
+package service;
 
-import dao.CategoryDAOImpl;
+import dao.impl.CategoryDAOImpl;
+import dao.ICategoryDAO;
 import model.Category;
-import util.DBConnector;
 
 import java.sql.*;
-import java.util.LinkedList;
 import java.util.List;
 
 public class CategoryServices {
-    private CategoryDAOImpl categoryDAO;
+    private ICategoryDAO categoryDAO;
 
     public CategoryServices() {
         this.categoryDAO = new CategoryDAOImpl();

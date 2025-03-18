@@ -2,9 +2,8 @@ package controller;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
-import util.DBConnector;
+import common.config.DBConnector;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DBConnectionController extends HttpServlet {

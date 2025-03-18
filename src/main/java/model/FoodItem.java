@@ -1,6 +1,4 @@
-package entity;
-
-import java.time.LocalDateTime;
+package model;
 
 public class FoodItem {
 
@@ -11,8 +9,6 @@ public class FoodItem {
     private double discount;
     private boolean isAvailable;
     private int categoryId;
-//    private LocalDateTime createdOn;
-//    private LocalDateTime updatedOn;
     private String imagePath;
     private double rating;
 

@@ -1,4 +1,6 @@
-package dto;
+package dto.user_dto;
+
+import java.time.LocalDateTime;
 
 public class UserDTO {
 
@@ -8,6 +10,8 @@ public class UserDTO {
     private String email;
     private String phoneNumber;
     private String address;
+    private LocalDateTime createdOn;
+    private LocalDateTime updatedOn;
 
     public int getUserId() {
         return userId;
@@ -57,6 +61,22 @@ public class UserDTO {
         this.address = address;
     }
 
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(LocalDateTime createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public LocalDateTime getUpdatedOn() {
+        return updatedOn;
+    }
+
+    public void setUpdatedOn(LocalDateTime updatedOn) {
+        this.updatedOn = updatedOn;
+    }
+
     @Override
     public String toString() {
         return "UserDTO{" +
@@ -66,6 +86,8 @@ public class UserDTO {
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", address='" + address + '\'' +
+                ", createdOn=" + createdOn +
+                ", updatedOn=" + updatedOn +
                 '}';
     }
 }

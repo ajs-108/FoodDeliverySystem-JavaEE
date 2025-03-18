@@ -1,7 +1,8 @@
-package dao;
+package dao.impl;
 
+import dao.ICategoryDAO;
 import model.Category;
-import util.DBConnector;
+import common.config.DBConnector;
 
 import java.sql.*;
 import java.util.LinkedList;

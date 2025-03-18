@@ -1,15 +1,11 @@
-package common;
+package dto;
 
 /**
- * APIResponse Contains the Response that is to be sent over as HttpResponse
+ * APIResponse Contains the Response that is to be sent over as HttpResponse to client
  */
 public class APIResponse {
-
     private String message;
     private Object data;
-
-    public APIResponse() {
-    }
 
     public String getMessage() {
         return message;

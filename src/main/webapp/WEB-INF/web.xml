@@ -6,7 +6,7 @@
 
     <servlet>
         <servlet-name>login</servlet-name>
-        <servlet-class>servlet.LoginServlet</servlet-class>
+        <servlet-class>controller.LoginController</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -16,7 +16,7 @@
 
     <servlet>
         <servlet-name>logout</servlet-name>
-        <servlet-class>servlet.LogoutServlet</servlet-class>
+        <servlet-class>controller.LogoutController</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -25,8 +25,35 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>DBcontroller</servlet-name>
+        <servlet-class>controller.DBConnectionController</servlet-class>
+        <load-on-startup>0</load-on-startup>
+        <init-param>
+            <param-name>url</param-name>
+            <param-value>jdbc:mysql://localhost:3306/food_delivery_db</param-value>
+        </init-param>
+        <init-param>
+            <param-name>driver</param-name>
+            <param-value>com.mysql.cj.jdbc.Driver</param-value>
+        </init-param>
+        <init-param>
+            <param-name>user</param-name>
+            <param-value>root</param-value>
+        </init-param>
+        <init-param>
+            <param-name>password</param-name>
+            <param-value>password123#</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DBcontroller</servlet-name>
+        <url-pattern>/dbController</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>Customersignup</servlet-name>
-        <servlet-class>servlet.CustomerSignUpServlet</servlet-class>
+        <servlet-class>controller.CustomerSignUpController</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -36,7 +63,7 @@
 
     <servlet>
         <servlet-name>Deliverypersonsignup</servlet-name>
-        <servlet-class>servlet.DeliveryPersonSignUpServlet</servlet-class>
+        <servlet-class>controller.DeliveryPersonSignUpController</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -46,7 +73,7 @@
 
     <servlet>
         <servlet-name>Usercontroller</servlet-name>
-        <servlet-class>servlet.UserControllerServlet</servlet-class>
+        <servlet-class>controller.UserController</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -54,6 +81,17 @@
         <url-pattern>/customer</url-pattern>
         <url-pattern>/deliveryPerson</url-pattern>
         <url-pattern>/admin</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Userscontroller</servlet-name>
+        <servlet-class>controller.UsersController</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Userscontroller</servlet-name>
+        <url-pattern>/customers</url-pattern>
+        <url-pattern>/deliveryPersons</url-pattern>
     </servlet-mapping>
 
 </web-app>
