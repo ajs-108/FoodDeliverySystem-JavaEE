@@ -1,22 +1,23 @@
 package controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import common.AppConstant;
+import mapper.UserMapper;
+import common.Message;
+import common.exception.ApplicationException;
+import common.exception.DBException;
+import common.util.ObjectMapperUtil;
+import controller.validation.LoginValidator;
 import dto.APIResponse;
-import common.Mapper;
-import dao.impl.UserDAOImpl;
 import dto.user_dto.UserDTO;
 import dto.user_dto.UserLoginDTO;
-import common.exception.ValidationException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.User;
-import controller.validation.LoginValidator;
+import service.UserServices;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 /**
  * Login Servlet ensures that a valid user is accessing the application.
@@ -31,40 +32,40 @@ public class LoginController extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("application/json");
-        APIResponse apiResponse = new APIResponse();
-        ObjectMapper objectMapper = new ObjectMapper();
-        Mapper mapper = new Mapper();
-        UserLoginDTO userLogin = objectMapper.readValue(request.getReader(), UserLoginDTO.class);
-        User user = mapper.toUser(userLogin);
+        response.setContentType(AppConstant.APPLICATION_JSON);
+        UserMapper userMapper = new UserMapper();
+        UserLoginDTO userLogin = ObjectMapperUtil.toObject(request.getReader(), UserLoginDTO.class);
         try {
-            LoginValidator.validateLogin(user);
-        } catch (ValidationException e) {
+            LoginValidator.validateLogin(userLogin);
+        } catch (ApplicationException e) {
             e.printStackTrace();
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            apiResponse.setMessage(e.getMessage());
-            response.getWriter().println(objectMapper.writeValueAsString(apiResponse));
+            sendResponse(response, e.getMessage(), null, HttpServletResponse.SC_BAD_REQUEST);
             return;
-        } catch (SQLException e) {
+        } catch (DBException e) {
             e.printStackTrace();
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            apiResponse.setMessage(e.getMessage());
-            response.getWriter().println(objectMapper.writeValueAsString(apiResponse));
+            sendResponse(response, e.getMessage(), null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
         }
 
         HttpSession session = request.getSession();
-        UserDAOImpl userDAO = new UserDAOImpl();
-        UserDTO userDTO = mapper.toDTO(user);
+        UserServices userServices = new UserServices();
+        UserDTO userDTO = null;
         try {
-            userDTO = mapper.toDTO(userDAO.getUser(user.getEmail()));
-        } catch (SQLException e) {
+            userDTO = userMapper.toDTO(userServices.getUser(userLogin.getEmail()));
+        } catch (DBException e) {
             e.printStackTrace();
         }
-        session.setAttribute("user", user.getEmail());
+        session.setAttribute("user", userLogin.getEmail());
+        assert userDTO != null;
         session.setAttribute("userId", userDTO.getUserId());
-        response.setStatus(HttpServletResponse.SC_OK);
-        apiResponse.setMessage("You are logged in.");
-        response.getWriter().println(objectMapper.writeValueAsString(apiResponse));
+        sendResponse(response, "You are logged in", null, HttpServletResponse.SC_OK);
+    }
+
+    public void sendResponse(HttpServletResponse response, String message, Object data, int statusCode) throws IOException {
+        response.setStatus(statusCode);
+        APIResponse apiResponse = new APIResponse();
+        apiResponse.setMessage(message);
+        apiResponse.setData(data);
+        response.getWriter().println(ObjectMapperUtil.toString(apiResponse));
     }
 }

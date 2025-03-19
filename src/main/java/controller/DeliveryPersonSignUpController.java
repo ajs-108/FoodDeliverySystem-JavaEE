@@ -1,14 +1,19 @@
 package controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import common.Mapper;
+import common.AppConstant;
+import common.Message;
 import common.Roles;
+import common.exception.ApplicationException;
+import common.exception.DBException;
+import common.util.ObjectMapperUtil;
+import dto.APIResponse;
 import dto.user_dto.UserSignUpDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.SignUp;
+import service.UserServices;
 
 import java.io.IOException;
 
@@ -22,11 +27,28 @@ public class DeliveryPersonSignUpController extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("application/json");
-        ObjectMapper objectMapper = new ObjectMapper();
-        Mapper mapper = new Mapper();
-        UserSignUpDTO userSignUpDTO = objectMapper.readValue(request.getReader(), UserSignUpDTO.class);
+        response.setContentType(AppConstant.APPLICATION_JSON);
+        UserSignUpDTO userSignUpDTO = ObjectMapperUtil.toObject(request.getReader(), UserSignUpDTO.class);
         userSignUpDTO.setRole(Roles.ROLE_DELIVERY_PERSON);
-        SignUp.signUp(response, mapper.toUser(userSignUpDTO), objectMapper);
+        try {
+            UserServices.signUp(userSignUpDTO);
+        } catch (DBException e) {
+            e.printStackTrace();
+            sendResponse(response, e.getMessage(), null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
+        } catch (ApplicationException e) {
+            e.printStackTrace();
+            sendResponse(response, e.getMessage(), null, HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+        sendResponse(response, "User created successfully", null, HttpServletResponse.SC_CREATED);
+    }
+
+    public static void sendResponse(HttpServletResponse response, String message, Object data, int statusCode) throws IOException {
+        response.setStatus(statusCode);
+        APIResponse apiResponse = new APIResponse();
+        apiResponse.setMessage(message);
+        apiResponse.setData(data);
+        response.getWriter().println(ObjectMapperUtil.toString(apiResponse));
     }
 }

@@ -1,11 +1,15 @@
 package common.exception;
 
-public class DBException extends Exception{
-    private String message;
-    private Exception e;
+public class DBException extends Exception {
+    public DBException(String message) {
+        super(message);
+    }
 
-    public DBException(String message, Exception e) {
-        this.message = message;
-        this.e = e;
+    public DBException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public DBException(Throwable cause) {
+        super(cause);
     }
 }

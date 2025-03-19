@@ -1,16 +1,20 @@
 package dao;
 
+import common.exception.DBException;
 import model.User;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public interface IUserDAO {
-    void saveUser(User user) throws SQLException;
+    void saveUser(User user) throws DBException;
 
-    User getUser(String email) throws SQLException;
+    User getUser(String email) throws DBException;
 
-    List<User> getAllUsers(int role_id) throws SQLException;
+    List<User> getAllUsers(int role_id) throws DBException;
 
-    void updateUser(User user, int userID) throws SQLException;
+    void updateUser(User user, int userID) throws DBException;
+
+    boolean isEmailExists(String email, int roleId) throws DBException;
+
+    boolean isPhoneNumberExists(String phoneNumber, int roleId) throws DBException;
 }

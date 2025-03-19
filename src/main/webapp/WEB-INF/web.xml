@@ -26,7 +26,7 @@
 
     <servlet>
         <servlet-name>DBcontroller</servlet-name>
-        <servlet-class>controller.DBConnectionController</servlet-class>
+        <servlet-class>controller.DBInitializationController</servlet-class>
         <load-on-startup>0</load-on-startup>
         <init-param>
             <param-name>url</param-name>
@@ -85,7 +85,7 @@
 
     <servlet>
         <servlet-name>Userscontroller</servlet-name>
-        <servlet-class>controller.UsersController</servlet-class>
+        <servlet-class>controller.ListAllUsersController</servlet-class>
     </servlet>
 
     <servlet-mapping>

@@ -1,14 +1,14 @@
 package controller.validation;
 
-import common.exception.ValidationException;
+import common.exception.ApplicationException;
+import common.exception.DBException;
+import dto.user_dto.UserLoginDTO;
 import model.User;
 import service.UserServices;
 
-import java.sql.SQLException;
-
 /**
  * LoginValidator class is used for controller.validation of Incoming data from form/UI.
- * It throws ValidationException if the incoming data violets the constraints.
+ * It throws ApplicationException if the incoming data violets the constraints.
  */
 public class LoginValidator {
     private static Validator validate = new Validator();
@@ -18,25 +18,25 @@ public class LoginValidator {
      * This method is used to validate the incoming SignUp form data.
      *
      * @param user - data to be validated
-     * @throws ValidationException - thrown if incoming data violets the constraint
+     * @throws ApplicationException - thrown if incoming data violets the constraint
      */
-    public static void validateLogin(User user) throws ValidationException, SQLException {
+    public static void validateLogin(UserLoginDTO user) throws ApplicationException, DBException {
         User userFromDB = userServices.getUser(user.getEmail());
 
+        if(userFromDB == null) {
+            throw new ApplicationException("No such User Exists");
+        }
         if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
-            throw new ValidationException("Email is Mandatory");
+            throw new ApplicationException("Email is Mandatory");
         }
         if (!validate.checkEmail(user.getEmail())) {
-            throw new ValidationException("Please enter valid Email Address");
-        }
-        if (userFromDB == null) {
-            throw new ValidationException("User not Found.");
+            throw new ApplicationException("Please enter valid Email Address");
         }
         if (user.getPassword() == null || user.getPassword().isBlank()) {
-            throw new ValidationException("Password is mandatory");
+            throw new ApplicationException("Password is mandatory");
         }
         if (!userFromDB.getPassword().equals(user.getPassword())) {
-            throw new ValidationException("Login credentials are incorrect. Please try again");
+            throw new ApplicationException("Login credentials are incorrect. Please try again");
         }
     }
 }

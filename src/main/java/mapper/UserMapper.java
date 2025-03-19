@@ -1,11 +1,11 @@
-package common;
+package mapper;
 
 import dto.user_dto.UserSignUpDTO;
 import dto.user_dto.UserDTO;
 import dto.user_dto.UserLoginDTO;
 import model.User;
 
-public class Mapper {
+public class UserMapper {
     public UserDTO toDTO(User user) {
         UserDTO userDTO = new UserDTO();
         userDTO.setUserId(user.getUserId());

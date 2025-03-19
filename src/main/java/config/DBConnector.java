@@ -1,8 +1,9 @@
-package common.config;
+package config;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import common.Message;
+import common.exception.DBException;
+
+import java.sql.*;
 
 /**
  * The DBConnector class is used for establishing the connection with MySQL database food_delivery_db
@@ -35,5 +36,22 @@ public class DBConnector {
     public Connection getConnection() throws SQLException, ClassNotFoundException {
         Class.forName(driver);
         return DriverManager.getConnection(url, username, password);
+    }
+
+    public static void resourceCloser(Statement statement, ResultSet resultSet, Connection connection) throws DBException {
+
+        try {
+            if (statement != null) {
+                statement.close();
+            }
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            throw new DBException(Message.Error.INTERNAL_ERROR, e);
+        }
     }
 }

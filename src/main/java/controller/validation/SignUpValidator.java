@@ -1,64 +1,54 @@
 package controller.validation;
 
-import common.exception.ValidationException;
-import model.User;
+import common.Message;
+import common.exception.ApplicationException;
+import common.exception.DBException;
+import dto.user_dto.UserSignUpDTO;
 import service.UserServices;
 
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Objects;
-
 public class SignUpValidator {
-    private static Validator validate = new Validator();
-    private static UserServices userServices = new UserServices();
+    public static void validate(UserSignUpDTO signUpDTO) throws ApplicationException, DBException {
+        Validator validate = new Validator();
+        UserServices userServices = new UserServices();
 
-    public static void validate(User user) throws ValidationException, SQLException {
-        userServices = new UserServices();
-        List<User> userList = userServices.getAllUsers(user.getRole().getId());
-
-        if (user.getFirstName() == null || user.getFirstName().isBlank()) {
-            throw new ValidationException("First name is Mandatory");
+        if (signUpDTO.getFirstName() == null || signUpDTO.getFirstName().isBlank()) {
+            throw new ApplicationException(Message.User.MANDATORY);
         }
-        if (user.getFirstName().length() > 30) {
-            throw new ValidationException("First name should be equal to 30 characters.");
+        if (signUpDTO.getFirstName().length() > 30) {
+            throw new ApplicationException(Message.User.NAME_LENGTH);
         }
-        if (user.getLastName() == null || user.getLastName().isBlank()) {
-            throw new ValidationException("Last name is Mandatory");
+        if (signUpDTO.getLastName() == null || signUpDTO.getLastName().isBlank()) {
+            throw new ApplicationException(Message.User.MANDATORY);
         }
-        if (user.getLastName().length() > 30) {
-            throw new ValidationException("Last name should be equal to 30 characters.");
+        if (signUpDTO.getLastName().length() > 30) {
+            throw new ApplicationException(Message.User.NAME_LENGTH);
         }
-        if (user.getEmail() == null || user.getEmail().isBlank()) {
-            throw new ValidationException("Email is Mandatory");
+        if (signUpDTO.getEmail() == null || signUpDTO.getEmail().isBlank()) {
+            throw new ApplicationException(Message.User.MANDATORY);
         }
-        if (!validate.checkEmail(user.getEmail())) {
-            throw new ValidationException("Please enter valid Email Address");
+        if (!validate.checkEmail(signUpDTO.getEmail())) {
+            throw new ApplicationException(Message.User.INVALID_EMAIL);
         }
-        for (User u : userList) {
-            if (Objects.equals(u.getEmail(), user.getEmail())) {
-                throw new ValidationException("There already exits User with this email address. " +
-                        "Please try again with different email address.");
-            }
+        if (signUpDTO.getEmail().length() > 255) {
+            throw new ApplicationException(Message.User.EMAIL_LENGTH);
         }
-        if (user.getPassword() == null || user.getPassword().isBlank()) {
-            throw new ValidationException("Password is mandatory");
+        if (userServices.isEmailExists(signUpDTO.getEmail(), signUpDTO.getRole().getId())) {
+            throw new ApplicationException(Message.User.EMAIL_EXISTS);
         }
-        if (!validate.checkPassword(user.getPassword())) {
-            throw new ValidationException("Please enter valid Password. It should be between 8-40 characters " +
-                    "and should be a combination of uppercase and lowercase letters, numbers, and special characters");
+        if (signUpDTO.getPassword() == null || signUpDTO.getPassword().isBlank()) {
+            throw new ApplicationException(Message.User.MANDATORY);
         }
-        if (user.getPhoneNumber() == null || user.getPhoneNumber().isBlank()) {
-            throw new ValidationException("Phone number is mandatory");
+        if (!validate.checkPassword(signUpDTO.getPassword())) {
+            throw new ApplicationException(Message.User.INVALID_PASSWORD);
         }
-        if (!validate.checkContactNo(user.getPhoneNumber())) {
-            throw new ValidationException("Please enter valid Phone number. It should be combination of 10 numbers " +
-                    "starting with 1-9 numbers.");
+        if (signUpDTO.getPhoneNumber() == null || signUpDTO.getPhoneNumber().isBlank()) {
+            throw new ApplicationException(Message.User.MANDATORY);
         }
-        for (User u : userList) {
-            if (Objects.equals(u.getPhoneNumber(), user.getPhoneNumber())) {
-                throw new ValidationException("There already exits User with this Phone number. " +
-                        "Please try again with different phone number");
-            }
+        if (!validate.checkPhoneNo(signUpDTO.getPhoneNumber())) {
+            throw new ApplicationException(Message.User.INVALID_PHONE_NUMBER);
+        }
+        if (userServices.isPhoneNumberExists(signUpDTO.getPhoneNumber(), signUpDTO.getRole().getId())) {
+            throw new ApplicationException(Message.User.PHONE_NUMBER_EXISTS);
         }
     }
 }

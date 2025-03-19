@@ -1,8 +1,10 @@
 package dao.impl;
 
+import common.Message;
+import common.exception.DBException;
 import dao.ICategoryDAO;
 import model.Category;
-import common.config.DBConnector;
+import config.DBConnector;
 
 import java.sql.*;
 import java.util.LinkedList;
@@ -10,90 +12,69 @@ import java.util.List;
 
 public class CategoryDAOImpl implements ICategoryDAO {
     @Override
-    public void saveCategory(Category category) throws SQLException {
-        Connection connect = null;
-        PreparedStatement ps = null;
+    public void saveCategory(Category category) throws DBException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
         String sql = "insert into category(category_name) values (?)";
         try {
-            connect = DBConnector.getInstance().getConnection();
-            ps = connect.prepareStatement(sql);
-            ps.setString(1, category.getCategoryName());
-        } catch (Exception e) {
-            e.printStackTrace();
+            connection = DBConnector.getInstance().getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, category.getCategoryName());
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new DBException(Message.Error.INTERNAL_ERROR, e);
         } finally {
-            if (ps != null) {
-                ps.close();
-            }
-            if (connect != null) {
-                connect.close();
-            }
+            DBConnector.resourceCloser(preparedStatement, null, connection);
         }
     }
 
     @Override
-    public Category getCategory(int category_id) throws SQLException {
-        Connection connect = null;
+    public Category getCategory(int category_id) throws DBException {
+        Connection connection = null;
         Category category = new Category();
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         String sql = "Select * from category where category_id = ?";
         try {
-            connect = DBConnector.getInstance().getConnection();
-            ps = connect.prepareStatement(sql);
-            ps.setInt(1, category_id);
-            rs = ps.executeQuery();
+            connection = DBConnector.getInstance().getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, category_id);
+            resultSet = preparedStatement.executeQuery();
 
-            while (rs.next()) {
+            while (resultSet.next()) {
                 category = new Category();
-                category.setCategoryId(rs.getInt("category_id"));
-                category.setCategoryName(rs.getString("category_name"));
+                category.setCategoryId(resultSet.getInt("category_id"));
+                category.setCategoryName(resultSet.getString("category_name"));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new DBException(Message.Error.INTERNAL_ERROR, e);
         } finally {
-            if (ps != null) {
-                ps.close();
-            }
-            if (rs != null) {
-                rs.close();
-            }
-            if (connect != null) {
-                connect.close();
-            }
+            DBConnector.resourceCloser(preparedStatement, resultSet, connection);
         }
         return category;
     }
 
     @Override
-    public List<Category> getAllCategories() throws SQLException {
-        Connection connect = null;
+    public List<Category> getAllCategories() throws DBException {
+        Connection connection = null;
         List<Category> categoryList = new LinkedList<>();
         Category category;
-        Statement s = null;
-        ResultSet rs = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         String sql = "Select * from category";
         try {
-            connect = DBConnector.getInstance().getConnection();
-            s = connect.createStatement();
-            rs = s.executeQuery(sql);
-            while (rs.next()) {
+            connection = DBConnector.getInstance().getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
                 category = new Category();
-                category.setCategoryId(rs.getInt("category_id"));
-                category.setCategoryName(rs.getString("category_name"));
+                category.setCategoryId(resultSet.getInt("category_id"));
+                category.setCategoryName(resultSet.getString("category_name"));
                 categoryList.add(category);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new DBException(Message.Error.INTERNAL_ERROR, e);
         } finally {
-            if (s != null) {
-                s.close();
-            }
-            if (rs != null) {
-                rs.close();
-            }
-            if (connect != null) {
-                connect.close();
-            }
+            DBConnector.resourceCloser(statement, resultSet, connection);
         }
         return categoryList;
     }

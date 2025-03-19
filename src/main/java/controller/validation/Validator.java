@@ -16,7 +16,7 @@ public class Validator {
         return flag;
     }
 
-    public boolean checkContactNo(String contactNo) {
+    public boolean checkPhoneNo(String contactNo) {
         flag = false;
         pattern = Pattern.compile("[1-9][0-9]{9}");
         if (pattern.matcher(contactNo).matches()) {

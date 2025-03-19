@@ -1,8 +1,10 @@
 package dao.impl;
 
+import common.Message;
+import config.DBConnector;
+import common.exception.DBException;
 import dao.IFoodItemDAO;
 import model.FoodItem;
-import common.config.DBConnector;
 
 import java.sql.*;
 import java.util.LinkedList;
@@ -10,16 +12,12 @@ import java.util.List;
 
 public class FoodItemDAOImpl implements IFoodItemDAO {
     @Override
-    public void saveFoodItem(FoodItem foodItem) throws SQLException {
-        Connection connect = null;
-        PreparedStatement ps = null;
+    public void saveFoodItem(FoodItem foodItem) throws DBException {
         String sql = """
                 insert into food_item(food_name, food_description, price, discount, category_id, image_path)
                 values (?,?,?,?,?,?,?,?);
                 """;
-        try {
-            connect = DBConnector.getInstance().getConnection();
-            ps = connect.prepareStatement(sql);
+        try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setString(1, foodItem.getFoodName());
             ps.setString(2, foodItem.getFoodDescription());
             ps.setDouble(3, foodItem.getPrice());
@@ -28,109 +26,82 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
             ps.setString(6, foodItem.getImagePath());
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (ps != null) {
-                ps.close();
-            }
-            if (connect != null) {
-                connect.close();
-            }
         }
     }
 
     @Override
-    public FoodItem getFoodItem(int foodItemId) throws SQLException {
-        Connection connect = null;
-        FoodItem foodItem = new FoodItem();
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    public FoodItem getFoodItem(int foodItemId) throws DBException {
         String sql = "Select * from food_item where food_item_id = ?";
+        Connection connection = null;
+        FoodItem foodItem;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
-            connect = DBConnector.getInstance().getConnection();
-            ps = connect.prepareStatement(sql);
-            ps.setInt(1, foodItemId);
-            rs = ps.executeQuery();
-            if (rs.next()) {
+            connection = DBConnector.getInstance().getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, foodItemId);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
                 foodItem = new FoodItem();
-                foodItem.setFoodItemId(rs.getInt("food_item_id"));
-                foodItem.setFoodName(rs.getString("food_name"));
-                foodItem.setFoodDescription(rs.getString("food_description"));
-                foodItem.setPrice(rs.getDouble("price"));
-                foodItem.setDiscount(rs.getDouble("discount"));
-                foodItem.setAvailable(rs.getBoolean("is_available"));
-                foodItem.setCategoryId(rs.getInt("category_id"));
-                foodItem.setImagePath(rs.getString("image_path"));
-                foodItem.setRating(rs.getDouble("rating"));
+                foodItem.setFoodItemId(resultSet.getInt("food_item_id"));
+                foodItem.setFoodName(resultSet.getString("food_name"));
+                foodItem.setFoodDescription(resultSet.getString("food_description"));
+                foodItem.setPrice(resultSet.getDouble("price"));
+                foodItem.setDiscount(resultSet.getDouble("discount"));
+                foodItem.setAvailable(resultSet.getBoolean("is_available"));
+                foodItem.setCategoryId(resultSet.getInt("category_id"));
+                foodItem.setImagePath(resultSet.getString("image_path"));
+                foodItem.setRating(resultSet.getDouble("rating"));
             } else {
-                System.out.println("No such foodItem found.");
+                throw new SQLException("No such FoodItem Found");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new DBException(Message.Error.INTERNAL_ERROR, e);
         } finally {
-            if (ps != null) {
-                ps.close();
-            }
-            if (rs != null) {
-                rs.close();
-            }
-            if (connect != null) {
-                connect.close();
-            }
+            DBConnector.resourceCloser(preparedStatement, resultSet, connection);
         }
         return foodItem;
     }
 
     @Override
-    public List<FoodItem> getAllFoodItems() throws SQLException {
-        Connection connect = null;
-        List<FoodItem> foodItemList = new LinkedList<>();
-        Statement s = null;
-        ResultSet rs = null;
+    public List<FoodItem> getAllFoodItems() throws DBException {
         String sql = "select * from food_item";
+        Connection connection = null;
+        List<FoodItem> foodItemList = new LinkedList<>();
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            connect = DBConnector.getInstance().getConnection();
-            s = connect.createStatement();
-            rs = s.executeQuery(sql);
-            while (rs.next()) {
+            connection = DBConnector.getInstance().getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
                 FoodItem foodItem = new FoodItem();
-                foodItem.setFoodItemId(rs.getInt("food_item_id"));
-                foodItem.setFoodName(rs.getString("food_name"));
-                foodItem.setFoodDescription(rs.getString("food_description"));
-                foodItem.setPrice(rs.getDouble("price"));
-                foodItem.setDiscount(rs.getDouble("discount"));
-                foodItem.setAvailable(rs.getBoolean("is_available"));
-                foodItem.setCategoryId(rs.getInt("category_id"));
-                foodItem.setImagePath(rs.getString("image_path"));
-                foodItem.setRating(rs.getDouble("rating"));
+                foodItem.setFoodItemId(resultSet.getInt("food_item_id"));
+                foodItem.setFoodName(resultSet.getString("food_name"));
+                foodItem.setFoodDescription(resultSet.getString("food_description"));
+                foodItem.setPrice(resultSet.getDouble("price"));
+                foodItem.setDiscount(resultSet.getDouble("discount"));
+                foodItem.setAvailable(resultSet.getBoolean("is_available"));
+                foodItem.setCategoryId(resultSet.getInt("category_id"));
+                foodItem.setImagePath(resultSet.getString("image_path"));
+                foodItem.setRating(resultSet.getDouble("rating"));
                 foodItemList.add(foodItem);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new DBException(Message.Error.INTERNAL_ERROR, e);
         } finally {
-            if (s != null) {
-                s.close();
-            }
-            if (rs != null) {
-                rs.close();
-            }
-            if (connect != null) {
-                connect.close();
-            }
+            DBConnector.resourceCloser(statement, resultSet, connection);
         }
         return foodItemList;
     }
 
     @Override
-    public void updateFoodItem(FoodItem foodItem, int foodItemId) throws SQLException {
-        Connection connect = null;
-        PreparedStatement ps = null;
+    public void updateFoodItem(FoodItem foodItem, int foodItemId) throws DBException {
         String sql1 = """
                 update food_item set food_description = ?, discount = ?, price = ?, is_available = ?, image_path = ?
                 where food_item_id = ?;
                 """;
-        try {
-            connect = DBConnector.getInstance().getConnection();
-            ps = connect.prepareStatement(sql1);
+        try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement ps = connect.prepareStatement(sql1)) {
             ps.setString(1, foodItem.getFoodDescription());
             ps.setDouble(2, foodItem.getDiscount());
             ps.setDouble(3, foodItem.getPrice());
@@ -140,13 +111,6 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (ps != null) {
-                ps.close();
-            }
-            if (connect != null) {
-                connect.close();
-            }
         }
     }
 }
