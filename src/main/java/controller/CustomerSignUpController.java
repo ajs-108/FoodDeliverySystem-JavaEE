@@ -4,7 +4,7 @@ import common.AppConstant;
 import common.exception.ApplicationException;
 import common.exception.DBException;
 import dto.APIResponse;
-import common.Roles;
+import common.enums.Roles;
 import common.util.ObjectMapperUtil;
 import dto.user_dto.UserSignUpDTO;
 import jakarta.servlet.ServletException;

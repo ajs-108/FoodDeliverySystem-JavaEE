@@ -1,6 +1,6 @@
 package dto.user_dto;
 
-import common.Roles;
+import common.enums.Roles;
 
 public class UserSignUpDTO {
 

@@ -2,7 +2,7 @@ package controller;
 
 import common.AppConstant;
 import mapper.UserMapper;
-import common.Roles;
+import common.enums.Roles;
 import common.exception.DBException;
 import common.util.ObjectMapperUtil;
 import dto.APIResponse;

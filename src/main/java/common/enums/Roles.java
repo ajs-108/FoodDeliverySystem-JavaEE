@@ -1,4 +1,4 @@
-package common;
+package common.enums;
 
 public enum Roles {
     ROLE_SUPER_ADMIN(1001),

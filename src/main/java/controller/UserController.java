@@ -1,7 +1,7 @@
 package controller;
 
 import common.AppConstant;
-import common.Roles;
+import common.enums.Roles;
 import common.exception.ApplicationException;
 import common.exception.DBException;
 import common.util.ObjectMapperUtil;

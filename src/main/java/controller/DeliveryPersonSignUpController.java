@@ -1,8 +1,7 @@
 package controller;
 
 import common.AppConstant;
-import common.Message;
-import common.Roles;
+import common.enums.Roles;
 import common.exception.ApplicationException;
 import common.exception.DBException;
 import common.util.ObjectMapperUtil;
@@ -12,7 +11,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.SignUp;
 import service.UserServices;
 
 import java.io.IOException;
