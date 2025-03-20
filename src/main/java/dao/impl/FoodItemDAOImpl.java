@@ -1,9 +1,10 @@
 package dao.impl;
 
 import common.Message;
-import config.DBConnector;
 import common.exception.DBException;
+import config.DBConnector;
 import dao.IFoodItemDAO;
+import model.Category;
 import model.FoodItem;
 
 import java.sql.*;
@@ -15,23 +16,26 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
     public void saveFoodItem(FoodItem foodItem) throws DBException {
         String sql = """
                 insert into food_item(food_name, food_description, price, discount, category_id, image_path)
-                values (?,?,?,?,?,?,?,?);
+                values (?,?,?,?,?,?);
                 """;
         try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setString(1, foodItem.getFoodName());
             ps.setString(2, foodItem.getFoodDescription());
             ps.setDouble(3, foodItem.getPrice());
             ps.setDouble(4, foodItem.getDiscount());
-            ps.setInt(5, foodItem.getCategoryId());
+            ps.setInt(5, foodItem.getCategory().getCategoryId());
             ps.setString(6, foodItem.getImagePath());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new DBException(Message.Error.GENERIC_ERROR, e);
         }
     }
 
     @Override
     public FoodItem getFoodItem(int foodItemId) throws DBException {
-        String sql = "Select * from food_item where food_item_id = ?";
+        String sql = """
+                select * from food_item, category
+                where food_item.category_id = category.category_id and food_item_id = ?;
+                """;
         Connection connection = null;
         FoodItem foodItem;
         PreparedStatement preparedStatement = null;
@@ -43,20 +47,23 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 foodItem = new FoodItem();
+                Category category = new Category();
                 foodItem.setFoodItemId(resultSet.getInt("food_item_id"));
                 foodItem.setFoodName(resultSet.getString("food_name"));
                 foodItem.setFoodDescription(resultSet.getString("food_description"));
                 foodItem.setPrice(resultSet.getDouble("price"));
                 foodItem.setDiscount(resultSet.getDouble("discount"));
                 foodItem.setAvailable(resultSet.getBoolean("is_available"));
-                foodItem.setCategoryId(resultSet.getInt("category_id"));
                 foodItem.setImagePath(resultSet.getString("image_path"));
                 foodItem.setRating(resultSet.getDouble("rating"));
+                category.setCategoryId(resultSet.getInt("category_id"));
+                category.setCategoryName(resultSet.getString("category_name"));
+                foodItem.setCategory(category);
             } else {
-                throw new SQLException("No such FoodItem Found");
+                throw new DBException("No such FoodItem Found");
             }
         } catch (SQLException | ClassNotFoundException e) {
-            throw new DBException(Message.Error.INTERNAL_ERROR, e);
+            throw new DBException(Message.Error.GENERIC_ERROR, e);
         } finally {
             DBConnector.resourceCloser(preparedStatement, resultSet, connection);
         }
@@ -65,7 +72,7 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
 
     @Override
     public List<FoodItem> getAllFoodItems() throws DBException {
-        String sql = "select * from food_item";
+        String sql = "select * from food_item, category where food_item.category_id = category.category_id;";
         Connection connection = null;
         List<FoodItem> foodItemList = new LinkedList<>();
         Statement statement = null;
@@ -76,19 +83,22 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
             resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
                 FoodItem foodItem = new FoodItem();
+                Category category = new Category();
                 foodItem.setFoodItemId(resultSet.getInt("food_item_id"));
                 foodItem.setFoodName(resultSet.getString("food_name"));
                 foodItem.setFoodDescription(resultSet.getString("food_description"));
                 foodItem.setPrice(resultSet.getDouble("price"));
                 foodItem.setDiscount(resultSet.getDouble("discount"));
                 foodItem.setAvailable(resultSet.getBoolean("is_available"));
-                foodItem.setCategoryId(resultSet.getInt("category_id"));
                 foodItem.setImagePath(resultSet.getString("image_path"));
                 foodItem.setRating(resultSet.getDouble("rating"));
+                category.setCategoryId(resultSet.getInt("category_id"));
+                category.setCategoryName(resultSet.getString("category_name"));
+                foodItem.setCategory(category);
                 foodItemList.add(foodItem);
             }
         } catch (SQLException | ClassNotFoundException e) {
-            throw new DBException(Message.Error.INTERNAL_ERROR, e);
+            throw new DBException(Message.Error.GENERIC_ERROR, e);
         } finally {
             DBConnector.resourceCloser(statement, resultSet, connection);
         }
@@ -109,8 +119,8 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
             ps.setString(5, foodItem.getImagePath());
             ps.setInt(6, foodItemId);
             ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new DBException(Message.Error.GENERIC_ERROR, e);
         }
     }
 }

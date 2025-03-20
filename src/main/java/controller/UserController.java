@@ -1,14 +1,15 @@
 package controller;
 
 import common.AppConstant;
+import common.Message;
 import common.enums.Roles;
 import common.exception.ApplicationException;
 import common.exception.DBException;
 import common.util.ObjectMapperUtil;
-import controller.validation.SignUpValidator;
+import controller.validation.UserUpdateValidator;
+import controller.validation.Validator;
 import dto.APIResponse;
-import dto.user_dto.UserDTO;
-import dto.user_dto.UserSignUpDTO;
+import dto.UserDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,45 +33,69 @@ public class UserController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType(AppConstant.APPLICATION_JSON);
-        HttpSession session = req.getSession(false);
-
+        HttpSession session;
         UserDTO user;
         try {
+            session = req.getSession(false);
+            if (session == null) {
+                throw new ApplicationException(Message.Error.UNAUTHORIZED_ACCESS);
+            }
             user = userMapper.toDTO(userServices.getUser((String) session.getAttribute("user")));
         } catch (DBException e) {
             e.printStackTrace();
-            sendResponse(resp, e.getMessage(), null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return;
-        }
-        sendResponse(resp, "Your details are updated Successfully", user, HttpServletResponse.SC_OK);
-    }
-
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType(AppConstant.APPLICATION_JSON);
-        UserSignUpDTO userDTO = ObjectMapperUtil.toObject(req.getReader(), UserSignUpDTO.class);
-        HttpSession session = req.getSession(false);
-
-        if (req.getServletPath().equals("/customer")) {
-            userDTO.setRole(Roles.ROLE_CUSTOMER);
-        } else if (req.getServletPath().equals("/deliveryPerson")) {
-            userDTO.setRole(Roles.ROLE_DELIVERY_PERSON);
-        } else if (req.getServletPath().equals("/admin")) {
-            userDTO.setRole(Roles.ROLE_SUPER_ADMIN);
-        }
-        try {
-            SignUpValidator.validate(userDTO);
-            userServices.updateUser(userDTO, (int) session.getAttribute("userId"));
-        } catch (DBException e) {
-            e.printStackTrace();
-            sendResponse(resp, e.getMessage(), null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            sendResponse(resp, Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
         } catch (ApplicationException e) {
             e.printStackTrace();
             sendResponse(resp, e.getMessage(), null, HttpServletResponse.SC_BAD_REQUEST);
             return;
+        } catch (Exception e) {
+            e.printStackTrace();
+            sendResponse(resp, Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
         }
-        sendResponse(resp, "Your details are updated Successfully", null, HttpServletResponse.SC_OK);
+        sendResponse(resp, null, user, HttpServletResponse.SC_OK);
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType(AppConstant.APPLICATION_JSON);
+        UserDTO userDTO = ObjectMapperUtil.toObject(req.getReader(), UserDTO.class);
+        HttpSession session;
+
+        try {
+            session = req.getSession(false);
+            if (session == null) {
+                throw new ApplicationException(Message.Error.UNAUTHORIZED_ACCESS);
+            }
+            if (req.getServletPath().equals("/customer") &&
+                    (int) session.getAttribute(AppConstant.ROLE_ID) == Roles.ROLE_CUSTOMER.getId()) {
+                userDTO.setRole(Roles.ROLE_CUSTOMER);
+            } else if (req.getServletPath().equals("/deliveryPerson") &&
+                    (int) session.getAttribute(AppConstant.ROLE_ID) == Roles.ROLE_DELIVERY_PERSON.getId()) {
+                userDTO.setRole(Roles.ROLE_DELIVERY_PERSON);
+            } else if (req.getServletPath().equals("/admin") &&
+                    (int) session.getAttribute(AppConstant.ROLE_ID) == Roles.ROLE_SUPER_ADMIN.getId()) {
+                userDTO.setRole(Roles.ROLE_SUPER_ADMIN);
+            } else {
+                throw new ApplicationException(Message.Error.ACCESS_DENIED);
+            }
+            UserUpdateValidator.validate(userDTO);
+            userServices.updateUser(userDTO, (int) session.getAttribute("userId"));
+        } catch (DBException e) {
+            e.printStackTrace();
+            sendResponse(resp, Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
+        } catch (ApplicationException e) {
+            e.printStackTrace();
+            sendResponse(resp, e.getMessage(), null, HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+            sendResponse(resp, Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
+        }
+        sendResponse(resp, Message.User.USER_INFO_UPDATES, null, HttpServletResponse.SC_OK);
     }
 
     public void sendResponse(HttpServletResponse response, String message, Object data, int statusCode) throws IOException {

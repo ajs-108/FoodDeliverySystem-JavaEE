@@ -1,14 +1,13 @@
 package model;
 
 public class FoodItem {
-
     private int foodItemId;
     private String foodName;
     private String foodDescription;
     private double price;
     private double discount;
     private boolean isAvailable;
-    private int categoryId;
+    private Category category;
     private String imagePath;
     private double rating;
 
@@ -60,12 +59,12 @@ public class FoodItem {
         isAvailable = available;
     }
 
-    public int getCategoryId() {
-        return categoryId;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public String getImagePath() {
@@ -93,7 +92,7 @@ public class FoodItem {
                 ", price=" + price +
                 ", discount=" + discount +
                 ", isAvailable=" + isAvailable +
-                ", categoryId=" + categoryId +
+                ", category=" + category +
                 ", imagePath='" + imagePath + '\'' +
                 ", rating=" + rating +
                 '}';

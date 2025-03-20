@@ -51,7 +51,7 @@ public class DBConnector {
                 connection.close();
             }
         } catch (SQLException e) {
-            throw new DBException(Message.Error.INTERNAL_ERROR, e);
+            throw new DBException(Message.Error.GENERIC_ERROR, e);
         }
     }
 }

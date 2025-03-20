@@ -22,7 +22,7 @@ public class CategoryServices {
         return categoryDAO.getAllCategories();
     }
 
-    public Category getCategory(int category_id) throws DBException {
-        return categoryDAO.getCategory(category_id);
+    public Category getCategory(int categoryId) throws DBException {
+        return categoryDAO.getCategory(categoryId);
     }
 }

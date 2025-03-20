@@ -1,10 +1,11 @@
 package dao.impl;
 
 import common.Message;
+import common.enums.Roles;
 import common.exception.DBException;
+import config.DBConnector;
 import dao.IUserDAO;
 import model.User;
-import config.DBConnector;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -31,7 +32,7 @@ public class UserDAOImpl implements IUserDAO {
             preparedStatement.setInt(7, user.getRole().getId());
             preparedStatement.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
-            throw new DBException(Message.Error.INTERNAL_ERROR,e);
+            throw new DBException(Message.Error.GENERIC_ERROR,e);
         }
     }
 
@@ -58,9 +59,15 @@ public class UserDAOImpl implements IUserDAO {
                 user.setAddress(resultSet.getString("address"));
                 user.setCreatedOn(resultSet.getTimestamp("created_on"));
                 user.setUpdatedOn(resultSet.getTimestamp("update_on"));
+                int roleId = resultSet.getInt("role_id");
+                for(Roles role : Roles.values()) {
+                    if(roleId == role.getId()) {
+                        user.setRole(role);
+                    }
+                }
             }
         } catch (SQLException | ClassNotFoundException e) {
-            throw new DBException(Message.Error.INTERNAL_ERROR,e);
+            throw new DBException(Message.Error.GENERIC_ERROR,e);
         } finally {
             DBConnector.resourceCloser(preparedStatement, resultSet, connection);
         }
@@ -68,7 +75,7 @@ public class UserDAOImpl implements IUserDAO {
     }
 
     @Override
-    public List<User> getAllUsers(int role_id) throws DBException {
+    public List<User> getAllUsers(int roleId) throws DBException {
         Connection connection = null;
         List<User> userList = new LinkedList<>();
         PreparedStatement preparedStatement = null;
@@ -77,7 +84,7 @@ public class UserDAOImpl implements IUserDAO {
         try {
             connection = DBConnector.getInstance().getConnection();
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, role_id);
+            preparedStatement.setInt(1, roleId);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 User user = new User();
@@ -89,10 +96,15 @@ public class UserDAOImpl implements IUserDAO {
                 user.setAddress(resultSet.getString("address"));
                 user.setCreatedOn(resultSet.getTimestamp("created_on"));
                 user.setUpdatedOn(resultSet.getTimestamp("update_on"));
+                for(Roles role : Roles.values()) {
+                    if(roleId == role.getId()) {
+                        user.setRole(role);
+                    }
+                }
                 userList.add(user);
             }
         } catch (SQLException | ClassNotFoundException e) {
-            throw new DBException(Message.Error.INTERNAL_ERROR,e);
+            throw new DBException(Message.Error.GENERIC_ERROR, e);
         } finally {
             DBConnector.resourceCloser(preparedStatement, resultSet, connection);
         }
@@ -114,7 +126,7 @@ public class UserDAOImpl implements IUserDAO {
             preparedStatement.setInt(6, userID);
             preparedStatement.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
-            throw new DBException(Message.Error.INTERNAL_ERROR, e);
+            throw new DBException(Message.Error.GENERIC_ERROR, e);
         }
     }
 

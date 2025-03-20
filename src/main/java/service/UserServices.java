@@ -1,18 +1,14 @@
 package service;
 
 import common.exception.ApplicationException;
-import common.util.ObjectMapperUtil;
 import controller.validation.SignUpValidator;
-import dto.APIResponse;
-import jakarta.servlet.http.HttpServletResponse;
+import dto.UserDTO;
 import mapper.UserMapper;
 import common.exception.DBException;
 import dao.IUserDAO;
 import dao.impl.UserDAOImpl;
-import dto.user_dto.UserSignUpDTO;
 import model.User;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -27,7 +23,7 @@ public class UserServices {
         userMapper = new UserMapper();
     }
 
-    public void saveUser(UserSignUpDTO userDTO) throws DBException {
+    public void saveUser(UserDTO userDTO) throws DBException {
         userDAO.saveUser(userMapper.toUser(userDTO));
     }
 
@@ -35,11 +31,11 @@ public class UserServices {
         return userDAO.getUser(email);
     }
 
-    public List<User> getAllUsers(int role_id) throws DBException {
-        return userDAO.getAllUsers(role_id);
+    public List<User> getAllUsers(int roleId) throws DBException {
+        return userDAO.getAllUsers(roleId);
     }
 
-    public void updateUser(UserSignUpDTO userDTO, int userId) throws DBException {
+    public void updateUser(UserDTO userDTO, int userId) throws DBException {
         userDAO.updateUser(userMapper.toUser(userDTO), userId);
     }
 
@@ -51,7 +47,7 @@ public class UserServices {
         return userDAO.isPhoneNumberExists(phoneNumber, roleId);
     }
 
-    public static void signUp(UserSignUpDTO userDTO) throws DBException, ApplicationException {
+    public static void signUp(UserDTO userDTO) throws DBException, ApplicationException {
         UserServices userServices = new UserServices();
         SignUpValidator.validate(userDTO);
         userServices.saveUser(userDTO);

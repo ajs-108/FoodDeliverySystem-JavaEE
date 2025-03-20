@@ -3,11 +3,9 @@ package controller.validation;
 import common.Message;
 import common.exception.ApplicationException;
 import common.exception.DBException;
-import dto.user_dto.UserLoginDTO;
+import dto.UserDTO;
 import model.User;
 import service.UserServices;
-
-import java.lang.reflect.Member;
 
 /**
  * LoginValidator class is used for controller.validation of Incoming data from form/UI.
@@ -23,13 +21,13 @@ public class LoginValidator {
      * @param user - data to be validated
      * @throws ApplicationException - thrown if incoming data violets the constraint
      */
-    public static void validateLogin(UserLoginDTO user) throws ApplicationException, DBException {
+    public static void validateLogin(UserDTO user) throws ApplicationException, DBException {
         User userFromDB = userServices.getUser(user.getEmail());
 
         if(userFromDB == null) {
             throw new ApplicationException(Message.User.INVALID_USER);
         }
-        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+        if (user.getEmail() == null || user.getEmail().isBlank()) {
             throw new ApplicationException(Message.User.MANDATORY);
         }
         if (!validate.checkEmail(user.getEmail())) {

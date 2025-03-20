@@ -8,8 +8,7 @@ import common.exception.DBException;
 import common.util.ObjectMapperUtil;
 import controller.validation.LoginValidator;
 import dto.APIResponse;
-import dto.user_dto.UserDTO;
-import dto.user_dto.UserLoginDTO;
+import dto.UserDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,31 +33,31 @@ public class LoginController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         UserMapper userMapper = new UserMapper();
-        UserLoginDTO userLogin = ObjectMapperUtil.toObject(request.getReader(), UserLoginDTO.class);
+        UserDTO userLogin = ObjectMapperUtil.toObject(request.getReader(), UserDTO.class);
+        UserServices userServices = new UserServices();
+        UserDTO userDTO;
         try {
             LoginValidator.validateLogin(userLogin);
+            userDTO = userMapper.toDTO(userServices.getUser(userLogin.getEmail()));
         } catch (ApplicationException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), null, HttpServletResponse.SC_BAD_REQUEST);
             return;
         } catch (DBException e) {
             e.printStackTrace();
-            sendResponse(response, e.getMessage(), null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            sendResponse(response,Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+            sendResponse(response,Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
         }
 
         HttpSession session = request.getSession();
-        UserServices userServices = new UserServices();
-        UserDTO userDTO = null;
-        try {
-            userDTO = userMapper.toDTO(userServices.getUser(userLogin.getEmail()));
-        } catch (DBException e) {
-            e.printStackTrace();
-        }
         session.setAttribute("user", userLogin.getEmail());
-        assert userDTO != null;
         session.setAttribute("userId", userDTO.getUserId());
-        sendResponse(response, "You are logged in", null, HttpServletResponse.SC_OK);
+        session.setAttribute(AppConstant.ROLE_ID, userDTO.getRole().getId());
+        sendResponse(response, Message.User.LOGIN, null, HttpServletResponse.SC_OK);
     }
 
     public void sendResponse(HttpServletResponse response, String message, Object data, int statusCode) throws IOException {

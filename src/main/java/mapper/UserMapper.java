@@ -1,8 +1,6 @@
 package mapper;
 
-import dto.user_dto.UserSignUpDTO;
-import dto.user_dto.UserDTO;
-import dto.user_dto.UserLoginDTO;
+import dto.UserDTO;
 import model.User;
 
 public class UserMapper {
@@ -12,14 +10,16 @@ public class UserMapper {
         userDTO.setFirstName(user.getFirstName());
         userDTO.setLastName(user.getLastName());
         userDTO.setEmail(user.getEmail());
+        userDTO.setPassword(user.getPassword());
         userDTO.setPhoneNumber(user.getPhoneNumber());
         userDTO.setAddress(user.getAddress());
         userDTO.setCreatedOn(user.getCreatedOn());
         userDTO.setUpdatedOn(user.getUpdatedOn());
+        userDTO.setRole(user.getRole());
         return userDTO;
     }
 
-    public User toUser(UserSignUpDTO userDTO) {
+    public User toUser(UserDTO userDTO) {
         User user = new User();
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
@@ -28,13 +28,6 @@ public class UserMapper {
         user.setPhoneNumber(userDTO.getPhoneNumber());
         user.setAddress(userDTO.getAddress());
         user.setRole(userDTO.getRole());
-        return user;
-    }
-
-    public User toUser(UserLoginDTO userLogin) {
-        User user = new User();
-        user.setEmail(userLogin.getEmail());
-        user.setPassword(userLogin.getPassword());
         return user;
     }
 }

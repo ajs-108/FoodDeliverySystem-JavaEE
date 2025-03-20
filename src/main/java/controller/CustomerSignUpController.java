@@ -1,12 +1,13 @@
 package controller;
 
 import common.AppConstant;
+import common.Message;
 import common.exception.ApplicationException;
 import common.exception.DBException;
 import dto.APIResponse;
 import common.enums.Roles;
 import common.util.ObjectMapperUtil;
-import dto.user_dto.UserSignUpDTO;
+import dto.UserDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,20 +30,24 @@ public class CustomerSignUpController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
-        UserSignUpDTO userSignUpDTO = ObjectMapperUtil.toObject(request.getReader(), UserSignUpDTO.class);
+        UserDTO userSignUpDTO = ObjectMapperUtil.toObject(request.getReader(), UserDTO.class);
         userSignUpDTO.setRole(Roles.ROLE_CUSTOMER);
         try {
             UserServices.signUp(userSignUpDTO);
         } catch (DBException e) {
             e.printStackTrace();
-            sendResponse(response, e.getMessage(), null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            sendResponse(response, Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
         } catch (ApplicationException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), null, HttpServletResponse.SC_BAD_REQUEST);
             return;
+        } catch (Exception e) {
+            e.printStackTrace();
+            sendResponse(response, Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
         }
-        sendResponse(response, "User created successfully", null, HttpServletResponse.SC_CREATED);
+        sendResponse(response, Message.User.USER_REGISTERED, null, HttpServletResponse.SC_CREATED);
     }
 
     public static void sendResponse(HttpServletResponse response, String message, Object data, int statusCode) throws IOException {

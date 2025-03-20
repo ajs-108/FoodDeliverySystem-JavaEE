@@ -9,7 +9,6 @@ public class Validator {
     public boolean checkPassword(String password) {
         flag = false;
         pattern = Pattern.compile("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[`~!@#$%^&*()_\\-+={}\\[\\]'\":;?/<>,.|]).{8,41}$");
-
         if (pattern.matcher(password).matches()) {
             flag = true;
         }
@@ -18,7 +17,7 @@ public class Validator {
 
     public boolean checkPhoneNo(String contactNo) {
         flag = false;
-        pattern = Pattern.compile("[1-9][0-9]{9}");
+        pattern = Pattern.compile("[1-9][\\d]{9}");
         if (pattern.matcher(contactNo).matches()) {
             flag = true;
         }
@@ -28,7 +27,6 @@ public class Validator {
     public boolean checkEmail(String email) {
         flag = false;
         pattern = Pattern.compile("^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+[.]?[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)+$");
-
         if (pattern.matcher(email).matches()) {
             flag = true;
         }

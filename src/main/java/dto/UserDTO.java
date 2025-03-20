@@ -1,4 +1,6 @@
-package dto.user_dto;
+package dto;
+
+import common.enums.Roles;
 
 import java.time.LocalDateTime;
 
@@ -8,10 +10,12 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private String email;
+    private String password;
     private String phoneNumber;
     private String address;
     private LocalDateTime createdOn;
     private LocalDateTime updatedOn;
+    private Roles role;
 
     public int getUserId() {
         return userId;
@@ -43,6 +47,14 @@ public class UserDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getPhoneNumber() {
@@ -77,17 +89,11 @@ public class UserDTO {
         this.updatedOn = updatedOn;
     }
 
-    @Override
-    public String toString() {
-        return "UserDTO{" +
-                "userId=" + userId +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", address='" + address + '\'' +
-                ", createdOn=" + createdOn +
-                ", updatedOn=" + updatedOn +
-                '}';
+    public Roles getRole() {
+        return role;
+    }
+
+    public void setRole(Roles role) {
+        this.role = role;
     }
 }

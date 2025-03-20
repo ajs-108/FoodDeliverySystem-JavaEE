@@ -1,21 +1,23 @@
 package controller;
 
 import common.AppConstant;
-import mapper.UserMapper;
+import common.Message;
 import common.enums.Roles;
+import common.exception.ApplicationException;
 import common.exception.DBException;
 import common.util.ObjectMapperUtil;
 import dto.APIResponse;
-import dto.user_dto.UserDTO;
+import dto.UserDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import mapper.UserMapper;
 import service.UserServices;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ListAllUsersController extends HttpServlet {
     @Override
@@ -24,6 +26,7 @@ public class ListAllUsersController extends HttpServlet {
         UserMapper userMapper = new UserMapper();
         UserServices userServices = new UserServices();
         List<UserDTO> listOfUsers;
+        HttpSession session;
         int roleId = 0;
 
         if (request.getServletPath().equals("/customers")) {
@@ -32,13 +35,28 @@ public class ListAllUsersController extends HttpServlet {
             roleId = Roles.ROLE_DELIVERY_PERSON.getId();
         }
         try {
+            session = request.getSession(false);
+            if (session == null) {
+                throw new ApplicationException(Message.Error.UNAUTHORIZED_ACCESS);
+            }
+            if ((int) session.getAttribute(AppConstant.ROLE_ID) != Roles.ROLE_SUPER_ADMIN.getId()) {
+                throw new ServletException(Message.Error.ACCESS_DENIED);
+            }
             listOfUsers = userServices.getAllUsers(roleId)
                     .stream()
                     .map(userMapper::toDTO)
-                    .collect(Collectors.toList());
+                    .toList();
         } catch (DBException e) {
             e.printStackTrace();
-            sendResponse(response, e.getMessage(), null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            sendResponse(response, Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
+        } catch (ApplicationException e) {
+            e.printStackTrace();
+            sendResponse(response, e.getMessage(), null, HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+            sendResponse(response, Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
         }
         sendResponse(response, null, listOfUsers, HttpServletResponse.SC_OK);

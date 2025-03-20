@@ -21,36 +21,36 @@ public class CategoryDAOImpl implements ICategoryDAO {
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, category.getCategoryName());
         } catch (SQLException | ClassNotFoundException e) {
-            throw new DBException(Message.Error.INTERNAL_ERROR, e);
+            throw new DBException(Message.Error.GENERIC_ERROR, e);
         } finally {
             DBConnector.resourceCloser(preparedStatement, null, connection);
         }
     }
 
     @Override
-    public Category getCategory(int category_id) throws DBException {
+    public Category getCategory(int categoryId) throws DBException {
         Connection connection = null;
-        Category category = new Category();
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         String sql = "Select * from category where category_id = ?";
         try {
             connection = DBConnector.getInstance().getConnection();
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, category_id);
+            preparedStatement.setInt(1, categoryId);
             resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()) {
-                category = new Category();
+            if (resultSet.next()) {
+                Category category = new Category();
                 category.setCategoryId(resultSet.getInt("category_id"));
                 category.setCategoryName(resultSet.getString("category_name"));
+                return category;
             }
         } catch (SQLException | ClassNotFoundException e) {
-            throw new DBException(Message.Error.INTERNAL_ERROR, e);
+            throw new DBException(Message.Error.GENERIC_ERROR, e);
         } finally {
             DBConnector.resourceCloser(preparedStatement, resultSet, connection);
         }
-        return category;
+        return null;
     }
 
     @Override
@@ -72,7 +72,7 @@ public class CategoryDAOImpl implements ICategoryDAO {
                 categoryList.add(category);
             }
         } catch (SQLException | ClassNotFoundException e) {
-            throw new DBException(Message.Error.INTERNAL_ERROR, e);
+            throw new DBException(Message.Error.GENERIC_ERROR, e);
         } finally {
             DBConnector.resourceCloser(statement, resultSet, connection);
         }
