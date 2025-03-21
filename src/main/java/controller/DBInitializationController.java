@@ -1,16 +1,22 @@
 package controller;
 
+import config.DBConnector;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
-import config.DBConnector;
 
 public class DBInitializationController extends HttpServlet {
     @Override
     public void init() throws ServletException {
-        String url = getServletConfig().getInitParameter("url");
-        String driver = getServletConfig().getInitParameter("driver");
-        String username = getServletConfig().getInitParameter("user");
-        String password = getServletConfig().getInitParameter("password");
+        ServletContext context = getServletConfig().getServletContext();
+        String url = context.getInitParameter("url");
+        String driver = context.getInitParameter("driver");
+        String username = context.getInitParameter("user");
+        String password = context.getInitParameter("password");
         DBConnector.getInstance(url, driver, username, password);
+    }
+
+    public ServletContext getServletContext() {
+        return getServletContext();
     }
 }

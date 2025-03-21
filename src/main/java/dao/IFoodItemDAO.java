@@ -3,7 +3,6 @@ package dao;
 import common.exception.DBException;
 import model.FoodItem;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public interface IFoodItemDAO {

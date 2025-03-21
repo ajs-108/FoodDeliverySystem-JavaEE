@@ -1,21 +1,37 @@
 package controller.validation;
 
+import common.Message;
 import common.exception.ApplicationException;
-import model.FoodItem;
+import dto.FoodItemDTO;
 
 public class FoodItemValidator {
-    public static void validateFoodItem(FoodItem foodItem) throws ApplicationException {
-        if(foodItem.getFoodName() == null || foodItem.getFoodName().isBlank()) {
-            throw new ApplicationException("Food name is Mandatory");
+    private static final int FOOD_NAME_LENGTH = 30;
+    private static final int FOOD_DESCRIPTION_LENGTH = 30;
+
+    public static void validateFoodItem(FoodItemDTO foodItemDTO) throws ApplicationException {
+        if (foodItemDTO.getFoodName() == null || foodItemDTO.getFoodName().isBlank()) {
+            throw new ApplicationException(Message.Common.MANDATORY);
         }
-        if(foodItem.getFoodDescription() == null || foodItem.getFoodDescription().isBlank()) {
-            throw new ApplicationException("Food description is Mandatory");
+        if (foodItemDTO.getFoodName().length() > FOOD_NAME_LENGTH) {
+            throw new ApplicationException(Message.FoodItem.FOOD_NAME_LENGTH);
         }
-        if(foodItem.getPrice() == 0) {
-            throw new ApplicationException("Food Item Price is Mandatory");
+        if (foodItemDTO.getFoodDescription() == null || foodItemDTO.getFoodDescription().isBlank()) {
+            throw new ApplicationException(Message.Common.MANDATORY);
         }
-        if(Double.isNaN(foodItem.getPrice())) {
-            throw new ApplicationException("Value should in Decimal number");
+        if (foodItemDTO.getFoodName().length() > FOOD_DESCRIPTION_LENGTH) {
+            throw new ApplicationException(Message.FoodItem.FOOD_DESCRIPTION_LENGTH);
+        }
+        if (foodItemDTO.getPrice() == 0) {
+            throw new ApplicationException(Message.Common.MANDATORY);
+        }
+        if (Double.isNaN(foodItemDTO.getPrice())) {
+            throw new ApplicationException(Message.FoodItem.PRICE);
+        }
+        if (foodItemDTO.getCategory() == null) {
+            throw new ApplicationException(Message.Common.MANDATORY);
+        }
+        if (foodItemDTO.getImagePath() == null || foodItemDTO.getImagePath().isBlank()) {
+            throw new ApplicationException(Message.Common.MANDATORY);
         }
     }
 }

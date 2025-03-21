@@ -1,8 +1,8 @@
 package service;
 
 import common.exception.DBException;
-import dao.impl.CategoryDAOImpl;
 import dao.ICategoryDAO;
+import dao.impl.CategoryDAOImpl;
 import model.Category;
 
 import java.util.List;
@@ -14,8 +14,10 @@ public class CategoryServices {
         this.categoryDAO = new CategoryDAOImpl();
     }
 
-    public void saveCategory(Category category) throws DBException {
-        categoryDAO.saveCategory(category);
+    public void saveCategory(List<Category> categoryList) throws DBException {
+        for (Category category : categoryList) {
+            categoryDAO.saveCategory(category);
+        }
     }
 
     public List<Category> getAllCategories() throws DBException {

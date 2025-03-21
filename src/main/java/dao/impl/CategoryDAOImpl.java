@@ -2,9 +2,9 @@ package dao.impl;
 
 import common.Message;
 import common.exception.DBException;
+import config.DBConnector;
 import dao.ICategoryDAO;
 import model.Category;
-import config.DBConnector;
 
 import java.sql.*;
 import java.util.LinkedList;

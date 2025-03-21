@@ -4,7 +4,6 @@ import common.Message;
 import common.exception.ApplicationException;
 import common.exception.DBException;
 import dto.UserDTO;
-import model.User;
 import service.UserServices;
 
 /**
@@ -12,31 +11,25 @@ import service.UserServices;
  * It throws ApplicationException if the incoming data violets the constraints.
  */
 public class LoginValidator {
-    private static Validator validate = new Validator();
     private static UserServices userServices = new UserServices();
 
     /**
      * This method is used to validate the incoming SignUp form data.
      *
-     * @param user - data to be validated
+     * @param userDTO - data to be validated
      * @throws ApplicationException - thrown if incoming data violets the constraint
      */
-    public static void validateLogin(UserDTO user) throws ApplicationException, DBException {
-        User userFromDB = userServices.getUser(user.getEmail());
-
-        if(userFromDB == null) {
-            throw new ApplicationException(Message.User.INVALID_USER);
+    public static void validateLogin(UserDTO userDTO) throws ApplicationException, DBException {
+        if(!userServices.isUserValid(userDTO.getEmail())) {
+            throw new ApplicationException(Message.User.NO_SUCH_USER);
         }
-        if (user.getEmail() == null || user.getEmail().isBlank()) {
-            throw new ApplicationException(Message.User.MANDATORY);
+        if (userDTO.getEmail() == null || userDTO.getEmail().isBlank()) {
+            throw new ApplicationException(Message.Common.MANDATORY);
         }
-        if (!validate.checkEmail(user.getEmail())) {
-            throw new ApplicationException(Message.User.INVALID_EMAIL);
+        if (userDTO.getPassword() == null || userDTO.getPassword().isBlank()) {
+            throw new ApplicationException(Message.Common.MANDATORY);
         }
-        if (user.getPassword() == null || user.getPassword().isBlank()) {
-            throw new ApplicationException(Message.User.MANDATORY);
-        }
-        if (!userFromDB.getPassword().equals(user.getPassword())) {
+        if (!userServices.getUserLoginCredentials(userDTO.getEmail()).getPassword().equals(userDTO.getPassword())) {
             throw new ApplicationException(Message.User.INCORRECT_LOGIN_CREDENTIALS);
         }
     }

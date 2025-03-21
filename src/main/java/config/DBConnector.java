@@ -39,7 +39,6 @@ public class DBConnector {
     }
 
     public static void resourceCloser(Statement statement, ResultSet resultSet, Connection connection) throws DBException {
-
         try {
             if (statement != null) {
                 statement.close();
