@@ -4,6 +4,10 @@
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
          version="5.0">
 
+    <listener>
+        <listener-class>com.app.config.FlywayConfig</listener-class>
+    </listener>
+
     <context-param>
         <param-name>url</param-name>
         <param-value>jdbc:mysql://localhost:3306/food_delivery_db</param-value>
@@ -26,7 +30,7 @@
 
     <servlet>
         <servlet-name>login</servlet-name>
-        <servlet-class>controller.LoginController</servlet-class>
+        <servlet-class>com.app.controller.LoginController</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -36,7 +40,7 @@
 
     <servlet>
         <servlet-name>logout</servlet-name>
-        <servlet-class>controller.LogoutController</servlet-class>
+        <servlet-class>com.app.controller.LogoutController</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -46,7 +50,7 @@
 
     <servlet>
         <servlet-name>DBcontroller</servlet-name>
-        <servlet-class>controller.DBInitializationController</servlet-class>
+        <servlet-class>com.app.controller.DBInitializationController</servlet-class>
         <load-on-startup>0</load-on-startup>
     </servlet>
 
@@ -57,7 +61,7 @@
 
     <servlet>
         <servlet-name>Customersignup</servlet-name>
-        <servlet-class>controller.CustomerSignUpController</servlet-class>
+        <servlet-class>com.app.controller.CustomerSignUpController</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -66,36 +70,74 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>Deliverypersonsignup</servlet-name>
-        <servlet-class>controller.AddDeliveryPersonController</servlet-class>
+        <servlet-name>AddDeliveryperson</servlet-name>
+        <servlet-class>com.app.controller.AddDeliveryPersonController</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>Deliverypersonsignup</servlet-name>
+        <servlet-name>AddDeliveryperson</servlet-name>
         <url-pattern>/deliveryPersonSignUp</url-pattern>
     </servlet-mapping>
 
     <servlet>
         <servlet-name>Usercontroller</servlet-name>
-        <servlet-class>controller.UserController</servlet-class>
+        <servlet-class>com.app.controller.UserController</servlet-class>
     </servlet>
 
     <servlet-mapping>
         <servlet-name>Usercontroller</servlet-name>
-        <url-pattern>/customer</url-pattern>
-        <url-pattern>/deliveryPerson</url-pattern>
-        <url-pattern>/admin</url-pattern>
+        <url-pattern>/user</url-pattern>
     </servlet-mapping>
 
     <servlet>
         <servlet-name>Userscontroller</servlet-name>
-        <servlet-class>controller.ListAllUsersController</servlet-class>
+        <servlet-class>com.app.controller.ListAllUsersController</servlet-class>
     </servlet>
 
     <servlet-mapping>
         <servlet-name>Userscontroller</servlet-name>
         <url-pattern>/customers</url-pattern>
         <url-pattern>/deliveryPersons</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Addcategory</servlet-name>
+        <servlet-class>com.app.controller.AddCategoryController</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Addcategory</servlet-name>
+        <url-pattern>/addCategory</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Listallcategories</servlet-name>
+        <servlet-class>com.app.controller.ListAllCategoryController</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Listallcategories</servlet-name>
+        <url-pattern>/categories</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Addfooditem</servlet-name>
+        <servlet-class>com.app.controller.AddFoodItemController</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>Addfooditem</servlet-name>
+        <url-pattern>/addFoodItem</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Listallfooditems</servlet-name>
+        <servlet-class>com.app.controller.ListAllFoodItemsController</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Listallfooditems</servlet-name>
+        <url-pattern>/foodItems</url-pattern>
     </servlet-mapping>
 
 </web-app>
