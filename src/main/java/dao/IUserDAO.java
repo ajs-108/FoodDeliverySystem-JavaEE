@@ -14,7 +14,5 @@ public interface IUserDAO {
 
     void updateUser(User user, int userID) throws DBException;
 
-    boolean isEmailExists(String email, int roleId) throws DBException;
-
-    boolean isPhoneNumberExists(String phoneNumber, int roleId) throws DBException;
+    User getUserLoginCredentials(String email) throws DBException;
 }

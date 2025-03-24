@@ -8,7 +8,7 @@ public class Validator {
 
     public boolean checkPassword(String password) {
         flag = false;
-        pattern = Pattern.compile("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[`~!@#$%^&*()_\\-+={}\\[\\]'\":;?/<>,.|]).{8,41}$");
+        pattern = Pattern.compile("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[`~!@#$%^&*()_\\-+={}\\[\\]'\":;?/<>,.|]).{8,16}$");
         if (pattern.matcher(password).matches()) {
             flag = true;
         }

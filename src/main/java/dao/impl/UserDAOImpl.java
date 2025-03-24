@@ -13,7 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 public class UserDAOImpl implements IUserDAO {
     @Override
@@ -29,10 +28,10 @@ public class UserDAOImpl implements IUserDAO {
             preparedStatement.setString(4, user.getPassword());
             preparedStatement.setString(5, user.getPhoneNumber());
             preparedStatement.setString(6, user.getAddress());
-            preparedStatement.setInt(7, user.getRole().getId());
+            preparedStatement.setInt(7, user.getRole().getRoleId());
             preparedStatement.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
-            throw new DBException(Message.Error.GENERIC_ERROR,e);
+            throw new DBException(Message.Error.GENERIC_ERROR, e);
         }
     }
 
@@ -54,20 +53,12 @@ public class UserDAOImpl implements IUserDAO {
                 user.setFirstName(resultSet.getString("first_name"));
                 user.setLastName(resultSet.getString("last_name"));
                 user.setEmail(resultSet.getString("email"));
-                user.setPassword(resultSet.getString("password_"));
                 user.setPhoneNumber(resultSet.getString("phone_number"));
                 user.setAddress(resultSet.getString("address"));
-                user.setCreatedOn(resultSet.getTimestamp("created_on"));
-                user.setUpdatedOn(resultSet.getTimestamp("update_on"));
-                int roleId = resultSet.getInt("role_id");
-                for(Roles role : Roles.values()) {
-                    if(roleId == role.getId()) {
-                        user.setRole(role);
-                    }
-                }
+                user.setRole(Roles.fromId(resultSet.getInt("role_id")));
             }
         } catch (SQLException | ClassNotFoundException e) {
-            throw new DBException(Message.Error.GENERIC_ERROR,e);
+            throw new DBException(Message.Error.GENERIC_ERROR, e);
         } finally {
             DBConnector.resourceCloser(preparedStatement, resultSet, connection);
         }
@@ -96,8 +87,8 @@ public class UserDAOImpl implements IUserDAO {
                 user.setAddress(resultSet.getString("address"));
                 user.setCreatedOn(resultSet.getTimestamp("created_on"));
                 user.setUpdatedOn(resultSet.getTimestamp("update_on"));
-                for(Roles role : Roles.values()) {
-                    if(roleId == role.getId()) {
+                for (Roles role : Roles.values()) {
+                    if (roleId == role.getRoleId()) {
                         user.setRole(role);
                     }
                 }
@@ -131,24 +122,27 @@ public class UserDAOImpl implements IUserDAO {
     }
 
     @Override
-    public boolean isEmailExists(String email, int roleId) throws DBException {
-        List<User> userList = getAllUsers(roleId);
-        for (User u : userList) {
-            if (Objects.equals(u.getEmail(), email)) {
-                return true;
+    public User getUserLoginCredentials(String email) throws DBException {
+        String sql = "select password_, email from user_ where email = ?";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = DBConnector.getInstance().getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, email);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                User user = new User();
+                user.setEmail(resultSet.getString("email"));
+                user.setPassword(resultSet.getString("password_"));
+                return user;
             }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new DBException(Message.Error.GENERIC_ERROR, e);
+        } finally {
+            DBConnector.resourceCloser(preparedStatement, resultSet, connection);
         }
-        return false;
-    }
-
-    @Override
-    public boolean isPhoneNumberExists(String phoneNumber, int roleId) throws DBException {
-        List<User> userList = getAllUsers(roleId);
-        for (User u : userList) {
-            if (Objects.equals(u.getPhoneNumber(), phoneNumber)) {
-                return true;
-            }
-        }
-        return false;
+        return null;
     }
 }

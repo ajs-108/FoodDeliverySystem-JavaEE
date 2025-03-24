@@ -5,13 +5,22 @@ public enum Roles {
     ROLE_CUSTOMER(1002),
     ROLE_DELIVERY_PERSON(1003);
 
-    private int id;
+    private int roleId;
 
-    Roles(int id) {
-        this.id = id;
+    Roles(int roleId) {
+        this.roleId = roleId;
     }
 
-    public int getId() {
-        return id;
+    public static Roles fromId(int roleId) {
+        for (Roles role : Roles.values()) {
+            if (roleId == role.getRoleId()) {
+                return role;
+            }
+        }
+        return null;
+    }
+
+    public int getRoleId() {
+        return roleId;
     }
 }

@@ -1,7 +1,6 @@
 package controller;
 
 import common.AppConstant;
-import mapper.UserMapper;
 import common.Message;
 import common.exception.ApplicationException;
 import common.exception.DBException;
@@ -22,6 +21,8 @@ import java.io.IOException;
  * Login Servlet ensures that a valid user is accessing the application.
  */
 public class LoginController extends HttpServlet {
+    private UserServices userServices = new UserServices();
+
     /**
      * The doPost method is used to get the login credentials through request and check if provided login credentials are correct or not.
      * If correct it gives access to the application.
@@ -32,32 +33,23 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
-        UserMapper userMapper = new UserMapper();
-        UserDTO userLogin = ObjectMapperUtil.toObject(request.getReader(), UserDTO.class);
-        UserServices userServices = new UserServices();
-        UserDTO userDTO;
         try {
+            UserDTO userLogin = ObjectMapperUtil.toObject(request.getReader(), UserDTO.class);
             LoginValidator.validateLogin(userLogin);
-            userDTO = userMapper.toDTO(userServices.getUser(userLogin.getEmail()));
+            UserDTO userDTO = userServices.getUser(userLogin.getEmail());
+            HttpSession session = request.getSession();
+            session.setAttribute("user", userDTO);
+            sendResponse(response, Message.User.LOGIN, null, HttpServletResponse.SC_OK);
         } catch (ApplicationException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), null, HttpServletResponse.SC_BAD_REQUEST);
-            return;
         } catch (DBException e) {
             e.printStackTrace();
-            sendResponse(response,Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return;
+            sendResponse(response, Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
             e.printStackTrace();
-            sendResponse(response,Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return;
+            sendResponse(response, Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-
-        HttpSession session = request.getSession();
-        session.setAttribute("user", userLogin.getEmail());
-        session.setAttribute("userId", userDTO.getUserId());
-        session.setAttribute(AppConstant.ROLE_ID, userDTO.getRole().getId());
-        sendResponse(response, Message.User.LOGIN, null, HttpServletResponse.SC_OK);
     }
 
     public void sendResponse(HttpServletResponse response, String message, Object data, int statusCode) throws IOException {

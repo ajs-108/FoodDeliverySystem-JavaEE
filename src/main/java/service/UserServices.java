@@ -1,15 +1,16 @@
 package service;
 
+import common.enums.Roles;
 import common.exception.ApplicationException;
-import controller.validation.SignUpValidator;
-import dto.UserDTO;
-import mapper.UserMapper;
 import common.exception.DBException;
+import controller.validation.SignUpValidator;
 import dao.IUserDAO;
 import dao.impl.UserDAOImpl;
-import model.User;
+import dto.UserDTO;
+import mapper.UserMapper;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * User Service class contains the methods to handle the operation of database such as insert, fetch, update
@@ -23,16 +24,29 @@ public class UserServices {
         userMapper = new UserMapper();
     }
 
+    public void addDeliveryPerson(UserDTO userDTO) throws DBException, ApplicationException {
+        userDTO.setRole(Roles.ROLE_DELIVERY_PERSON);
+        signUp(userDTO);
+    }
+
+    public void signUp(UserDTO userDTO) throws DBException, ApplicationException {
+        SignUpValidator.validate(userDTO);
+        saveUser(userDTO);
+    }
+
     public void saveUser(UserDTO userDTO) throws DBException {
         userDAO.saveUser(userMapper.toUser(userDTO));
     }
 
-    public User getUser(String email) throws DBException {
-        return userDAO.getUser(email);
+    public UserDTO getUser(String email) throws DBException {
+        return userMapper.toDTO(userDAO.getUser(email));
     }
 
-    public List<User> getAllUsers(int roleId) throws DBException {
-        return userDAO.getAllUsers(roleId);
+    public List<UserDTO> getAllUsers(int roleId) throws DBException {
+        return userDAO.getAllUsers(roleId)
+                .stream()
+                .map(userMapper::toDTO)
+                .toList();
     }
 
     public void updateUser(UserDTO userDTO, int userId) throws DBException {
@@ -40,18 +54,30 @@ public class UserServices {
     }
 
     public boolean isEmailExists(String email, int roleId) throws DBException {
-        return userDAO.isEmailExists(email, roleId);
+        List<UserDTO> userList = getAllUsers(roleId);
+        for (UserDTO u : userList) {
+            if (Objects.equals(u.getEmail(), email)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean isPhoneNumberExists(String phoneNumber, int roleId) throws DBException {
-        return userDAO.isPhoneNumberExists(phoneNumber, roleId);
+        List<UserDTO> userList = getAllUsers(roleId);
+        for (UserDTO u : userList) {
+            if (Objects.equals(u.getPhoneNumber(), phoneNumber)) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public static void signUp(UserDTO userDTO) throws DBException, ApplicationException {
-        UserServices userServices = new UserServices();
-        SignUpValidator.validate(userDTO);
-        userServices.saveUser(userDTO);
+    public UserDTO getUserLoginCredentials(String email) throws DBException {
+        return userMapper.toDTO(userDAO.getUserLoginCredentials(email));
     }
 
-
+    public boolean isUserValid(String email) throws DBException {
+        return userDAO.getUserLoginCredentials(email) != null;
+    }
 }

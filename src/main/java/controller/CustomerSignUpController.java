@@ -2,11 +2,11 @@ package controller;
 
 import common.AppConstant;
 import common.Message;
+import common.enums.Roles;
 import common.exception.ApplicationException;
 import common.exception.DBException;
-import dto.APIResponse;
-import common.enums.Roles;
 import common.util.ObjectMapperUtil;
+import dto.APIResponse;
 import dto.UserDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -20,6 +20,16 @@ import java.io.IOException;
  * Sign up Servlet is used for creating an account for the user.
  */
 public class CustomerSignUpController extends HttpServlet {
+    private UserServices userServices = new UserServices();
+
+    public static void sendResponse(HttpServletResponse response, String message, Object data, int statusCode) throws IOException {
+        response.setStatus(statusCode);
+        APIResponse apiResponse = new APIResponse();
+        apiResponse.setMessage(message);
+        apiResponse.setData(data);
+        response.getWriter().println(ObjectMapperUtil.toString(apiResponse));
+    }
+
     /**
      * The doPost method is used by Servlet to receive the form data from the Sign-Up form and store it in the database
      * after verifying the data that has come.
@@ -30,31 +40,20 @@ public class CustomerSignUpController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
-        UserDTO userSignUpDTO = ObjectMapperUtil.toObject(request.getReader(), UserDTO.class);
-        userSignUpDTO.setRole(Roles.ROLE_CUSTOMER);
         try {
-            UserServices.signUp(userSignUpDTO);
+            UserDTO userSignUpDTO = ObjectMapperUtil.toObject(request.getReader(), UserDTO.class);
+            userSignUpDTO.setRole(Roles.ROLE_CUSTOMER);
+            userServices.signUp(userSignUpDTO);
+            sendResponse(response, Message.User.USER_REGISTERED, null, HttpServletResponse.SC_CREATED);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return;
         } catch (ApplicationException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), null, HttpServletResponse.SC_BAD_REQUEST);
-            return;
         } catch (Exception e) {
             e.printStackTrace();
             sendResponse(response, Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return;
         }
-        sendResponse(response, Message.User.USER_REGISTERED, null, HttpServletResponse.SC_CREATED);
-    }
-
-    public static void sendResponse(HttpServletResponse response, String message, Object data, int statusCode) throws IOException {
-        response.setStatus(statusCode);
-        APIResponse apiResponse = new APIResponse();
-        apiResponse.setMessage(message);
-        apiResponse.setData(data);
-        response.getWriter().println(ObjectMapperUtil.toString(apiResponse));
     }
 }

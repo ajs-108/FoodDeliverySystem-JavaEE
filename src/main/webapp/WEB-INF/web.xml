@@ -4,6 +4,26 @@
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
          version="5.0">
 
+    <context-param>
+        <param-name>url</param-name>
+        <param-value>jdbc:mysql://localhost:3306/food_delivery_db</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>driver</param-name>
+        <param-value>com.mysql.cj.jdbc.Driver</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>user</param-name>
+        <param-value>root</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>password</param-name>
+        <param-value>password123#</param-value>
+    </context-param>
+
     <servlet>
         <servlet-name>login</servlet-name>
         <servlet-class>controller.LoginController</servlet-class>
@@ -44,6 +64,8 @@
             <param-name>password</param-name>
             <param-value>password123#</param-value>
         </init-param>
+=======
+>>>>>>> 4891bd9eac260359d9622f5aa0c2a65881658c2e
     </servlet>
 
     <servlet-mapping>
@@ -63,7 +85,7 @@
 
     <servlet>
         <servlet-name>Deliverypersonsignup</servlet-name>
-        <servlet-class>controller.DeliveryPersonSignUpController</servlet-class>
+        <servlet-class>controller.AddDeliveryPersonController</servlet-class>
     </servlet>
 
     <servlet-mapping>
