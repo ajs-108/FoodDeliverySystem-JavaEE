@@ -2,8 +2,10 @@ package com.app.config;
 
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.annotation.WebListener;
 import org.flywaydb.core.Flyway;
 
+@WebListener
 public class FlywayConfig implements ServletContextListener {
 
     @Override

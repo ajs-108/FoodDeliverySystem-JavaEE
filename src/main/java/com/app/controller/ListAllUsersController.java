@@ -11,6 +11,7 @@ import com.app.dto.APIResponse;
 import com.app.dto.UserDTO;
 import com.app.service.UserServices;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,6 +19,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+@WebServlet(
+        name = "Listallusers",
+        urlPatterns = {
+                "/customers",
+                "/deliveryPersons"
+        })
 public class ListAllUsersController extends HttpServlet {
     private UserServices userServices = new UserServices();
 

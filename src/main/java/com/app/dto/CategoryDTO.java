@@ -1,5 +1,8 @@
 package com.app.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CategoryDTO {
     private int categoryId;
     private String categoryName;

@@ -6,6 +6,8 @@ import com.app.common.exception.DBException;
 import com.app.dto.UserDTO;
 import com.app.service.UserServices;
 
+import java.util.Objects;
+
 /**
  * LoginValidator class is used for com.app.controller.validation of Incoming data from form/UI.
  * It throws ApplicationException if the incoming data violets the constraints.
@@ -29,7 +31,7 @@ public class LoginValidator {
         if (userDTO.getPassword() == null || userDTO.getPassword().isBlank()) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
-        if (!userServices.getUserLoginCredentials(userDTO.getEmail()).getPassword().equals(userDTO.getPassword())) {
+        if (!Objects.equals(userServices.getUserLoginCredentials(userDTO.getEmail()).getPassword(), userDTO.getPassword())) {
             throw new ApplicationException(Message.User.INCORRECT_LOGIN_CREDENTIALS);
         }
     }

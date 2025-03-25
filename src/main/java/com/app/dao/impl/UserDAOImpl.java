@@ -1,6 +1,5 @@
 package com.app.dao.impl;
 
-import com.app.common.Message;
 import com.app.common.enums.Roles;
 import com.app.common.exception.DBException;
 import com.app.config.DBConnector;
@@ -105,16 +104,15 @@ public class UserDAOImpl implements IUserDAO {
     @Override
     public void updateUser(User user, int userID) throws DBException {
         String sql1 = """
-                update user_ set first_name = ?, last_name = ?, password_ = ?, phone_number = ?, address = ?
+                update user_ set first_name = ?, last_name = ?, phone_number = ?, address = ?
                 where user_id = ?;
                 """;
         try (Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql1)) {
             preparedStatement.setString(1, user.getFirstName());
             preparedStatement.setString(2, user.getLastName());
-            preparedStatement.setString(3, user.getPassword());
-            preparedStatement.setString(4, user.getPhoneNumber());
-            preparedStatement.setString(5, user.getAddress());
-            preparedStatement.setInt(6, userID);
+            preparedStatement.setString(3, user.getPhoneNumber());
+            preparedStatement.setString(4, user.getAddress());
+            preparedStatement.setInt(5, userID);
             preparedStatement.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
             throw new DBException(e);
@@ -144,5 +142,20 @@ public class UserDAOImpl implements IUserDAO {
             DBConnector.resourceCloser(preparedStatement, resultSet, connection);
         }
         return null;
+    }
+
+    @Override
+    public void updatePassword(String email , String newPassword) throws DBException {
+        String sql1 = """
+                update user_ set password_ = ?
+                where email = ?;
+                """;
+        try (Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql1)) {
+            preparedStatement.setString(1, newPassword);
+            preparedStatement.setString(2, email);
+            preparedStatement.executeUpdate();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new DBException(e);
+        }
     }
 }

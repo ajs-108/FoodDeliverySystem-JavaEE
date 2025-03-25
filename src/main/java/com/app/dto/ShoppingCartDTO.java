@@ -1,8 +1,11 @@
-package com.app.model;
+package com.app.dto;
+
+import com.app.model.FoodItem;
+import com.app.model.User;
 
 import java.util.List;
 
-public class ShoppingCart {
+public class ShoppingCartDTO {
     private FoodItem foodItem;
     private User user;
     private int quantity;

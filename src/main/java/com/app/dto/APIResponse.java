@@ -1,8 +1,12 @@
 package com.app.dto;
 
+import com.fasterxml.jackson.annotation.JacksonAnnotation;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * APIResponse Contains the Response that is to be sent over as HttpResponse to client
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class APIResponse {
     private String message;
     private Object data;

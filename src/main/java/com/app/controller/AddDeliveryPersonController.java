@@ -11,12 +11,16 @@ import com.app.dto.APIResponse;
 import com.app.dto.UserDTO;
 import com.app.service.UserServices;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+@WebServlet(
+        name = "AddDeliveryperson",
+        value = "/deliveryPersonSignUp")
 public class AddDeliveryPersonController extends HttpServlet {
     private UserServices userServices = new UserServices();
 

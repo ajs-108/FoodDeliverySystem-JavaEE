@@ -80,4 +80,8 @@ public class UserServices {
     public boolean isUserValid(String email) throws DBException {
         return userDAO.getUserLoginCredentials(email) != null;
     }
+
+    public void changePassword(UserDTO userDTO) throws DBException {
+        userDAO.updatePassword(userDTO.getEmail(), userDTO.getNewPassword());
+    }
 }

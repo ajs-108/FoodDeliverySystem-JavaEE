@@ -10,12 +10,16 @@ import com.app.dto.APIResponse;
 import com.app.dto.CategoryDTO;
 import com.app.service.CategoryServices;
 import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import javax.swing.*;
 import java.io.IOException;
 import java.util.List;
 
+@WebServlet(
+        name = "Listallcategories",
+        value = "/categories")
 public class ListAllCategoryController extends HttpServlet {
     private CategoryServices categoryServices = new CategoryServices();
 

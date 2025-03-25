@@ -34,7 +34,10 @@ public class Message {
         public static final String INCORRECT_LOGIN_CREDENTIALS = "Login Credentials are incorrect.";
         public static final String USER_REGISTERED = "User Registered successfully";
         public static final String DELIVERY_PERSON_REGISTERED = "Delivery Person Registered successfully";
-        public static final String USER_INFO_UPDATES = "User Information is updated successfully";
+        public static final String USER_INFO_UPDATED = "User Information is updated successfully";
+        public static final String INCORRECT_PASSWORD = "The password you have entered is incorrect.";
+        public static final String SAME_PASSWORD = "New password is the same as previous password.";
+        public static final String PASSWORD_UPDATED = "Password updated successfully";
     }
 
     public static class FoodItem {
@@ -42,5 +45,6 @@ public class Message {
         public static final String FOOD_DESCRIPTION_LENGTH = "Description should be less than or equal to 255 characters";
         public static final String PRICE = "Value should be Decimal/Integer number";
         public static final String CATEGORY_NAME_LENGTH = "Category name should be less than 40";
+        public static final String FOOD_ITEM_UPDATED = "Food Item information is updated successfully";
     }
 }

@@ -1,9 +1,11 @@
 package com.app.dto;
 
 import com.app.common.enums.Roles;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO {
 
     private int userId;
@@ -11,6 +13,7 @@ public class UserDTO {
     private String lastName;
     private String email;
     private String password;
+    private String newPassword;
     private String phoneNumber;
     private String address;
     private LocalDateTime createdOn;
@@ -59,6 +62,14 @@ public class UserDTO {
 
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 
     public void setPhoneNumber(String phoneNumber) {

@@ -15,4 +15,6 @@ public interface IUserDAO {
     void updateUser(User user, int userID) throws DBException;
 
     User getUserLoginCredentials(String email) throws DBException;
+
+    void updatePassword(String email, String newPassword) throws DBException;
 }

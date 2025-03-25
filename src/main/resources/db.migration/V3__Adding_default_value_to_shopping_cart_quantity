@@ -1,0 +1,2 @@
+ALTER TABLE shopping_cart
+    MODIFY COLUMN quantity SMALLINT NOT NULL DEFAULT 1;

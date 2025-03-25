@@ -6,32 +6,27 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
-import com.app.controller.validation.FoodItemValidator;
 import com.app.dto.APIResponse;
 import com.app.dto.FoodItemDTO;
-import com.app.model.FoodItem;
 import com.app.service.FoodItemServices;
 import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 
-@WebServlet(
-        name = "Addfooditem",
-        value = "/addFoodItem")
-public class AddFoodItemController extends HttpServlet {
+@WebServlet(name = "Updatefooditem", value = "/foodItem/{id}")
+public class UpdateFoodItemController extends HttpServlet {
     private FoodItemServices foodItemServices = new FoodItemServices();
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
             FoodItemDTO foodItemDTO = ObjectMapperUtil.toObject(request.getReader(), FoodItemDTO.class);
-            FoodItemValidator.validateFoodItem(foodItemDTO);
-            foodItemServices.createFoodItem(foodItemDTO);
-            sendResponse(response, null, Message.Common.ENTRY_ADDED, null, HttpServletResponse.SC_CREATED);
+            foodItemServices.updateFoodItem(foodItemDTO, foodItemDTO.getFoodItemId());
+            sendResponse(response, null, Message.FoodItem.FOOD_ITEM_UPDATED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -44,11 +39,11 @@ public class AddFoodItemController extends HttpServlet {
         }
     }
 
-    public void sendResponse(HttpServletResponse response, String techMessage, String message, Object data, int status) throws IOException {
+    public static void sendResponse(HttpServletResponse response, String techMessage, String message, Object data, int statusCode) throws IOException {
+        response.setStatus(statusCode);
         APIResponse apiResponse = new APIResponse();
         apiResponse.setMessage(message);
         apiResponse.setData(data);
-        response.setStatus(status);
-        response.getWriter().write(ObjectMapperUtil.toString(apiResponse));
+        response.getWriter().println(ObjectMapperUtil.toString(apiResponse));
     }
 }

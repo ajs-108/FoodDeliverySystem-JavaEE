@@ -11,6 +11,7 @@ import com.app.dto.CategoryDTO;
 import com.app.service.CategoryServices;
 import com.fasterxml.jackson.core.type.TypeReference;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,6 +19,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+@WebServlet(
+        name = "Addcategory",
+        value = "/addCategory")
 public class AddCategoryController extends HttpServlet {
     private CategoryServices categoryServices = new CategoryServices();
 

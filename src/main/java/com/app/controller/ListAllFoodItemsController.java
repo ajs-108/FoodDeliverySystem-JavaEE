@@ -10,11 +10,15 @@ import com.app.dto.APIResponse;
 import com.app.dto.FoodItemDTO;
 import com.app.service.FoodItemServices;
 import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.util.List;
 
+@WebServlet(
+        name = "Listallfooditems",
+        value = "/foodItems")
 public class ListAllFoodItemsController extends HttpServlet {
     private FoodItemServices foodItemServices = new FoodItemServices();
 
