@@ -18,13 +18,14 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
                 insert into food_item(food_name, food_description, price, discount, category_id, image_path)
                 values (?,?,?,?,?,?);
                 """;
-        try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement ps = connect.prepareStatement(sql)) {
-            ps.setString(1, foodItem.getFoodName());
-            ps.setString(2, foodItem.getFoodDescription());
-            ps.setDouble(3, foodItem.getPrice());
-            ps.setDouble(4, foodItem.getDiscount());
-            ps.setInt(5, foodItem.getCategory().getCategoryId());
-            ps.setString(6, foodItem.getImagePath());
+        try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
+            preparedStatement.setString(1, foodItem.getFoodName());
+            preparedStatement.setString(2, foodItem.getFoodDescription());
+            preparedStatement.setDouble(3, foodItem.getPrice());
+            preparedStatement.setDouble(4, foodItem.getDiscount());
+            preparedStatement.setInt(5, foodItem.getCategory().getCategoryId());
+            preparedStatement.setString(6, foodItem.getImagePath());
+            preparedStatement.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
             throw new DBException(e);
         }

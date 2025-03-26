@@ -18,6 +18,7 @@ public class FlywayConfig implements ServletContextListener {
                     .baselineOnMigrate(true)
                     .baselineVersion("2")
                     .load();
+            flyway.repair();
             flyway.baseline();
             flyway.migrate();
         } catch (Exception e) {

@@ -7,9 +7,9 @@ import com.app.dao.ICategoryDAO;
 import com.app.dao.impl.CategoryDAOImpl;
 import com.app.dto.CategoryDTO;
 import com.app.mapper.CategoryMapper;
-import com.app.model.Category;
 
 import java.util.List;
+import java.util.Objects;
 
 public class CategoryServices {
     private ICategoryDAO categoryDAO;
@@ -36,5 +36,15 @@ public class CategoryServices {
 
     public CategoryDTO getCategory(int categoryId) throws DBException {
         return categoryMapper.toDTO(categoryDAO.getCategory(categoryId));
+    }
+
+    public boolean isCategoryExists(CategoryDTO categoryDTO) throws DBException {
+        List<CategoryDTO> categoryList = getAllCategories();
+        for (CategoryDTO category : categoryList) {
+            if (Objects.equals(category.getCategoryName(), categoryDTO.getCategoryName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

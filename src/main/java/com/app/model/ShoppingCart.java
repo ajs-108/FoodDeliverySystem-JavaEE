@@ -1,11 +1,17 @@
 package com.app.model;
 
-import java.util.List;
-
 public class ShoppingCart {
+    private int userId;
     private FoodItem foodItem;
-    private User user;
     private int quantity;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     public FoodItem getFoodItem() {
         return foodItem;
@@ -13,14 +19,6 @@ public class ShoppingCart {
 
     public void setFoodItem(FoodItem foodItem) {
         this.foodItem = foodItem;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public int getQuantity() {
@@ -34,8 +32,8 @@ public class ShoppingCart {
     @Override
     public String toString() {
         return "ShoppingCart{" +
-                "foodItemList=" + foodItem +
-                ", user=" + user +
+                "userId=" + userId +
+                ", foodItem=" + foodItem +
                 ", quantity=" + quantity +
                 '}';
     }

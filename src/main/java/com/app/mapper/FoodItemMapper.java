@@ -4,15 +4,17 @@ import com.app.dto.FoodItemDTO;
 import com.app.model.FoodItem;
 
 public class FoodItemMapper {
+    CategoryMapper categoryMapper = new CategoryMapper();
+
     public FoodItemDTO toDTO(FoodItem foodItem) {
         FoodItemDTO foodItemDTO = new FoodItemDTO();
         foodItemDTO.setFoodItemId(foodItem.getFoodItemId());
         foodItemDTO.setFoodName(foodItem.getFoodName());
         foodItemDTO.setFoodDescription(foodItem.getFoodDescription());
-        foodItemDTO.setPrice(foodItemDTO.getPrice());
-        foodItemDTO.setDiscount(foodItemDTO.getDiscount());
+        foodItemDTO.setPrice(foodItem.getPrice());
+        foodItemDTO.setDiscount(foodItem.getDiscount());
         foodItemDTO.setAvailable(foodItem.isAvailable());
-        foodItemDTO.setCategory(foodItem.getCategory());
+        foodItemDTO.setCategoryDTO(categoryMapper.toDTO(foodItem.getCategory()));
         foodItemDTO.setImagePath(foodItem.getImagePath());
         foodItemDTO.setRating(foodItem.getRating());
         return foodItemDTO;
@@ -26,7 +28,7 @@ public class FoodItemMapper {
         foodItem.setPrice(foodItemDTO.getPrice());
         foodItem.setDiscount(foodItemDTO.getDiscount());
         foodItem.setAvailable(foodItemDTO.isAvailable());
-        foodItem.setCategory(foodItemDTO.getCategory());
+        foodItem.setCategory(categoryMapper.toCategory(foodItemDTO.getCategoryDTO()));
         foodItem.setImagePath(foodItemDTO.getImagePath());
         foodItem.setRating(foodItemDTO.getRating());
         return foodItem;

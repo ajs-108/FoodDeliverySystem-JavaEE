@@ -11,7 +11,7 @@ public class FoodItemDTO {
     private double price;
     private double discount;
     private boolean isAvailable;
-    private Category category;
+    private CategoryDTO categoryDTO;
     private String imagePath;
     private double rating;
 
@@ -63,12 +63,12 @@ public class FoodItemDTO {
         isAvailable = available;
     }
 
-    public Category getCategory() {
-        return category;
+    public CategoryDTO getCategoryDTO() {
+        return categoryDTO;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setCategoryDTO(CategoryDTO categoryDTO) {
+        this.categoryDTO = categoryDTO;
     }
 
     public String getImagePath() {
@@ -89,14 +89,14 @@ public class FoodItemDTO {
 
     @Override
     public String toString() {
-        return "FoodItem{" +
+        return "FoodItemDTO{" +
                 "foodItemId=" + foodItemId +
                 ", foodName='" + foodName + '\'' +
                 ", foodDescription='" + foodDescription + '\'' +
                 ", price=" + price +
                 ", discount=" + discount +
                 ", isAvailable=" + isAvailable +
-                ", category=" + category +
+                ", categoryDTO=" + categoryDTO +
                 ", imagePath='" + imagePath + '\'' +
                 ", rating=" + rating +
                 '}';

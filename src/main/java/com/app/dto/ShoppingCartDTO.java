@@ -1,29 +1,26 @@
 package com.app.dto;
 
 import com.app.model.FoodItem;
-import com.app.model.User;
-
-import java.util.List;
 
 public class ShoppingCartDTO {
-    private FoodItem foodItem;
-    private User user;
+    private int userId;
+    private FoodItemDTO foodItemDTO;
     private int quantity;
 
-    public FoodItem getFoodItem() {
-        return foodItem;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setFoodItem(FoodItem foodItem) {
-        this.foodItem = foodItem;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public User getUser() {
-        return user;
+    public FoodItemDTO getFoodItemDTO() {
+        return foodItemDTO;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setFoodItemDTO(FoodItemDTO foodItemDTO) {
+        this.foodItemDTO = foodItemDTO;
     }
 
     public int getQuantity() {
@@ -36,9 +33,9 @@ public class ShoppingCartDTO {
 
     @Override
     public String toString() {
-        return "ShoppingCart{" +
-                "foodItemList=" + foodItem +
-                ", user=" + user +
+        return "ShoppingCartDTO{" +
+                "userId=" + userId +
+                ", foodItemDTO=" + foodItemDTO +
                 ", quantity=" + quantity +
                 '}';
     }

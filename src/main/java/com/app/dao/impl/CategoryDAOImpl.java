@@ -1,6 +1,5 @@
 package com.app.dao.impl;
 
-import com.app.common.Message;
 import com.app.common.exception.DBException;
 import com.app.config.DBConnector;
 import com.app.dao.ICategoryDAO;
@@ -17,9 +16,11 @@ public class CategoryDAOImpl implements ICategoryDAO {
         PreparedStatement preparedStatement = null;
         String sql = "insert into category(category_name) values (?)";
         try {
+            System.out.println("&&"+category.getCategoryName());
             connection = DBConnector.getInstance().getConnection();
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, category.getCategoryName());
+            preparedStatement.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
             throw new DBException(e);
         } finally {
@@ -38,7 +39,6 @@ public class CategoryDAOImpl implements ICategoryDAO {
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, categoryId);
             resultSet = preparedStatement.executeQuery();
-
             if (resultSet.next()) {
                 Category category = new Category();
                 category.setCategoryId(resultSet.getInt("category_id"));

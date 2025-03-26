@@ -6,6 +6,7 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
+import com.app.controller.validation.CategoryValidator;
 import com.app.dto.APIResponse;
 import com.app.dto.CategoryDTO;
 import com.app.service.CategoryServices;

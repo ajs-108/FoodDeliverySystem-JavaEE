@@ -1,6 +1,7 @@
 package com.app.test;
 
 import com.app.common.exception.ApplicationException;
+import com.app.common.exception.DBException;
 import com.app.controller.validation.FoodItemValidator;
 import com.app.dto.FoodItemDTO;
 import com.app.model.Category;
@@ -19,7 +20,7 @@ public class FoodValidatorChecker {
         try {
             FoodItemValidator.validateFoodItem(foodItemDTO);
             System.out.println("success");
-        } catch (ApplicationException e) {
+        } catch (ApplicationException | DBException e) {
             System.out.println(e.getMessage());
         }
     }

@@ -24,12 +24,6 @@ public class UserUpdateValidator {
         if (userDTO.getLastName().length() > NAME_LENGTH) {
             throw new ApplicationException(Message.User.NAME_LENGTH);
         }
-        if (userDTO.getPassword() == null || userDTO.getPassword().isBlank()) {
-            throw new ApplicationException(Message.Common.MANDATORY);
-        }
-        if (!validate.checkPassword(userDTO.getPassword())) {
-            throw new ApplicationException(Message.User.INVALID_PASSWORD);
-        }
         if (userDTO.getPhoneNumber() == null || userDTO.getPhoneNumber().isBlank()) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }

@@ -5,8 +5,10 @@ import com.app.dao.IFoodItemDAO;
 import com.app.dao.impl.FoodItemDAOImpl;
 import com.app.dto.FoodItemDTO;
 import com.app.mapper.FoodItemMapper;
+import com.app.model.FoodItem;
 
 import java.util.List;
+import java.util.Objects;
 
 public class FoodItemServices {
     private IFoodItemDAO foodItemDAO;
@@ -34,5 +36,15 @@ public class FoodItemServices {
 
     public void updateFoodItem(FoodItemDTO foodItemDTO, int foodItemId) throws DBException {
         foodItemDAO.updateFoodItem(foodItemMapper.toFoodItem(foodItemDTO), foodItemId);
+    }
+
+    public boolean isFoodItemExists(FoodItemDTO foodItemDTO) throws DBException {
+        List<FoodItemDTO> foodItemsList = getAllFoodItems();
+        for (FoodItemDTO foodItem : foodItemsList) {
+            if (Objects.equals(foodItem.getFoodItemId(), foodItemDTO.getFoodItemId())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
