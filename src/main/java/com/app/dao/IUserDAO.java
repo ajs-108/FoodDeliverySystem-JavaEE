@@ -10,6 +10,8 @@ public interface IUserDAO {
 
     User getUser(String email) throws DBException;
 
+    User getUser(int userId) throws DBException;
+
     List<User> getAllUsers(int roleId) throws DBException;
 
     void updateUser(User user, int userID) throws DBException;

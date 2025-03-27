@@ -1,16 +1,10 @@
 package com.app.controller;
 
-import com.app.common.Message;
-import com.app.common.util.ObjectMapperUtil;
 import com.app.config.DBConnector;
-import com.app.dto.APIResponse;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
 
 @WebServlet(
         name = "DBinitializer",

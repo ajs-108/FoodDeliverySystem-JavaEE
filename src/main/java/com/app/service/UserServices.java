@@ -42,6 +42,10 @@ public class UserServices {
         return userMapper.toDTO(userDAO.getUser(email));
     }
 
+    public UserDTO getUser(int userId) throws DBException {
+        return userMapper.toDTO(userDAO.getUser(userId));
+    }
+
     public List<UserDTO> getAllUsers(int roleId) throws DBException {
         return userDAO.getAllUsers(roleId)
                 .stream()

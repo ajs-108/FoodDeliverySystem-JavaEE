@@ -36,6 +36,9 @@ public class FoodItemValidator {
         if (foodItemDTO.getCategoryDTO() == null) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
+        if (foodItemDTO.getCategoryDTO().getCategoryId() == 0) {
+            throw new ApplicationException(Message.Common.MANDATORY);
+        }
         CategoryValidator.validateCategory(foodItemDTO.getCategoryDTO());
         if (foodItemDTO.getImagePath() == null || foodItemDTO.getImagePath().isBlank()) {
             throw new ApplicationException(Message.Common.MANDATORY);

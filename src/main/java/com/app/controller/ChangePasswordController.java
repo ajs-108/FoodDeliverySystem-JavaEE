@@ -17,7 +17,9 @@ import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 
-@WebServlet(name = "Changepassword", value = "/changePassword")
+@WebServlet(
+        name = "Changepassword",
+        value = "/changePassword")
 public class ChangePasswordController extends HttpServlet {
     private UserServices userServices = new UserServices();
 

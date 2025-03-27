@@ -11,10 +11,10 @@ public class CategoryValidator {
     private static final int CATEGORY_NAME_LENGTH = 40;
 
     public static void validateCategory(CategoryDTO categoryDTO) throws ApplicationException, DBException {
-        if(categoryDTO.getCategoryName() == null || categoryDTO.getCategoryName().isBlank()) {
+        if (categoryDTO.getCategoryName() == null || categoryDTO.getCategoryName().isBlank()) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
-        if(categoryDTO.getCategoryName().length() > CATEGORY_NAME_LENGTH) {
+        if (categoryDTO.getCategoryName().length() > CATEGORY_NAME_LENGTH) {
             throw new ApplicationException(Message.Category.CATEGORY_NAME_LENGTH);
         }
         if (categoryServices.isCategoryExists(categoryDTO)) {

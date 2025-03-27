@@ -15,7 +15,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet(name = "Getfooditem", value = "/getFoodItem")
+@WebServlet(
+        name = "Getfooditem",
+        value = "/getFoodItem")
 public class GetFoodItemController extends HttpServlet {
     public static void sendResponse(HttpServletResponse response, String techMessage, String message, Object data, int statusCode) throws IOException {
         response.setStatus(statusCode);

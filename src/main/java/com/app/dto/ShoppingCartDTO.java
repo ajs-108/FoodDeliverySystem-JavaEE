@@ -1,7 +1,5 @@
 package com.app.dto;
 
-import com.app.model.FoodItem;
-
 public class ShoppingCartDTO {
     private int userId;
     private FoodItemDTO foodItemDTO;

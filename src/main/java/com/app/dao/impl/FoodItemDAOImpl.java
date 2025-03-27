@@ -107,7 +107,7 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
     }
 
     @Override
-    public void updateFoodItem(FoodItem foodItem, int foodItemId) throws DBException {
+    public void updateFoodItem(FoodItem foodItem) throws DBException {
         String sql1 = """
                 update food_item set food_description = ?, price = ?, discount = ?, is_available = ?, image_path = ?, rating = ?
                 where food_item_id = ?;
@@ -119,7 +119,7 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
             ps.setBoolean(4, foodItem.isAvailable());
             ps.setString(5, foodItem.getImagePath());
             ps.setDouble(6, foodItem.getRating());
-            ps.setInt(7, foodItemId);
+            ps.setInt(7, foodItem.getFoodItemId());
             ps.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
             throw new DBException(e);

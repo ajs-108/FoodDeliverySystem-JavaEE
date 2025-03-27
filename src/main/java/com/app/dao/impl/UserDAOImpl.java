@@ -39,7 +39,6 @@ public class UserDAOImpl implements IUserDAO {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        User user = null;
         String sql = "Select * from user_ where email = ?";
         try {
             connection = DBConnector.getInstance().getConnection();
@@ -47,7 +46,7 @@ public class UserDAOImpl implements IUserDAO {
             preparedStatement.setString(1, email);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                user = new User();
+                User user = new User();
                 user.setUserId(resultSet.getInt("user_id"));
                 user.setFirstName(resultSet.getString("first_name"));
                 user.setLastName(resultSet.getString("last_name"));
@@ -55,13 +54,44 @@ public class UserDAOImpl implements IUserDAO {
                 user.setPhoneNumber(resultSet.getString("phone_number"));
                 user.setAddress(resultSet.getString("address"));
                 user.setRole(Roles.fromId(resultSet.getInt("role_id")));
+                return user;
             }
         } catch (SQLException | ClassNotFoundException e) {
             throw new DBException(e);
         } finally {
             DBConnector.resourceCloser(preparedStatement, resultSet, connection);
         }
-        return user;
+        return null;
+    }
+
+    @Override
+    public User getUser(int userId) throws DBException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        String sql = "Select * from user_ where user_id = ?";
+        try {
+            connection = DBConnector.getInstance().getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, userId);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                User user = new User();
+                user.setUserId(resultSet.getInt("user_id"));
+                user.setFirstName(resultSet.getString("first_name"));
+                user.setLastName(resultSet.getString("last_name"));
+                user.setEmail(resultSet.getString("email"));
+                user.setPhoneNumber(resultSet.getString("phone_number"));
+                user.setAddress(resultSet.getString("address"));
+                user.setRole(Roles.fromId(resultSet.getInt("role_id")));
+                return user;
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new DBException(e);
+        } finally {
+            DBConnector.resourceCloser(preparedStatement, resultSet, connection);
+        }
+        return null;
     }
 
     @Override

@@ -29,7 +29,7 @@ public class Message {
         public static final String PHONE_NUMBER_EXISTS = "The entered Phone number is already registered, " +
                                                         "please enter another phone number";
         public static final String ADDRESS_LENGTH = "Address should be less than or equal to 255 characters";
-        public static final String NO_SUCH_USER = "There is no user registered by this email. Please register " +
+        public static final String NO_SUCH_USER = "There is no such user. Please register " +
                                                 "first to access the application";
         public static final String INCORRECT_LOGIN_CREDENTIALS = "Login Credentials are incorrect.";
         public static final String USER_REGISTERED = "User Registered successfully";
@@ -53,9 +53,13 @@ public class Message {
         public static final String FOOD_ITEM_UPDATED = "Food Item information is updated successfully";
         public static final String FOOD_ITEM_EXISTS = "Food Item you have entered already exists, Please enter " +
                                                     "another one";
+        public static final String FOOD_ITEM_DOES_NOT_EXISTS = "There is no such Food Item in the Menu, " +
+                                                            "Please Select another one";
     }
 
     public static class ShoppingCart {
-        public static final String FOOD_ITEM_ADDED = "Food Item added to cart.";
+        public static final String FOOD_ITEM_ADDED = "Food Item added to cart";
+        public static final String FOOD_ITEM_REMOVED = "Food Item removed from cart";
+        public static final String QUANTITY = "Quantity value should at least be 1";
     }
 }

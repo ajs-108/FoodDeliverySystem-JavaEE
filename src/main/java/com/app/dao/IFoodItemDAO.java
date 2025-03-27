@@ -12,5 +12,5 @@ public interface IFoodItemDAO {
 
     List<FoodItem> getAllFoodItems() throws DBException;
 
-    void updateFoodItem(FoodItem foodItem, int foodItemId) throws DBException;
+    void updateFoodItem(FoodItem foodItem) throws DBException;
 }

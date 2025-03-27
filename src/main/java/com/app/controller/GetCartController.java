@@ -17,22 +17,22 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.List;
 
-@WebServlet(
-        name = "addToCart",
-        value = "/addToCart")
-public class AddToCartController extends HttpServlet {
+@WebServlet(name = "getCart", value = "/getCart")
+public class GetCartController extends HttpServlet {
     private ShoppingCartServices shoppingCartServices = new ShoppingCartServices();
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            ShoppingCartDTO shoppingCartDTO = ObjectMapperUtil.toObject(request.getReader(), ShoppingCartDTO.class);
-            ShoppingCartValidator.validateShoppingCart(shoppingCartDTO);
-            shoppingCartServices.addFoodItem(shoppingCartDTO);
-            sendResponse(response, null, Message.Common.ENTRY_ADDED, null, HttpServletResponse.SC_OK);
+            int userId = Integer.parseInt(request.getParameter("userId"));
+            ShoppingCartValidator.validateUserId(userId);
+            List<ShoppingCartDTO> shoppingCartDTO = shoppingCartServices.showShoppingCart(userId);
+            sendResponse(response, null, null, shoppingCartDTO, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

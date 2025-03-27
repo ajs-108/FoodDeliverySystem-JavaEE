@@ -6,29 +6,31 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
+import com.app.controller.validation.ShoppingCartValidator;
 import com.app.dto.APIResponse;
-import com.app.dto.FoodItemDTO;
-import com.app.service.FoodItemServices;
+import com.app.dto.ShoppingCartDTO;
+import com.app.service.ShoppingCartServices;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
-@WebServlet(
-        name = "Updatefooditem",
-        value = "/updateFoodItem")
-public class UpdateFoodItemController extends HttpServlet {
-    private FoodItemServices foodItemServices = new FoodItemServices();
+@WebServlet(name = "removeFromCart", value = "/removeFromCart")
+public class RemoveFromCartController extends HttpServlet {
+    private ShoppingCartServices shoppingCartServices = new ShoppingCartServices();
 
     @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            FoodItemDTO foodItemDTO = ObjectMapperUtil.toObject(request.getReader(), FoodItemDTO.class);
-            foodItemServices.updateFoodItem(foodItemDTO);
-            sendResponse(response, null, Message.FoodItem.FOOD_ITEM_UPDATED, null, HttpServletResponse.SC_OK);
+            int userId = Integer.parseInt(request.getParameter("userId"));
+            int foodItemId = Integer.parseInt(request.getParameter("foodItemId"));
+            ShoppingCartValidator.validateRemoval(userId, foodItemId);
+            shoppingCartServices.removeFoodItem(userId, foodItemId);
+            sendResponse(response, null, Message.ShoppingCart.FOOD_ITEM_REMOVED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -41,11 +43,11 @@ public class UpdateFoodItemController extends HttpServlet {
         }
     }
 
-    public static void sendResponse(HttpServletResponse response, String techMessage, String message, Object data, int statusCode) throws IOException {
-        response.setStatus(statusCode);
+    public void sendResponse(HttpServletResponse response, String techMessage, String message, Object data, int status) throws IOException {
         APIResponse apiResponse = new APIResponse();
         apiResponse.setMessage(message);
         apiResponse.setData(data);
-        response.getWriter().println(ObjectMapperUtil.toString(apiResponse));
+        response.setStatus(status);
+        response.getWriter().write(ObjectMapperUtil.toString(apiResponse));
     }
 }

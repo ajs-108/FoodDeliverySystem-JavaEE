@@ -23,15 +23,15 @@ import java.io.IOException;
         name = "Addfooditem",
         value = "/addFoodItem")
 public class AddFoodItemController extends HttpServlet {
-    private ShoppingCartServices shoppingCartServices = new ShoppingCartServices();
+    private FoodItemServices foodItemServices = new FoodItemServices();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            ShoppingCartDTO shoppingCartDTO = ObjectMapperUtil.toObject(request.getReader(), ShoppingCartDTO.class);
-            shoppingCartServices.addFoodItem(shoppingCartDTO);
+            FoodItemDTO foodItemDTO = ObjectMapperUtil.toObject(request.getReader(), FoodItemDTO.class);
+            foodItemServices.createFoodItem(foodItemDTO);
             sendResponse(response, null, Message.ShoppingCart.FOOD_ITEM_ADDED, null, HttpServletResponse.SC_CREATED);
         } catch (DBException e) {
             e.printStackTrace();
