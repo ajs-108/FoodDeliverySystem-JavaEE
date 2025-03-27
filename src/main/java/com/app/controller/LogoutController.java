@@ -21,7 +21,7 @@ import java.io.IOException;
 )
 public class LogoutController extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             HttpSession session = AuthUtils.getCurrentUserSession(request);
