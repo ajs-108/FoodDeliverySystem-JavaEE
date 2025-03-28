@@ -1,6 +1,5 @@
 package com.app.dao.impl;
 
-import com.app.common.Message;
 import com.app.common.exception.DBException;
 import com.app.config.DBConnector;
 import com.app.dao.IFoodItemDAO;
@@ -15,8 +14,8 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
     @Override
     public void saveFoodItem(FoodItem foodItem) throws DBException {
         String sql = """
-                insert into food_item(food_name, food_description, price, discount, category_id, image_path)
-                values (?,?,?,?,?,?);
+                insert into food_item(food_name, food_description, price, discount, category_id, image_path, is_available)
+                values (?,?,?,?,?,?,?);
                 """;
         try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
             preparedStatement.setString(1, foodItem.getFoodName());
@@ -25,6 +24,7 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
             preparedStatement.setDouble(4, foodItem.getDiscount());
             preparedStatement.setInt(5, foodItem.getCategory().getCategoryId());
             preparedStatement.setString(6, foodItem.getImagePath());
+            preparedStatement.setBoolean(7, foodItem.isAvailable());
             preparedStatement.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
             throw new DBException(e);

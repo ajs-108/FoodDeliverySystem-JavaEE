@@ -1,6 +1,5 @@
 package com.app.dto;
 
-import com.app.model.Category;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
