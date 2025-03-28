@@ -33,13 +33,13 @@ public class FoodItemValidator {
         if (Double.isNaN(foodItemDTO.getDiscount())) {
             throw new ApplicationException(Message.FoodItem.PRICE_DISCOUNT_DATATYPE);
         }
-        if (foodItemDTO.getCategoryDTO() == null) {
+        if (foodItemDTO.getCategory() == null) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
-        if (foodItemDTO.getCategoryDTO().getCategoryId() == 0) {
+        if (foodItemDTO.getCategory().getCategoryId() == 0) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
-        CategoryValidator.validateCategory(foodItemDTO.getCategoryDTO());
+        CategoryValidator.validateCategory(foodItemDTO.getCategory());
         if (foodItemDTO.getImagePath() == null || foodItemDTO.getImagePath().isBlank()) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }

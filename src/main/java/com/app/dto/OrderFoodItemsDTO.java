@@ -1,14 +1,16 @@
-package com.app.model;
+package com.app.dto;
 
-public class OrderFoodItems {
-    private FoodItem foodItem;
+import com.app.model.FoodItem;
+
+public class OrderFoodItemsDTO {
+    private FoodItemDTO foodItem;
     private int quantity;
 
-    public FoodItem getFoodItem() {
+    public FoodItemDTO getFoodItem() {
         return foodItem;
     }
 
-    public void setFoodItem(FoodItem foodItem) {
+    public void setFoodItem(FoodItemDTO foodItem) {
         this.foodItem = foodItem;
     }
 

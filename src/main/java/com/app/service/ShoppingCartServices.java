@@ -35,4 +35,13 @@ public class ShoppingCartServices {
                 .map(shoppingCartMapper::toDTO)
                 .toList();
     }
+
+    public boolean isFoodItemExists(ShoppingCartDTO shoppingCartDTO) throws DBException {
+        for (ShoppingCartDTO cart : showShoppingCart(shoppingCartDTO.getUserId())) {
+            if (shoppingCartDTO.getFoodItem().getFoodItemId() == cart.getFoodItem().getFoodItemId()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -4,7 +4,7 @@ public class ReviewRating {
     private int reviewId;
     private User user;
     private FoodItem foodItem;
-    private Order order;
+    private int orderId;
     private int rating;
     private String review;
 
@@ -32,12 +32,12 @@ public class ReviewRating {
         this.foodItem = foodItem;
     }
 
-    public Order getOrder() {
-        return order;
+    public int getOrderId() {
+        return orderId;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 
     public int getRating() {
@@ -62,7 +62,7 @@ public class ReviewRating {
                 "reviewId=" + reviewId +
                 ", user=" + user +
                 ", foodItem=" + foodItem +
-                ", order=" + order +
+                ", orderId=" + orderId +
                 ", rating=" + rating +
                 ", review='" + review + '\'' +
                 '}';

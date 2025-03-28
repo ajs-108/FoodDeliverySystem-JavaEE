@@ -2,7 +2,7 @@ package com.app.dto;
 
 public class ShoppingCartDTO {
     private int userId;
-    private FoodItemDTO foodItemDTO;
+    private FoodItemDTO foodItem;
     private int quantity;
 
     public int getUserId() {
@@ -13,12 +13,12 @@ public class ShoppingCartDTO {
         this.userId = userId;
     }
 
-    public FoodItemDTO getFoodItemDTO() {
-        return foodItemDTO;
+    public FoodItemDTO getFoodItem() {
+        return foodItem;
     }
 
-    public void setFoodItemDTO(FoodItemDTO foodItemDTO) {
-        this.foodItemDTO = foodItemDTO;
+    public void setFoodItem(FoodItemDTO foodItem) {
+        this.foodItem = foodItem;
     }
 
     public int getQuantity() {
@@ -33,7 +33,7 @@ public class ShoppingCartDTO {
     public String toString() {
         return "ShoppingCartDTO{" +
                 "userId=" + userId +
-                ", foodItemDTO=" + foodItemDTO +
+                ", foodItemDTO=" + foodItem +
                 ", quantity=" + quantity +
                 '}';
     }

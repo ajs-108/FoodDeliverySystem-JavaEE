@@ -6,16 +6,14 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
-import com.app.controller.validation.FoodItemValidator;
 import com.app.dto.APIResponse;
 import com.app.dto.FoodItemDTO;
-import com.app.dto.ShoppingCartDTO;
-import com.app.model.FoodItem;
 import com.app.service.FoodItemServices;
-import com.app.service.ShoppingCartServices;
-import jakarta.servlet.*;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
@@ -30,6 +28,9 @@ public class AddFoodItemController extends HttpServlet {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
+            if (!AuthUtils.isAdmin(request)) {
+                throw new ApplicationException(Message.Error.ACCESS_DENIED);
+            }
             FoodItemDTO foodItemDTO = ObjectMapperUtil.toObject(request.getReader(), FoodItemDTO.class);
             foodItemServices.createFoodItem(foodItemDTO);
             sendResponse(response, null, Message.ShoppingCart.FOOD_ITEM_ADDED, null, HttpServletResponse.SC_CREATED);

@@ -11,31 +11,32 @@ import com.app.dto.APIResponse;
 import com.app.dto.ShoppingCartDTO;
 import com.app.dto.UserDTO;
 import com.app.service.ShoppingCartServices;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 
-@WebServlet(
-        name = "addToCart",
-        value = "/addToCart")
-public class AddToCartController extends HttpServlet {
+@WebServlet(name = "Update Quantity", value = "/updateQuantity")
+public class UpdateQuantityController extends HttpServlet {
     private ShoppingCartServices shoppingCartServices = new ShoppingCartServices();
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            ShoppingCartDTO shoppingCartDTO = ObjectMapperUtil.toObject(request.getReader(), ShoppingCartDTO.class);
             UserDTO userDTO = AuthUtils.getCurrentUser(request);
+            ShoppingCartDTO shoppingCartDTO = ObjectMapperUtil.toObject(request.getReader(), ShoppingCartDTO.class);
+            if(shoppingCartDTO.getQuantity() == 0) {
+                shoppingCartServices.removeFoodItem(userDTO.getUserId(), shoppingCartDTO.getFoodItem().getFoodItemId());
+                sendResponse(response, null, Message.ShoppingCart.FOOD_ITEM_REMOVED, null, HttpServletResponse.SC_OK);
+                return;
+            }
             shoppingCartDTO.setUserId(userDTO.getUserId());
-            ShoppingCartValidator.validateAddToCart(shoppingCartDTO);
-            shoppingCartServices.addFoodItem(shoppingCartDTO);
-            sendResponse(response, null, Message.Common.ENTRY_ADDED, null, HttpServletResponse.SC_OK);
+            ShoppingCartValidator.validateQuantityUpdate(shoppingCartDTO);
+            shoppingCartServices.updateQuantity(shoppingCartDTO);
+            sendResponse(response, null, Message.ShoppingCart.QUANTITY_UPDATED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

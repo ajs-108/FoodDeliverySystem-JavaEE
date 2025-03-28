@@ -8,28 +8,29 @@ import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
 import com.app.controller.validation.ShoppingCartValidator;
 import com.app.dto.APIResponse;
-import com.app.dto.ShoppingCartDTO;
+import com.app.dto.UserDTO;
 import com.app.service.ShoppingCartServices;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet(name = "removeFromCart", value = "/removeFromCart")
 public class RemoveFromCartController extends HttpServlet {
     private ShoppingCartServices shoppingCartServices = new ShoppingCartServices();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            int userId = Integer.parseInt(request.getParameter("userId"));
+            UserDTO userDTO = AuthUtils.getCurrentUser(request);
             int foodItemId = Integer.parseInt(request.getParameter("foodItemId"));
-            ShoppingCartValidator.validateRemoval(userId, foodItemId);
-            shoppingCartServices.removeFoodItem(userId, foodItemId);
+            ShoppingCartValidator.validateRemoval(userDTO.getUserId(), foodItemId);
+            shoppingCartServices.removeFoodItem(userDTO.getUserId(), foodItemId);
             sendResponse(response, null, Message.ShoppingCart.FOOD_ITEM_REMOVED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();

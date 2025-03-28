@@ -10,7 +10,7 @@ public class FoodItemDTO {
     private double price;
     private double discount;
     private boolean isAvailable;
-    private CategoryDTO categoryDTO;
+    private CategoryDTO category;
     private String imagePath;
     private double rating;
 
@@ -62,12 +62,12 @@ public class FoodItemDTO {
         isAvailable = available;
     }
 
-    public CategoryDTO getCategoryDTO() {
-        return categoryDTO;
+    public CategoryDTO getCategory() {
+        return category;
     }
 
-    public void setCategoryDTO(CategoryDTO categoryDTO) {
-        this.categoryDTO = categoryDTO;
+    public void setCategory(CategoryDTO category) {
+        this.category = category;
     }
 
     public String getImagePath() {
@@ -95,7 +95,7 @@ public class FoodItemDTO {
                 ", price=" + price +
                 ", discount=" + discount +
                 ", isAvailable=" + isAvailable +
-                ", categoryDTO=" + categoryDTO +
+                ", categoryDTO=" + category +
                 ", imagePath='" + imagePath + '\'' +
                 ", rating=" + rating +
                 '}';

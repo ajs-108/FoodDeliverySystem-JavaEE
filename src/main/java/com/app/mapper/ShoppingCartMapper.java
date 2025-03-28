@@ -10,7 +10,7 @@ public class ShoppingCartMapper {
         ShoppingCartDTO shoppingCartDTO = new ShoppingCartDTO();
         if (shoppingCart != null) {
             shoppingCartDTO.setUserId(shoppingCart.getUserId());
-            shoppingCartDTO.setFoodItemDTO(foodItemMapper.toDTO(shoppingCart.getFoodItem()));
+            shoppingCartDTO.setFoodItem(foodItemMapper.toDTO(shoppingCart.getFoodItem()));
             shoppingCartDTO.setQuantity(shoppingCart.getQuantity());
         } else {
             return null;
@@ -22,7 +22,7 @@ public class ShoppingCartMapper {
         ShoppingCart shoppingCart = new ShoppingCart();
         if (shoppingCartDTO != null) {
             shoppingCart.setUserId(shoppingCartDTO.getUserId());
-            shoppingCart.setFoodItem(foodItemMapper.toFoodItem(shoppingCartDTO.getFoodItemDTO()));
+            shoppingCart.setFoodItem(foodItemMapper.toFoodItem(shoppingCartDTO.getFoodItem()));
             shoppingCart.setQuantity(shoppingCartDTO.getQuantity());
         } else {
             return null;

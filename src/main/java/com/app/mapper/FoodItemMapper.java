@@ -15,7 +15,7 @@ public class FoodItemMapper {
             foodItemDTO.setPrice(foodItem.getPrice());
             foodItemDTO.setDiscount(foodItem.getDiscount());
             foodItemDTO.setAvailable(foodItem.isAvailable());
-            foodItemDTO.setCategoryDTO(categoryMapper.toDTO(foodItem.getCategory()));
+            foodItemDTO.setCategory(categoryMapper.toDTO(foodItem.getCategory()));
             foodItemDTO.setImagePath(foodItem.getImagePath());
             foodItemDTO.setRating(foodItem.getRating());
         } else {
@@ -33,7 +33,7 @@ public class FoodItemMapper {
             foodItem.setPrice(foodItemDTO.getPrice());
             foodItem.setDiscount(foodItemDTO.getDiscount());
             foodItem.setAvailable(foodItemDTO.isAvailable());
-            foodItem.setCategory(categoryMapper.toCategory(foodItemDTO.getCategoryDTO()));
+            foodItem.setCategory(categoryMapper.toCategory(foodItemDTO.getCategory()));
             foodItem.setImagePath(foodItemDTO.getImagePath());
             foodItem.setRating(foodItemDTO.getRating());
         } else {

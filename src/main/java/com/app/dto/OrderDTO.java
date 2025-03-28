@@ -1,20 +1,22 @@
-package com.app.model;
+package com.app.dto;
 
 import com.app.common.enums.OrderStatus;
 import com.app.common.enums.PaymentStatus;
+import com.app.model.OrderFoodItems;
+import com.app.model.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class Order {
+public class OrderDTO {
     private int orderId;
-    private User user;
+    private UserDTO user;
     private int deliveryPersonId;
     private double totalPrice;
     private OrderStatus orderStatus;
     private LocalDateTime orderDateTime;
     private PaymentStatus paymentStatus;
-    private List<OrderFoodItems> orderFoodItems;
+    private List<OrderFoodItemsDTO> orderFoodItems;
 
     public int getOrderId() {
         return orderId;
@@ -24,11 +26,11 @@ public class Order {
         this.orderId = orderId;
     }
 
-    public User getUser() {
+    public UserDTO getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserDTO user) {
         this.user = user;
     }
 
@@ -72,11 +74,11 @@ public class Order {
         this.paymentStatus = paymentStatus;
     }
 
-    public List<OrderFoodItems> getOrderFoodItems() {
+    public List<OrderFoodItemsDTO> getOrderFoodItems() {
         return orderFoodItems;
     }
 
-    public void setOrderFoodItems(List<OrderFoodItems> orderFoodItems) {
+    public void setOrderFoodItems(List<OrderFoodItemsDTO> orderFoodItems) {
         this.orderFoodItems = orderFoodItems;
     }
 

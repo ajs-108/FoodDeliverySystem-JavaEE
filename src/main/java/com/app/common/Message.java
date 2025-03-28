@@ -60,6 +60,9 @@ public class Message {
     public static class ShoppingCart {
         public static final String FOOD_ITEM_ADDED = "Food Item added to cart";
         public static final String FOOD_ITEM_REMOVED = "Food Item removed from cart";
+        public static final String FOOD_ITEM_EXISTS = "Food Item already exists in cart";
         public static final String QUANTITY = "Quantity value should at least be 1";
+        public static final String QUANTITY_VALUE = "Quantity value should less than or equal to 15";
+        public static final String QUANTITY_UPDATED = "Food Item quantity updated";
     }
 }
