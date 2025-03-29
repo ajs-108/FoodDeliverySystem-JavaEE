@@ -65,4 +65,8 @@ public class Message {
         public static final String QUANTITY_VALUE = "Quantity value should less than or equal to 15";
         public static final String QUANTITY_UPDATED = "Food Item quantity updated";
     }
+
+    public static class Order {
+        public static final String PLACE_ORDER = "Order Placed";
+    }
 }

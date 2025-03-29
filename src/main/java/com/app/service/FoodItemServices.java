@@ -5,7 +5,6 @@ import com.app.dao.IFoodItemDAO;
 import com.app.dao.impl.FoodItemDAOImpl;
 import com.app.dto.FoodItemDTO;
 import com.app.mapper.FoodItemMapper;
-import com.app.model.FoodItem;
 
 import java.util.List;
 import java.util.Objects;

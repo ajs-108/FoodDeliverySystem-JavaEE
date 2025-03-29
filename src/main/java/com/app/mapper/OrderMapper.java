@@ -12,7 +12,7 @@ public class OrderMapper {
         if (order != null) {
             orderDTO.setOrderId(order.getOrderId());
             orderDTO.setUser(userMapper.toDTO(order.getUser()));
-            orderDTO.setDeliveryPersonId(order.getUser().getUserId());
+            orderDTO.setDeliveryPersonId(order.getDeliveryPersonId());
             orderDTO.setTotalPrice(order.getTotalPrice());
             orderDTO.setOrderStatus(order.getOrderStatus());
             orderDTO.setOrderDateTime(order.getOrderDateTime());
@@ -25,17 +25,16 @@ public class OrderMapper {
 
     public Order toOrder(OrderDTO orderDTO) {
         Order order = new Order();
-        if (orderDTO != null) {
-            order.setOrderId(orderDTO.getOrderId());
-            order.setUser(userMapper.toUser(orderDTO.getUser()));
-            order.setDeliveryPersonId(orderDTO.getUser().getUserId());
-            order.setTotalPrice(orderDTO.getTotalPrice());
-            order.setOrderStatus(orderDTO.getOrderStatus());
-            order.setOrderDateTime(orderDTO.getOrderDateTime());
-            order.setPaymentStatus(orderDTO.getPaymentStatus());
-        } else {
+        if (orderDTO == null) {
             return null;
         }
+        order.setOrderId(orderDTO.getOrderId());
+        order.setUser(userMapper.toUser(orderDTO.getUser()));
+        order.setDeliveryPersonId(order.getDeliveryPersonId());
+        order.setTotalPrice(orderDTO.getTotalPrice());
+        order.setOrderStatus(orderDTO.getOrderStatus());
+        order.setOrderDateTime(orderDTO.getOrderDateTime());
+        order.setPaymentStatus(orderDTO.getPaymentStatus());
         return order;
     }
 }

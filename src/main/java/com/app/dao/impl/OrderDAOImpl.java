@@ -1,14 +1,16 @@
 package com.app.dao.impl;
 
+import com.app.common.enums.OrderStatus;
+import com.app.common.enums.PaymentStatus;
 import com.app.common.exception.DBException;
 import com.app.config.DBConnector;
 import com.app.dao.IOrderDAO;
 import com.app.model.Order;
+import com.app.model.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrderDAOImpl implements IOrderDAO {
     @Override
@@ -29,10 +31,9 @@ public class OrderDAOImpl implements IOrderDAO {
         ResultSet setOfGeneratedKeys = null;
         PreparedStatement psForOrderFoodItems = null;
         try {
-            assert false;
-            connection.setAutoCommit(false);
             connection = DBConnector.getInstance().getConnection();
-            psForOrder = connection.prepareStatement(orderSQL);
+            connection.setAutoCommit(false);
+            psForOrder = connection.prepareStatement(orderSQL, Statement.RETURN_GENERATED_KEYS);
             psForOrder.setString(1, order.getOrderStatus().name());
             psForOrder.setString(2, order.getPaymentStatus().name());
             psForOrder.setInt(3, userId);
@@ -49,13 +50,46 @@ public class OrderDAOImpl implements IOrderDAO {
         } catch (SQLException | ClassNotFoundException | NullPointerException e) {
             try {
                 connection.rollback();
-            } catch (SQLException ex) {
+            } catch (SQLException | NullPointerException ex) {
                 throw new DBException(ex);
             }
             throw new DBException(e);
         } finally {
             DBConnector.resourceCloser(psForOrder, setOfGeneratedKeys, connection);
             DBConnector.resourceCloser(psForOrderFoodItems, null, null);
+        }
+    }
+
+    @Override
+    public List<Order> getAllOrder() throws DBException {
+        String orderSQL = """
+                select * from order_;
+                """;
+        Connection connection = null;
+        PreparedStatement psForOrder = null;
+        ResultSet resultSet = null;
+        try {
+            connection = DBConnector.getInstance().getConnection();
+            psForOrder = connection.prepareStatement(orderSQL);
+            resultSet = psForOrder.executeQuery();
+            List<Order> orderList = new ArrayList<>();
+            while(resultSet.next()) {
+                Order order = new Order();
+                User user = new User();
+                order.setOrderId(resultSet.getInt("order_id"));
+                user.setUserId(resultSet.getInt("user_id"));
+                order.setUser(user);
+                order.setOrderStatus(OrderStatus.toEnum(resultSet.getString("order_status")));
+                order.setOrderDateTime(resultSet.getTimestamp("order_date_time").toLocalDateTime());
+                order.setTotalPrice(resultSet.getInt("total_price"));
+                order.setPaymentStatus(PaymentStatus.toEnum(resultSet.getString("payment_status")));
+                orderList.add(order);
+            }
+            return orderList;
+        } catch (SQLException | ClassNotFoundException | NullPointerException e) {
+            throw new DBException(e);
+        } finally {
+            DBConnector.resourceCloser(psForOrder, resultSet, connection);
         }
     }
 }
