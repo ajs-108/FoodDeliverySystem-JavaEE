@@ -1,10 +1,7 @@
 package com.app.mapper;
 
 import com.app.dto.OrderDTO;
-import com.app.dto.OrderFoodItemsDTO;
-import com.app.dto.UserDTO;
 import com.app.model.Order;
-import com.app.model.OrderFoodItems;
 
 public class OrderMapper {
     private UserMapper userMapper = new UserMapper();

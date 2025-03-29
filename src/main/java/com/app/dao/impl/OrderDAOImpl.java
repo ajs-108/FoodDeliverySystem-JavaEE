@@ -7,6 +7,7 @@ import com.app.model.Order;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class OrderDAOImpl implements IOrderDAO {
@@ -21,12 +22,14 @@ public class OrderDAOImpl implements IOrderDAO {
         String orderFoodItemSQL = """
                 insert into order_food_items(food_item_id, order_id, quantity)
                 select sc.food_item_id, o.order_id, sc.quantity
-                from shopping_cart sc, order_ o where sc.user_id = o.user_id;
+                from shopping_cart sc, order_ o where sc.user_id = o.user_id and order_id = ?;
                 """;
         Connection connection = null;
         PreparedStatement psForOrder = null;
+        ResultSet setOfGeneratedKeys = null;
         PreparedStatement psForOrderFoodItems = null;
         try {
+            assert false;
             connection.setAutoCommit(false);
             connection = DBConnector.getInstance().getConnection();
             psForOrder = connection.prepareStatement(orderSQL);
@@ -34,8 +37,13 @@ public class OrderDAOImpl implements IOrderDAO {
             psForOrder.setString(2, order.getPaymentStatus().name());
             psForOrder.setInt(3, userId);
             psForOrder.executeUpdate();
-
+            setOfGeneratedKeys = psForOrder.getGeneratedKeys();
+            int generatedKey = 0;
+            if(setOfGeneratedKeys.next()) {
+                generatedKey = setOfGeneratedKeys.getInt(1);
+            }
             psForOrderFoodItems = connection.prepareStatement(orderFoodItemSQL);
+            psForOrderFoodItems.setInt(1, generatedKey);
             psForOrderFoodItems.execute();
             connection.commit();
         } catch (SQLException | ClassNotFoundException | NullPointerException e) {
@@ -46,7 +54,7 @@ public class OrderDAOImpl implements IOrderDAO {
             }
             throw new DBException(e);
         } finally {
-            DBConnector.resourceCloser(psForOrder, null, connection);
+            DBConnector.resourceCloser(psForOrder, setOfGeneratedKeys, connection);
             DBConnector.resourceCloser(psForOrderFoodItems, null, null);
         }
     }

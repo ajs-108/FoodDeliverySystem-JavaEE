@@ -1,8 +1,6 @@
 package com.app.mapper;
 
-import com.app.dto.CategoryDTO;
 import com.app.dto.OrderFoodItemsDTO;
-import com.app.model.Category;
 import com.app.model.OrderFoodItems;
 
 public class OrderFoodItemsMapper {
