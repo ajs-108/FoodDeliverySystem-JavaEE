@@ -6,10 +6,10 @@ import java.io.File;
 import java.io.IOException;
 
 public class FileUtil {
-    private static final String PATH = "C:\\Users\\sarpan\\IdeaProjects\\Food_Delivery_System_JavaEE\\src\\main\\webapp";
+    private static final String DIR_PATH = "C:\\Users\\sarpan\\IdeaProjects\\Food_Delivery_System_JavaEE\\src\\main\\webapp";
 
     public static String getFilePath(String folder, Part part) throws IOException {
-        String directoryPath = PATH + File.separator +  folder;
+        String directoryPath = DIR_PATH + File.separator + folder;
         File fileDirectory = new File(directoryPath);
         if (!fileDirectory.exists()) {
             fileDirectory.mkdir();

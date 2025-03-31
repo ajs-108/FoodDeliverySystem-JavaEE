@@ -1,5 +1,6 @@
 package com.app.service;
 
+import com.app.common.enums.OrderStatus;
 import com.app.common.exception.DBException;
 import com.app.dao.IOrderDAO;
 import com.app.dao.impl.OrderDAOImpl;
@@ -26,5 +27,13 @@ public class OrderServices {
                 .stream()
                 .map(orderMapper::toDTO)
                 .toList();
+    }
+
+    public OrderDTO getOrder(int orderId, int userId) throws DBException {
+        return orderMapper.toDTO(orderDAO.getOrder(orderId, userId));
+    }
+
+    public void updateStatus(int orderId, OrderStatus orderStatus) throws DBException {
+        orderDAO.changeOrderStatus(orderId, orderStatus);
     }
 }

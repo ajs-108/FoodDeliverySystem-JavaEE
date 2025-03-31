@@ -67,5 +67,6 @@ public class Message {
 
     public static class Order {
         public static final String PLACE_ORDER = "Order Placed";
+        public static final String ORDER_STATUS = "Order status updated";
     }
 }
