@@ -24,7 +24,7 @@ public class ShoppingCartValidator {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
         if (!foodItemServices.isFoodItemExists(shoppingCartDTO.getFoodItem())) {
-            throw new ApplicationException(Message.FoodItem.FOOD_ITEM_DOES_NOT_EXISTS);
+            throw new ApplicationException(Message.Common.RESOURCE_NOT_AVAILABLE);
         }
         if (shoppingCartServices.isFoodItemExists(shoppingCartDTO)) {
             throw new ApplicationException(Message.ShoppingCart.FOOD_ITEM_EXISTS);
@@ -57,7 +57,7 @@ public class ShoppingCartValidator {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
         if (!foodItemServices.isFoodItemExists(foodItemId)) {
-            throw new ApplicationException(Message.FoodItem.FOOD_ITEM_DOES_NOT_EXISTS);
+            throw new ApplicationException(Message.Common.RESOURCE_NOT_AVAILABLE);
         }
     }
 
@@ -72,7 +72,7 @@ public class ShoppingCartValidator {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
         if (!foodItemServices.isFoodItemExists(shoppingCartDTO.getFoodItem().getFoodItemId())) {
-            throw new ApplicationException(Message.FoodItem.FOOD_ITEM_DOES_NOT_EXISTS);
+            throw new ApplicationException(Message.Common.RESOURCE_NOT_AVAILABLE);
         }
         if (shoppingCartDTO.getQuantity() > 15) {
             throw new ApplicationException(Message.ShoppingCart.QUANTITY_VALUE);

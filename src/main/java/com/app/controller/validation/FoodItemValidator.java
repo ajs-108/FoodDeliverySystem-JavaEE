@@ -4,14 +4,35 @@ import com.app.common.Message;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.dto.FoodItemDTO;
+import com.app.service.CategoryServices;
 import com.app.service.FoodItemServices;
 
+import static com.app.controller.validation.CategoryValidator.CATEGORY_NAME_LENGTH;
+
 public class FoodItemValidator {
-    private static final FoodItemServices foodItemServices = new FoodItemServices();
+    private static FoodItemServices foodItemServices = new FoodItemServices();
+    private static CategoryServices categoryServices = new CategoryServices();
     private static final int FOOD_NAME_LENGTH = 30;
     private static final int FOOD_DESCRIPTION_LENGTH = 30;
 
     public static void validateFoodItem(FoodItemDTO foodItemDTO) throws ApplicationException, DBException {
+        commonValidations(foodItemDTO);
+        if (foodItemServices.isFoodItemExists(foodItemDTO)) {
+            throw new ApplicationException(Message.FoodItem.FOOD_ITEM_EXISTS);
+        }
+    }
+
+    public static void validateOnUpdate(FoodItemDTO foodItemDTO) throws ApplicationException, DBException {
+        if (foodItemDTO.getFoodItemId() == 0) {
+            throw new ApplicationException(Message.Common.MANDATORY);
+        }
+        commonValidations(foodItemDTO);
+        if (!categoryServices.isCategoryExistsById(foodItemDTO.getCategory())) {
+            throw new ApplicationException(Message.Common.RESOURCE_NOT_AVAILABLE);
+        }
+    }
+
+    private static void commonValidations(FoodItemDTO foodItemDTO) throws ApplicationException {
         if (foodItemDTO.getFoodName() == null || foodItemDTO.getFoodName().isBlank()) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
@@ -39,12 +60,14 @@ public class FoodItemValidator {
         if (foodItemDTO.getCategory().getCategoryId() == 0) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
-        CategoryValidator.validateCategory(foodItemDTO.getCategory());
-        if (foodItemDTO.getImagePath() == null || foodItemDTO.getImagePath().isBlank()) {
+        if (foodItemDTO.getCategory().getCategoryName() == null || foodItemDTO.getCategory().getCategoryName().isBlank()) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
-        if (foodItemServices.isFoodItemExists(foodItemDTO)) {
-            throw new ApplicationException(Message.FoodItem.FOOD_ITEM_EXISTS);
+        if (foodItemDTO.getCategory().getCategoryName().length() > CATEGORY_NAME_LENGTH) {
+            throw new ApplicationException(Message.Category.CATEGORY_NAME_LENGTH);
+        }
+        if (foodItemDTO.getImagePath() == null || foodItemDTO.getImagePath().isBlank()) {
+            throw new ApplicationException(Message.Common.MANDATORY);
         }
     }
 }

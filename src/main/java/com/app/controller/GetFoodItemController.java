@@ -37,6 +37,18 @@ public class GetFoodItemController extends HttpServlet {
             AuthUtils.checkAuthentication(request);
             int foodItemId = Integer.parseInt(request.getParameter("foodItemId"));
             FoodItemDTO foodItemDTO = foodItemServices.getFoodItem(foodItemId);
+            response.getWriter().println("""
+                    <!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <title>Title</title>
+                    </head>
+                    <body>
+                       
+                    </body>
+                    </html>
+                    """);
             sendResponse(response, null, null, foodItemDTO, HttpServletResponse.SC_OK);
         } catch (ApplicationException e) {
             e.printStackTrace();

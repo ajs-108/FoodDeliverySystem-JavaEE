@@ -8,7 +8,7 @@ import com.app.service.CategoryServices;
 
 public class CategoryValidator {
     private static final CategoryServices categoryServices = new CategoryServices();
-    private static final int CATEGORY_NAME_LENGTH = 40;
+    protected static final int CATEGORY_NAME_LENGTH = 40;
 
     public static void validateCategory(CategoryDTO categoryDTO) throws ApplicationException, DBException {
         if (categoryDTO.getCategoryName() == null || categoryDTO.getCategoryName().isBlank()) {

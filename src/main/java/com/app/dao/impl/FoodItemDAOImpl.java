@@ -3,6 +3,7 @@ package com.app.dao.impl;
 import com.app.common.exception.DBException;
 import com.app.config.DBConnector;
 import com.app.dao.IFoodItemDAO;
+import com.app.dto.FoodItemDTO;
 import com.app.model.Category;
 import com.app.model.FoodItem;
 
@@ -109,7 +110,7 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
     @Override
     public void updateFoodItem(FoodItem foodItem) throws DBException {
         String sql1 = """
-                update food_item set food_description = ?, price = ?, discount = ?, is_available = ?, image_path = ?, rating = ?
+                update food_item set food_description = ?, price = ?, discount = ?, is_available = ?, image_path = ?
                 where food_item_id = ?;
                 """;
         try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement ps = connect.prepareStatement(sql1)) {
@@ -118,8 +119,22 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
             ps.setDouble(3, foodItem.getDiscount());
             ps.setBoolean(4, foodItem.isAvailable());
             ps.setString(5, foodItem.getImagePath());
-            ps.setDouble(6, foodItem.getRating());
-            ps.setInt(7, foodItem.getFoodItemId());
+            ps.setInt(6, foodItem.getFoodItemId());
+            ps.executeUpdate();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new DBException(e);
+        }
+    }
+
+    @Override
+    public void updateFoodItemRating(FoodItem foodItem) throws DBException {
+        String sql1 = """
+                update food_item set rating = ?
+                where food_item_id = ?;
+                """;
+        try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement ps = connect.prepareStatement(sql1)) {
+            ps.setDouble(1, foodItem.getRating());
+            ps.setInt(2, foodItem.getFoodItemId());
             ps.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
             throw new DBException(e);

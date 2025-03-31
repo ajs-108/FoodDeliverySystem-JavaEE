@@ -7,6 +7,7 @@ import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.FileUtil;
 import com.app.common.util.ObjectMapperUtil;
+import com.app.controller.validation.FoodItemValidator;
 import com.app.dto.APIResponse;
 import com.app.dto.FoodItemDTO;
 import com.app.service.FoodItemServices;
@@ -46,7 +47,8 @@ public class UpdateFoodItemController extends HttpServlet {
             Part foodItemPart = request.getPart("foodItem");
             Part imagePart = request.getPart("image");
             FoodItemDTO foodItemDTO = ObjectMapperUtil.toObject(foodItemPart.getInputStream(), FoodItemDTO.class);
-            foodItemDTO.setImagePath(FileUtil.toFilePath(AppConstant.FOOD_ITEM_IMAGE_FOLDER, imagePart));
+            foodItemDTO.setImagePath(FileUtil.getFilePath(AppConstant.FOOD_ITEM_IMAGE_FOLDER, imagePart));
+            FoodItemValidator.validateOnUpdate(foodItemDTO);
             foodItemServices.updateFoodItem(foodItemDTO);
             sendResponse(response, null, Message.FoodItem.FOOD_ITEM_UPDATED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {

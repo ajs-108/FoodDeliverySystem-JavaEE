@@ -47,4 +47,15 @@ public class CategoryServices {
         }
         return false;
     }
+
+    public boolean isCategoryExistsById(CategoryDTO categoryDTO) throws DBException {
+        List<CategoryDTO> categoryList = getAllCategories();
+        for (CategoryDTO category : categoryList) {
+            if (Objects.equals(category.getCategoryName(), categoryDTO.getCategoryName())
+                && category.getCategoryId() == categoryDTO.getCategoryId()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -6,9 +6,9 @@ import java.io.File;
 import java.io.IOException;
 
 public class FileUtil {
-    private static final String PATH = "C:\\Users\\sarpan\\IdeaProjects\\Food_Delivery_System_JavaEE\\src\\main\\resources";
+    private static final String PATH = "C:\\Users\\sarpan\\IdeaProjects\\Food_Delivery_System_JavaEE\\src\\main\\webapp";
 
-    public static String toFilePath(String folder, Part part) throws IOException {
+    public static String getFilePath(String folder, Part part) throws IOException {
         String directoryPath = PATH + File.separator +  folder;
         File fileDirectory = new File(directoryPath);
         if (!fileDirectory.exists()) {
@@ -16,6 +16,6 @@ public class FileUtil {
         }
         String filePath = directoryPath + File.separator + part.getSubmittedFileName();
         part.write(filePath);
-        return filePath;
+        return folder + File.separator + part.getSubmittedFileName();
     }
 }

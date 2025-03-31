@@ -11,6 +11,7 @@ public class Message {
     public static class Common {
         public static final String MANDATORY = "Please fill out all required fields";
         public static final String ENTRY_ADDED = "Entry added Successfully";
+        public static final String RESOURCE_NOT_AVAILABLE = "Requested resource is not available";
     }
 
     public static class User {
@@ -53,8 +54,6 @@ public class Message {
         public static final String FOOD_ITEM_UPDATED = "Food Item information is updated successfully";
         public static final String FOOD_ITEM_EXISTS = "Food Item you have entered already exists, Please enter " +
                                                     "another one";
-        public static final String FOOD_ITEM_DOES_NOT_EXISTS = "There is no such Food Item in the Menu, " +
-                                                            "Please Select another one";
     }
 
     public static class ShoppingCart {
