@@ -1,5 +1,8 @@
 package com.app.common.enums;
 
+import javax.management.relation.Role;
+import java.util.Objects;
+
 public enum Roles {
     ROLE_SUPER_ADMIN(1001),
     ROLE_CUSTOMER(1002),
@@ -15,6 +18,15 @@ public enum Roles {
         for (Roles role : Roles.values()) {
             if (roleId == role.getRoleId()) {
                 return role;
+            }
+        }
+        return null;
+    }
+
+    public static Roles toEnum(String role) {
+        for (Roles roles : Roles.values()) {
+            if (Objects.equals(roles.name(), role)) {
+                return roles;
             }
         }
         return null;

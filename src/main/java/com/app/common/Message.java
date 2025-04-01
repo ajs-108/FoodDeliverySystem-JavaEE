@@ -6,6 +6,7 @@ public class Message {
         public static final String GENERIC_ERROR = "Oop! Something went wrong.";
         public static final String UNAUTHORIZED_ACCESS = "You are unauthorized to access this, Please login first";
         public static final String ACCESS_DENIED = "Access denied, you do not have authority to access this";
+        public static final String NOT_A_PARAMETER = "Not a query parameter recognizable by server";
     }
 
     public static class Common {
@@ -14,7 +15,6 @@ public class Message {
         public static final String RESOURCE_NOT_AVAILABLE = "Requested resource is not available";
         public static final String NOT_A_POSITIVE_INTEGER = "Value should be a Positive Integer greater than 0";
         public static final String NOT_A_BOOLEAN = "Value should be either true or false";
-        public static final String GT_ZERO = "Value should greater than zero";
     }
 
     public static class User {
@@ -35,6 +35,7 @@ public class Message {
         public static final String ADDRESS_LENGTH = "Address should be less than or equal to 255 characters";
         public static final String NO_SUCH_USER = "There is no such user. Please register " +
                                                 "first to access the application";
+        public static final String NO_SUCH_DELIVERY_PERSON = "Delivery Person doesn't exists.";
         public static final String INCORRECT_LOGIN_CREDENTIALS = "Login Credentials are incorrect.";
         public static final String USER_REGISTERED = "User Registered successfully";
         public static final String DELIVERY_PERSON_REGISTERED = "Delivery Person Registered successfully";
@@ -42,6 +43,7 @@ public class Message {
         public static final String INCORRECT_PASSWORD = "Please ensure current password is correct";
         public static final String SAME_PASSWORD = "Please choose a different password";
         public static final String PASSWORD_UPDATED = "Password updated successfully";
+        public static final String NOT_A_DELIVERY_PERSON = "Not a Delivery Person";
     }
 
     public static class Category {
@@ -71,5 +73,8 @@ public class Message {
     public static class Order {
         public static final String PLACE_ORDER = "Order Placed";
         public static final String ORDER_STATUS = "Order status updated";
+        public static final String NOT_A_ORDER_STATUS = "Invalid order status";
+        public static final String NOT_A_PAYMENT_STATUS = "Invalid payment status";
+        public static final String ORDER_DOES_NOT_EXISTS = "Order doesn't exists";
     }
 }

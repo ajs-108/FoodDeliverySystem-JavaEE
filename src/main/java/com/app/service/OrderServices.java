@@ -33,7 +33,15 @@ public class OrderServices {
         return orderMapper.toDTO(orderDAO.getOrder(orderId, userId));
     }
 
+    public OrderDTO getOrder(int orderId) throws DBException {
+        return orderMapper.toDTO(orderDAO.getOrder(orderId));
+    }
+
     public void updateStatus(int orderId, OrderStatus orderStatus) throws DBException {
         orderDAO.changeOrderStatus(orderId, orderStatus);
+    }
+
+    public void assignDeliveryPerson(int orderId, int deliveryPersonId) throws DBException {
+        orderDAO.assignDeliveryPerson(orderId, deliveryPersonId);
     }
 }

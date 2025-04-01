@@ -42,7 +42,7 @@ public class OrderDAOImpl implements IOrderDAO {
             psForOrder.executeUpdate();
             setOfGeneratedKeys = psForOrder.getGeneratedKeys();
             int generatedKey = 0;
-            if(setOfGeneratedKeys.next()) {
+            if (setOfGeneratedKeys.next()) {
                 generatedKey = setOfGeneratedKeys.getInt(1);
             }
             psForOrderFoodItems = connection.prepareStatement(orderFoodItemSQL);
@@ -79,7 +79,7 @@ public class OrderDAOImpl implements IOrderDAO {
             psForOrder = connection.prepareStatement(orderSQL);
             resultSet = psForOrder.executeQuery();
             List<Order> orderList = new ArrayList<>();
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 Order order = new Order();
                 User user = new User();
                 order.setOrderId(resultSet.getInt("order_id"));
@@ -177,22 +177,90 @@ public class OrderDAOImpl implements IOrderDAO {
     }
 
     @Override
+    public Order getOrder(int orderId) throws DBException {
+        String orderSQL = """
+                select * from order_
+                where order_id = ?;
+                """;
+        String orderFoodItemSQL = """
+                select * from order_food_items ofi, food_item fi
+                where order_id = ? and fi.food_item_id = ofi.food_item_id;         
+                """;
+        Connection connection = null;
+        PreparedStatement psForOrder = null;
+        PreparedStatement psForOrderFoodItem = null;
+        ResultSet resultSet = null;
+        ResultSet foodItemSet = null;
+        try {
+            connection = DBConnector.getInstance().getConnection();
+            psForOrder = connection.prepareStatement(orderSQL);
+            psForOrder.setInt(1, orderId);
+            resultSet = psForOrder.executeQuery();
+            Order order = null;
+            if (resultSet.next()) {
+                order = new Order();
+                User user = new User();
+                order.setOrderId(resultSet.getInt("order_id"));
+                user.setUserId(resultSet.getInt("user_id"));
+                order.setUser(user);
+                order.setOrderStatus(OrderStatus.toEnum(resultSet.getString("order_status")));
+                order.setOrderDateTime(resultSet.getTimestamp("order_date_time").toLocalDateTime());
+                order.setTotalPrice(resultSet.getInt("total_price"));
+                order.setPaymentStatus(PaymentStatus.toEnum(resultSet.getString("payment_status")));
+                psForOrderFoodItem = connection.prepareStatement(orderFoodItemSQL);
+                psForOrderFoodItem.setInt(1, resultSet.getInt("order_id"));
+                foodItemSet = psForOrderFoodItem.executeQuery();
+                List<OrderFoodItems> orderFoodItemsList = new ArrayList<>();
+                while (foodItemSet.next()) {
+                    OrderFoodItems orderFoodItems = new OrderFoodItems();
+                    FoodItem foodItem = new FoodItem();
+                    foodItem.setFoodItemId(foodItemSet.getInt("food_item_id"));
+                    foodItem.setFoodName(foodItemSet.getString("food_name"));
+                    foodItem.setFoodDescription(foodItemSet.getString("food_description"));
+                    foodItem.setPrice(foodItemSet.getDouble("price"));
+                    foodItem.setDiscount(foodItemSet.getDouble("discount"));
+                    orderFoodItems.setFoodItem(foodItem);
+                    orderFoodItems.setQuantity(foodItemSet.getInt("quantity"));
+                    orderFoodItemsList.add(orderFoodItems);
+                }
+                order.setOrderFoodItems(orderFoodItemsList);
+            }
+            return order;
+        } catch (SQLException | ClassNotFoundException | NullPointerException e) {
+            throw new DBException(e);
+        } finally {
+            DBConnector.resourceCloser(psForOrder, resultSet, connection);
+            DBConnector.resourceCloser(psForOrderFoodItem, foodItemSet, null);
+        }
+    }
+
+    @Override
     public void changeOrderStatus(int orderId, OrderStatus orderStatus) throws DBException {
         String orderSQL = """
                 update order_ set order_status = ? where order_id = ?;
                 """;
-        Connection connection = null;
-        PreparedStatement psForOrder = null;
-        try {
-            connection = DBConnector.getInstance().getConnection();
-            psForOrder = connection.prepareStatement(orderSQL);
+        try (Connection connection = DBConnector.getInstance().getConnection();
+             PreparedStatement psForOrder = connection.prepareStatement(orderSQL)) {
             psForOrder.setString(1, orderStatus.name());
             psForOrder.setInt(2, orderId);
             psForOrder.execute();
         } catch (SQLException | ClassNotFoundException | NullPointerException e) {
             throw new DBException(e);
-        } finally {
-            DBConnector.resourceCloser(psForOrder,null, connection);
+        }
+    }
+
+    @Override
+    public void assignDeliveryPerson(int orderId, int deliveryPersonId) throws DBException {
+        String orderSQL = """
+                update order_ set delivery_person_id = ? where order_id = ?;
+                """;
+        try (Connection connection = DBConnector.getInstance().getConnection();
+             PreparedStatement psForOrder = connection.prepareStatement(orderSQL)) {
+            psForOrder.setInt(1, deliveryPersonId);
+            psForOrder.setInt(2, orderId);
+            psForOrder.execute();
+        } catch (SQLException | ClassNotFoundException | NullPointerException e) {
+            throw new DBException(e);
         }
     }
 }

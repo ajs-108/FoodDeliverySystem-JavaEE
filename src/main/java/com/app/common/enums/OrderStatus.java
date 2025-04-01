@@ -20,4 +20,13 @@ public enum OrderStatus {
         }
         return null;
     }
+
+    public static boolean isOrderStatus(OrderStatus status) {
+        for (OrderStatus orderStatus : OrderStatus.values()) {
+            if (Objects.equals(orderStatus, status)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
