@@ -65,7 +65,10 @@ public class OrderDAOImpl implements IOrderDAO {
     @Override
     public List<Order> getAllOrder() throws DBException {
         String orderSQL = "select * from order_;";
-        String orderFoodItemSQL = "select * from order_food_items where order_id = ?";
+        String orderFoodItemSQL = """
+                select * from order_food_items ofi, food_item fi
+                where order_id = ? and fi.food_item_id = ofi.food_item_id;         
+                """;
         Connection connection = null;
         PreparedStatement psForOrder = null;
         PreparedStatement psForOrderFoodItem = null;
@@ -94,6 +97,10 @@ public class OrderDAOImpl implements IOrderDAO {
                     OrderFoodItems orderFoodItems = new OrderFoodItems();
                     FoodItem foodItem = new FoodItem();
                     foodItem.setFoodItemId(foodItemSet.getInt("food_item_id"));
+                    foodItem.setFoodName(foodItemSet.getString("food_name"));
+                    foodItem.setFoodDescription(foodItemSet.getString("food_description"));
+                    foodItem.setPrice(foodItemSet.getDouble("price"));
+                    foodItem.setDiscount(foodItemSet.getDouble("discount"));
                     orderFoodItems.setFoodItem(foodItem);
                     orderFoodItems.setQuantity(foodItemSet.getInt("quantity"));
                     orderFoodItemsList.add(orderFoodItems);
@@ -116,7 +123,10 @@ public class OrderDAOImpl implements IOrderDAO {
                 select * from order_
                 where order_id = ? and user_id = ?;
                 """;
-        String orderFoodItemSQL = "select * from order_food_items where order_id = ?";
+        String orderFoodItemSQL = """
+                select * from order_food_items ofi, food_item fi
+                where order_id = ? and fi.food_item_id = ofi.food_item_id;         
+                """;
         Connection connection = null;
         PreparedStatement psForOrder = null;
         PreparedStatement psForOrderFoodItem = null;
@@ -147,6 +157,10 @@ public class OrderDAOImpl implements IOrderDAO {
                     OrderFoodItems orderFoodItems = new OrderFoodItems();
                     FoodItem foodItem = new FoodItem();
                     foodItem.setFoodItemId(foodItemSet.getInt("food_item_id"));
+                    foodItem.setFoodName(foodItemSet.getString("food_name"));
+                    foodItem.setFoodDescription(foodItemSet.getString("food_description"));
+                    foodItem.setPrice(foodItemSet.getDouble("price"));
+                    foodItem.setDiscount(foodItemSet.getDouble("discount"));
                     orderFoodItems.setFoodItem(foodItem);
                     orderFoodItems.setQuantity(foodItemSet.getInt("quantity"));
                     orderFoodItemsList.add(orderFoodItems);

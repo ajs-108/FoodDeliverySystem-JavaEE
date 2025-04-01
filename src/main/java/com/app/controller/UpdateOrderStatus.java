@@ -17,20 +17,22 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Iterator;
 
 @WebServlet(name = "updateOrderStatus", value = "/updateOrderStatus")
 public class UpdateOrderStatus extends HttpServlet {
     private OrderServices orderServices = new OrderServices();
-
+//todo:A server MUST return an error with a “400 Bad Request” status-line if a query parameter is unexpected.
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            int orderId = Integer.parseInt(request.getParameter("orderId"));
+            String orderId = request.getParameter("orderId");
             OrderStatus orderStatus = OrderStatus.toEnum(request.getParameter("orderStatus"));
             OrderValidator.validateUpdateStatus(orderId, orderStatus);
-            orderServices.updateStatus(orderId, orderStatus);
+            orderServices.updateStatus(Integer.parseInt(orderId), orderStatus);
             sendResponse(response, null, Message.Order.ORDER_STATUS, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();

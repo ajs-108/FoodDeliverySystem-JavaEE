@@ -17,6 +17,11 @@ public class OrderMapper {
             orderDTO.setOrderStatus(order.getOrderStatus());
             orderDTO.setOrderDateTime(order.getOrderDateTime());
             orderDTO.setPaymentStatus(order.getPaymentStatus());
+            orderDTO.setOrderFoodItems(
+                    order.getOrderFoodItems()
+                            .stream()
+                            .map(orderFoodItemsMapper::toDTO)
+                            .toList());
         } else {
             return null;
         }
@@ -35,6 +40,11 @@ public class OrderMapper {
         order.setOrderStatus(orderDTO.getOrderStatus());
         order.setOrderDateTime(orderDTO.getOrderDateTime());
         order.setPaymentStatus(orderDTO.getPaymentStatus());
+        order.setOrderFoodItems(
+                orderDTO.getOrderFoodItems()
+                        .stream()
+                        .map(orderFoodItemsMapper::toOrderFoodItems)
+                        .toList());
         return order;
     }
 }

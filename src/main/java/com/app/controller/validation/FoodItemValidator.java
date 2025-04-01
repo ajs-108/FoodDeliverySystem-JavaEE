@@ -7,13 +7,16 @@ import com.app.dto.FoodItemDTO;
 import com.app.service.CategoryServices;
 import com.app.service.FoodItemServices;
 
+import java.util.Objects;
+
 import static com.app.controller.validation.CategoryValidator.CATEGORY_NAME_LENGTH;
 
 public class FoodItemValidator {
-    private static FoodItemServices foodItemServices = new FoodItemServices();
-    private static CategoryServices categoryServices = new CategoryServices();
     private static final int FOOD_NAME_LENGTH = 30;
     private static final int FOOD_DESCRIPTION_LENGTH = 30;
+    private static FoodItemServices foodItemServices = new FoodItemServices();
+    private static CategoryServices categoryServices = new CategoryServices();
+    private static Validator validator = new Validator();
 
     public static void validateFoodItem(FoodItemDTO foodItemDTO) throws ApplicationException, DBException {
         commonValidations(foodItemDTO);
@@ -29,6 +32,27 @@ public class FoodItemValidator {
         commonValidations(foodItemDTO);
         if (!categoryServices.isCategoryExistsById(foodItemDTO.getCategory())) {
             throw new ApplicationException(Message.Common.RESOURCE_NOT_AVAILABLE);
+        }
+    }
+
+    public static void validateOnAvailabilityUpdate(String foodItemId, String isAvailable) throws ApplicationException, DBException {
+        if (foodItemId == null || foodItemId.isBlank()) {
+            throw new ApplicationException(Message.Common.MANDATORY);
+        }
+        if (!validator.isPositiveInteger(foodItemId)) {
+            throw new ApplicationException(Message.Common.NOT_A_POSITIVE_INTEGER);
+        }
+        if (Objects.equals(foodItemId,"0")) {
+            throw new ApplicationException(Message.Common.GT_ZERO);
+        }
+        if (isAvailable == null || isAvailable.isBlank()) {
+            throw new ApplicationException(Message.Common.MANDATORY);
+        }
+        if (!foodItemServices.isFoodItemExists(Integer.parseInt(foodItemId))) {
+            throw new ApplicationException(Message.Common.RESOURCE_NOT_AVAILABLE);
+        }
+        if (!validator.isBoolean(isAvailable)) {
+            throw new ApplicationException(Message.Common.NOT_A_BOOLEAN);
         }
     }
 

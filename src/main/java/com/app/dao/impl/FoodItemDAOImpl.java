@@ -110,16 +110,31 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
     @Override
     public void updateFoodItem(FoodItem foodItem) throws DBException {
         String sql1 = """
-                update food_item set food_description = ?, price = ?, discount = ?, is_available = ?, image_path = ?
+                update food_item set food_name = ?, food_description = ?, price = ?, discount = ?, image_path = ?
                 where food_item_id = ?;
                 """;
         try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement ps = connect.prepareStatement(sql1)) {
-            ps.setString(1, foodItem.getFoodDescription());
-            ps.setDouble(2, foodItem.getPrice());
-            ps.setDouble(3, foodItem.getDiscount());
-            ps.setBoolean(4, foodItem.isAvailable());
+            ps.setString(1, foodItem.getFoodName());
+            ps.setString(2, foodItem.getFoodDescription());
+            ps.setDouble(3, foodItem.getPrice());
+            ps.setDouble(4, foodItem.getDiscount());
             ps.setString(5, foodItem.getImagePath());
             ps.setInt(6, foodItem.getFoodItemId());
+            ps.executeUpdate();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new DBException(e);
+        }
+    }
+
+    @Override
+    public void updateFoodItemAvailability(int foodItemId, boolean isAvailable) throws DBException {
+        String sql1 = """
+                update food_item set is_available = ?
+                where food_item_id = ?;
+                """;
+        try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement ps = connect.prepareStatement(sql1)) {
+            ps.setBoolean(1, isAvailable);
+            ps.setInt(2, foodItemId);
             ps.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
             throw new DBException(e);

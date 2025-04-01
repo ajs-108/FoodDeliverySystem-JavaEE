@@ -37,6 +37,10 @@ public class FoodItemServices {
         foodItemDAO.updateFoodItem(foodItemMapper.toFoodItem(foodItemDTO));
     }
 
+    public void updateFoodItemAvailability(int foodItemId, boolean isAvailable) throws DBException {
+        foodItemDAO.updateFoodItemAvailability(foodItemId, isAvailable);
+    }
+
     public boolean isFoodItemExists(int foodItemId) throws DBException {
         return getFoodItem(foodItemId) != null;
     }

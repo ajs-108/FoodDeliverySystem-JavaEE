@@ -12,6 +12,9 @@ public class Message {
         public static final String MANDATORY = "Please fill out all required fields";
         public static final String ENTRY_ADDED = "Entry added Successfully";
         public static final String RESOURCE_NOT_AVAILABLE = "Requested resource is not available";
+        public static final String NOT_A_POSITIVE_INTEGER = "Value should be a Positive Integer greater than 0";
+        public static final String NOT_A_BOOLEAN = "Value should be either true or false";
+        public static final String GT_ZERO = "Value should greater than zero";
     }
 
     public static class User {

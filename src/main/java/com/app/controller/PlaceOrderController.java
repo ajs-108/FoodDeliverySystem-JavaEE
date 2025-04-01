@@ -6,11 +6,13 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
+import com.app.controller.validation.OrderValidator;
 import com.app.controller.validation.ShoppingCartValidator;
 import com.app.dto.APIResponse;
 import com.app.dto.OrderDTO;
 import com.app.dto.UserDTO;
 import com.app.service.OrderServices;
+import com.mysql.cj.x.protobuf.MysqlxCrud;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -30,6 +32,7 @@ public class PlaceOrderController extends HttpServlet {
             AuthUtils.checkAuthentication(request);
             int userId = AuthUtils.getCurrentUser(request).getUserId();
             OrderDTO orderDTO = ObjectMapperUtil.toObject(request.getReader(), OrderDTO.class);
+            OrderValidator.validateOrder(userId, orderDTO);
             orderServices.placeOrder(userId, orderDTO);
             sendResponse(response, null, Message.Order.PLACE_ORDER, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {

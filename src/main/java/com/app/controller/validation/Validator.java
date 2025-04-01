@@ -32,4 +32,22 @@ public class Validator {
         }
         return flag;
     }
+
+    public boolean isPositiveInteger(String number) {
+        flag = false;
+        pattern = Pattern.compile("\\d+");
+        if (pattern.matcher(number).matches()) {
+            flag = true;
+        }
+        return flag;
+    }
+
+    public boolean isBoolean(String bool) {
+        flag = false;
+        pattern = Pattern.compile("(?i)true|false");
+        if (pattern.matcher(bool).matches()) {
+            flag = true;
+        }
+        return flag;
+    }
 }
