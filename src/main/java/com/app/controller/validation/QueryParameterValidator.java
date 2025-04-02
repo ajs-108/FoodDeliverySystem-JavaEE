@@ -1,4 +1,4 @@
-package com.app.common.util;
+package com.app.controller.validation;
 
 import com.app.common.Message;
 import com.app.common.exception.ApplicationException;
@@ -9,8 +9,8 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
 
-public class QueryParameterUtil {
-    public static void checkQueryParameters(HttpServletRequest request, String... str) throws ApplicationException {
+public class QueryParameterValidator {
+    public static void validateQueryParameters(HttpServletRequest request, String... parameters) throws ApplicationException {
         Enumeration<String> parameterNames = request.getParameterNames();
         List<String> parameterNamesList = new ArrayList<>();
         int count = 0;
@@ -18,14 +18,14 @@ public class QueryParameterUtil {
             parameterNamesList.add(parameterNames.nextElement());
         }
         for (String pName : parameterNamesList) {
-            for (String requiredParameters : str) {
+            for (String requiredParameters : parameters) {
                 if (Objects.equals(pName, requiredParameters)) {
                     count++;
                 }
             }
         }
-        if (str.length != count) {
-            throw new ApplicationException(Message.Error.NOT_A_PARAMETER);
+        if (parameters.length != parameterNamesList.size() || parameters.length != count) {
+            throw new ApplicationException(Message.Error.INVALID_PARAMETER);
         }
     }
 }

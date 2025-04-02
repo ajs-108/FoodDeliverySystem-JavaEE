@@ -1,6 +1,5 @@
 package com.app.common.enums;
 
-import javax.management.relation.Role;
 import java.util.Objects;
 
 public enum Roles {

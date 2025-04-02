@@ -1,12 +1,12 @@
 package com.app.model;
 
-public class ReviewRating {
+public class Review {
     private int reviewId;
     private User user;
     private FoodItem foodItem;
     private int orderId;
     private int rating;
-    private String review;
+    private String userReview;
 
     public int getReviewId() {
         return reviewId;
@@ -48,23 +48,23 @@ public class ReviewRating {
         this.rating = rating;
     }
 
-    public String getReview() {
-        return review;
+    public String getUserReview() {
+        return userReview;
     }
 
-    public void setReview(String review) {
-        this.review = review;
+    public void setUserReview(String userReview) {
+        this.userReview = userReview;
     }
 
     @Override
     public String toString() {
-        return "ReviewRating{" +
+        return "Review{" +
                 "reviewId=" + reviewId +
                 ", user=" + user +
                 ", foodItem=" + foodItem +
                 ", orderId=" + orderId +
                 ", rating=" + rating +
-                ", review='" + review + '\'' +
+                ", userReview='" + userReview + '\'' +
                 '}';
     }
 }

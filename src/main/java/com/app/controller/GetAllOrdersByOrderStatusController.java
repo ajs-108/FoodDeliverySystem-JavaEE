@@ -2,12 +2,16 @@ package com.app.controller;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
+import com.app.common.enums.OrderStatus;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
+import com.app.controller.validation.OrderValidator;
+import com.app.controller.validation.QueryParameterValidator;
 import com.app.dto.APIResponse;
 import com.app.dto.OrderDTO;
+import com.app.dto.UserDTO;
 import com.app.service.OrderServices;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -16,16 +20,19 @@ import jakarta.servlet.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "getAllOrder", value = "/getAllOrder")
-public class GetAllOrderController extends HttpServlet {
+@WebServlet(name = "getAllOrderByOrderStatus", value = "/getAllOrderByOrderStatus")
+public class GetAllOrdersByOrderStatusController extends HttpServlet {
     private OrderServices orderServices = new OrderServices();
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            List<OrderDTO> orderDTO = orderServices.getAllOrder();
-            sendResponse(response, null, null, orderDTO, HttpServletResponse.SC_OK);
+            QueryParameterValidator.validateQueryParameters(request, "orderStatus");
+            String orderStatus = request.getParameter("orderStatus");
+            OrderValidator.validateGetOrdersByStatus(orderStatus);
+            List<OrderDTO> orderDTOList = orderServices.getAllOrder(OrderStatus.toEnum(orderStatus));
+            sendResponse(response, null, null, orderDTOList, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

@@ -21,9 +21,9 @@ public enum OrderStatus {
         return null;
     }
 
-    public static boolean isOrderStatus(OrderStatus status) {
+    public static boolean isOrderStatus(String status) {
         for (OrderStatus orderStatus : OrderStatus.values()) {
-            if (Objects.equals(orderStatus, status)) {
+            if (Objects.equals(orderStatus.name(), status)) {
                 return true;
             }
         }

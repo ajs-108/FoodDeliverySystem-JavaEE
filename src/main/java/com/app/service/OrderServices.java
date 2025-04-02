@@ -1,6 +1,7 @@
 package com.app.service;
 
 import com.app.common.enums.OrderStatus;
+import com.app.common.enums.Roles;
 import com.app.common.exception.DBException;
 import com.app.dao.IOrderDAO;
 import com.app.dao.impl.OrderDAOImpl;
@@ -24,6 +25,20 @@ public class OrderServices {
 
     public List<OrderDTO> getAllOrder() throws DBException {
         return orderDAO.getAllOrder()
+                .stream()
+                .map(orderMapper::toDTO)
+                .toList();
+    }
+
+    public List<OrderDTO> getAllOrder(int userid, Roles roles) throws DBException {
+        return orderDAO.getAllOrder(userid, roles)
+                .stream()
+                .map(orderMapper::toDTO)
+                .toList();
+    }
+
+    public List<OrderDTO> getAllOrder(OrderStatus orderStatus) throws DBException {
+        return orderDAO.getAllOrder(orderStatus)
                 .stream()
                 .map(orderMapper::toDTO)
                 .toList();

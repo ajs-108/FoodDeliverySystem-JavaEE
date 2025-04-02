@@ -6,6 +6,7 @@ import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
 import com.app.controller.validation.FoodItemValidator;
+import com.app.controller.validation.QueryParameterValidator;
 import com.app.dto.APIResponse;
 import com.app.service.FoodItemServices;
 import jakarta.servlet.ServletException;
@@ -35,6 +36,7 @@ public class UpdateFoodItemAvailability extends HttpServlet {
             if (!AuthUtils.isAdmin(request)) {
                 throw new ApplicationException(Message.Error.ACCESS_DENIED);
             }
+            QueryParameterValidator.validateQueryParameters(request, "foodItemId", "available");
             String foodItemId = request.getParameter("foodItemId");
             String isAvailable = request.getParameter("available");
             FoodItemValidator.validateOnAvailabilityUpdate(foodItemId, isAvailable);

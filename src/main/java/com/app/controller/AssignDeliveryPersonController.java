@@ -2,13 +2,12 @@ package com.app.controller;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
-import com.app.common.enums.OrderStatus;
 import com.app.common.enums.Roles;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
-import com.app.common.util.QueryParameterUtil;
+import com.app.controller.validation.QueryParameterValidator;
 import com.app.controller.validation.OrderValidator;
 import com.app.dto.APIResponse;
 import com.app.service.OrderServices;
@@ -18,11 +17,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import javax.management.relation.Role;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
 
 @WebServlet(name = "assignDeliveryPerson", value = "/assignDeliveryPerson")
 public class AssignDeliveryPersonController extends HttpServlet {
@@ -36,7 +31,7 @@ public class AssignDeliveryPersonController extends HttpServlet {
             if (!AuthUtils.isAdmin(request)) {
                 throw new ApplicationException(Message.Error.ACCESS_DENIED);
             }
-            QueryParameterUtil.checkQueryParameters(request, "orderId", "deliveryPersonId", "role");
+            QueryParameterValidator.validateQueryParameters(request, "orderId", "deliveryPersonId", "role");
             String orderId = request.getParameter("orderId");
             String deliveryPersonId = request.getParameter("deliveryPersonId");
             Roles roles = Roles.toEnum(request.getParameter("role"));

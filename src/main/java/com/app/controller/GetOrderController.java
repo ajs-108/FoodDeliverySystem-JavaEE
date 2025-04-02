@@ -2,13 +2,11 @@ package com.app.controller;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
-import com.app.common.enums.OrderStatus;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
-import com.app.common.util.QueryParameterUtil;
-import com.app.controller.validation.OrderValidator;
+import com.app.controller.validation.QueryParameterValidator;
 import com.app.dto.APIResponse;
 import com.app.dto.OrderDTO;
 import com.app.dto.UserDTO;
@@ -18,26 +16,21 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
 
-@WebServlet(name = "updateOrderStatus", value = "/updateOrderStatus")
-public class UpdateOrderStatus extends HttpServlet {
+@WebServlet(name = "getOrder", value = "/getOrder")
+public class GetOrderController extends HttpServlet {
     private OrderServices orderServices = new OrderServices();
 
     @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            QueryParameterUtil.checkQueryParameters(request, "orderId", "orderStatus");
-            String orderId = request.getParameter("orderId");
-            OrderStatus orderStatus = OrderStatus.toEnum(request.getParameter("orderStatus"));
-            OrderValidator.validateUpdateStatus(orderId, orderStatus);
-            orderServices.updateStatus(Integer.parseInt(orderId), orderStatus);
-            sendResponse(response, null, Message.Order.ORDER_STATUS, null, HttpServletResponse.SC_OK);
+            UserDTO userDTO = AuthUtils.getCurrentUser(request);
+            QueryParameterValidator.validateQueryParameters(request, "orderId");
+            int orderId = Integer.parseInt(request.getParameter("orderId"));
+            OrderDTO orderDTO = orderServices.getOrder(orderId, userDTO.getUserId());
+            sendResponse(response, null, null, orderDTO, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -49,7 +42,6 @@ public class UpdateOrderStatus extends HttpServlet {
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
-
     public void sendResponse(HttpServletResponse response, String techMessage, String message, Object data, int status) throws IOException {
         APIResponse apiResponse = new APIResponse();
         apiResponse.setMessage(message);

@@ -15,9 +15,9 @@ public enum PaymentStatus {
         return null;
     }
 
-    public static boolean isPaymentStatus(PaymentStatus status) {
+    public static boolean isPaymentStatus(String status) {
         for (PaymentStatus paymentStatus : PaymentStatus.values()) {
-            if (Objects.equals(paymentStatus, status)) {
+            if (Objects.equals(paymentStatus.name(), status)) {
                 return true;
             }
         }

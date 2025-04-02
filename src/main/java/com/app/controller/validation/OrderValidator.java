@@ -7,6 +7,7 @@ import com.app.common.enums.Roles;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.dto.OrderDTO;
+import com.app.dto.UserDTO;
 import com.app.service.OrderServices;
 import com.app.service.UserServices;
 
@@ -22,18 +23,18 @@ public class OrderValidator {
         if (orderDTO.getOrderStatus() == null) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
-        if (!OrderStatus.isOrderStatus(orderDTO.getOrderStatus())) {
+        if (!OrderStatus.isOrderStatus(orderDTO.getOrderStatus().name())) {
             throw new ApplicationException(Message.Order.NOT_A_ORDER_STATUS);
         }
         if (orderDTO.getPaymentStatus() == null) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
-        if (!PaymentStatus.isPaymentStatus(orderDTO.getPaymentStatus())) {
+        if (!PaymentStatus.isPaymentStatus(orderDTO.getPaymentStatus().name())) {
             throw new ApplicationException(Message.Order.NOT_A_PAYMENT_STATUS);
         }
     }
 
-    public static void validateUpdateStatus(String orderId, OrderStatus orderStatus)
+    public static void validateUpdateStatus(String orderId, String orderStatus)
             throws ApplicationException, DBException {
         if (orderId == null || orderId.isBlank()) {
             throw new ApplicationException(Message.Common.MANDATORY);
@@ -74,6 +75,21 @@ public class OrderValidator {
         }
         if (roles.getRoleId() != 1003) {
             throw new ApplicationException(Message.User.NOT_A_DELIVERY_PERSON);
+        }
+    }
+
+    public static void validateGetOrdersByStatus(String orderStatus) throws ApplicationException, DBException {
+        if (orderStatus == null) {
+            throw new ApplicationException(Message.Common.MANDATORY);
+        }
+        if (!OrderStatus.isOrderStatus(orderStatus)) {
+            throw new ApplicationException(Message.Order.NOT_A_ORDER_STATUS);
+        }
+    }
+
+    public static void validateGetOrdersOfUser(UserDTO userDTO) throws ApplicationException, DBException {
+        if (userServices.getUser(userDTO.getEmail()) == null) {
+            throw new ApplicationException(Message.User.NO_SUCH_USER);
         }
     }
 }

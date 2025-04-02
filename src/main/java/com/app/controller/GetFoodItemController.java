@@ -5,6 +5,7 @@ import com.app.common.Message;
 import com.app.common.exception.ApplicationException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
+import com.app.controller.validation.QueryParameterValidator;
 import com.app.dto.APIResponse;
 import com.app.dto.FoodItemDTO;
 import com.app.service.FoodItemServices;
@@ -35,6 +36,7 @@ public class GetFoodItemController extends HttpServlet {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
+            QueryParameterValidator.validateQueryParameters(request, "foodItemId");
             int foodItemId = Integer.parseInt(request.getParameter("foodItemId"));
             FoodItemDTO foodItemDTO = foodItemServices.getFoodItem(foodItemId);
             sendResponse(response, null, null, foodItemDTO, HttpServletResponse.SC_OK);
