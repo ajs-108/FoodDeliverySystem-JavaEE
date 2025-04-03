@@ -66,4 +66,37 @@ public class ReviewDAOImpl implements IReviewDAO {
             throw new DBException(e);
         }
     }
+
+    @Override
+    public Review getReview(int reviewId) throws DBException {
+        String sql = """
+                select r.review_id, u.user_id, u.first_name,
+                fi.food_item_id, fi.food_name, r.order_id, r.rating, r.review
+                from review_rating_table r, user_ u, food_item fi
+                where u.user_id = r.user_id and fi.food_item_id = r.food_item_id;
+                """;
+        ResultSet resultSet = null;
+        try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
+            resultSet = preparedStatement.executeQuery();
+            Review review = null;
+            if (resultSet.next()) {
+                User user = new User();
+                user.setUserId(resultSet.getInt("user_id"));
+                user.setFirstName(resultSet.getString("first_name"));
+                FoodItem foodItem = new FoodItem();
+                foodItem.setFoodItemId(resultSet.getInt("food_item_id"));
+                foodItem.setFoodName(resultSet.getString("food_name"));
+                review = new Review();
+                review.setReviewId(resultSet.getInt("review_id"));
+                review.setUser(user);
+                review.setFoodItem(foodItem);
+                review.setOrderId(resultSet.getInt("order_id"));
+                review.setRating(resultSet.getInt("rating"));
+                review.setUserReview(resultSet.getString("review"));
+            }
+            return review;
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new DBException(e);
+        }
+    }
 }

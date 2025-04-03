@@ -1,13 +1,12 @@
 package com.app.mapper;
 
-import com.app.dto.FoodItemDTO;
 import com.app.model.FoodItem;
 
 public class FoodItemMapper {
     CategoryMapper categoryMapper = new CategoryMapper();
 
-    public FoodItemDTO toDTO(FoodItem foodItem) {
-        FoodItemDTO foodItemDTO = new FoodItemDTO();
+    public com.app.dto.FoodItemDTO toDTO(FoodItem foodItem) {
+        com.app.dto.FoodItemDTO foodItemDTO = new com.app.dto.FoodItemDTO();
         if (foodItem != null) {
             foodItemDTO.setFoodItemId(foodItem.getFoodItemId());
             foodItemDTO.setFoodName(foodItem.getFoodName());
@@ -24,7 +23,7 @@ public class FoodItemMapper {
         return foodItemDTO;
     }
 
-    public FoodItem toFoodItem(FoodItemDTO foodItemDTO) {
+    public FoodItem toFoodItem(com.app.dto.FoodItemDTO foodItemDTO) {
         FoodItem foodItem = new FoodItem();
         if (foodItemDTO != null) {
             foodItem.setFoodItemId(foodItemDTO.getFoodItemId());

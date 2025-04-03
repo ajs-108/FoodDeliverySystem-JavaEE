@@ -3,7 +3,7 @@ package com.app.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class OrderFoodItemsDTO {
+public class CartFoodItemsDTO {
     private FoodItemDTO foodItemDTO;
     private int quantity;
 
@@ -25,7 +25,7 @@ public class OrderFoodItemsDTO {
 
     @Override
     public String toString() {
-        return "OrderFoodItems{" +
+        return "CartFoodItemsDTO{" +
                 "foodItemDTO=" + foodItemDTO +
                 ", quantity=" + quantity +
                 '}';

@@ -3,7 +3,6 @@ package com.app.dao.impl;
 import com.app.common.exception.DBException;
 import com.app.config.DBConnector;
 import com.app.dao.IFoodItemDAO;
-import com.app.dto.FoodItemDTO;
 import com.app.model.Category;
 import com.app.model.FoodItem;
 
@@ -142,14 +141,14 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
     }
 
     @Override
-    public void updateFoodItemRating(FoodItem foodItem) throws DBException {
+    public void updateFoodItemRating(int foodItemId, double rating) throws DBException {
         String sql1 = """
                 update food_item set rating = ?
                 where food_item_id = ?;
                 """;
         try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement ps = connect.prepareStatement(sql1)) {
-            ps.setDouble(1, foodItem.getRating());
-            ps.setInt(2, foodItem.getFoodItemId());
+            ps.setDouble(1, rating);
+            ps.setInt(2, foodItemId);
             ps.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
             throw new DBException(e);

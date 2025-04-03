@@ -17,7 +17,7 @@ import java.util.List;
 
 public class OrderDAOImpl implements IOrderDAO {
     @Override
-    public void placeOrder(int userId, Order order) throws DBException {
+    public int placeOrder(int userId, Order order) throws DBException {
         String orderSQL = """
                 insert into order_(user_id, total_price, order_status, payment_status)
                 select u.user_id, (sum(fi.price*sc.quantity)), ?, ?
@@ -40,7 +40,7 @@ public class OrderDAOImpl implements IOrderDAO {
             psForOrder.setString(1, order.getOrderStatus().name());
             psForOrder.setString(2, order.getPaymentStatus().name());
             psForOrder.setInt(3, userId);
-            psForOrder.executeUpdate();
+            int i = psForOrder.executeUpdate();
             setOfGeneratedKeys = psForOrder.getGeneratedKeys();
             int generatedKey = 0;
             if (setOfGeneratedKeys.next()) {
@@ -48,8 +48,9 @@ public class OrderDAOImpl implements IOrderDAO {
             }
             psForOrderFoodItems = connection.prepareStatement(orderFoodItemSQL);
             psForOrderFoodItems.setInt(1, generatedKey);
-            psForOrderFoodItems.execute();
+            i = psForOrderFoodItems.executeUpdate();
             connection.commit();
+            return i;
         } catch (SQLException | ClassNotFoundException | NullPointerException e) {
             try {
                 connection.rollback();

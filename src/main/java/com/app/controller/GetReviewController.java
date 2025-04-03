@@ -6,33 +6,32 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
-import com.app.controller.validation.ShoppingCartValidator;
+import com.app.controller.validation.QueryParameterValidator;
+import com.app.controller.validation.ReviewValidator;
 import com.app.dto.APIResponse;
-import com.app.dto.ShoppingCartDTO;
-import com.app.dto.UserDTO;
-import com.app.service.ShoppingCartServices;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import com.app.dto.ReviewDTO;
+import com.app.service.ReviewServices;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "getCart", value = "/getCart")
-public class GetCartController extends HttpServlet {
-    private ShoppingCartServices shoppingCartServices = new ShoppingCartServices();
+@WebServlet(name = "getReview", value = "/getReview")
+public class GetReviewController extends HttpServlet {
+    private ReviewServices reviewServices = new ReviewServices();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            UserDTO userDTO = AuthUtils.getCurrentUser(request);
-            ShoppingCartValidator.validateUserId(userDTO.getUserId());
-            ShoppingCartDTO shoppingCartDTO = shoppingCartServices.showShoppingCart(userDTO.getUserId());
-            sendResponse(response, null, null, shoppingCartDTO, HttpServletResponse.SC_OK);
+            QueryParameterValidator.validateQueryParameters(request, "reviewId");
+            String reviewId = request.getParameter("reviewId");
+            ReviewValidator.validateGetReview(reviewId);
+            ReviewDTO reviewDTO = reviewServices.getReview(Integer.parseInt(reviewId));
+            sendResponse(response, null, null, reviewDTO, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

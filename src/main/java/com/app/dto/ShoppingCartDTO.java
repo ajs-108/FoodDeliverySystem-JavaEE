@@ -1,9 +1,14 @@
 package com.app.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.util.List;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ShoppingCartDTO {
     private int userId;
-    private FoodItemDTO foodItem;
-    private int quantity;
+    private List<CartFoodItemsDTO> cartFoodItemsDTOList;
+    private double totalPrice;
 
     public int getUserId() {
         return userId;
@@ -13,28 +18,28 @@ public class ShoppingCartDTO {
         this.userId = userId;
     }
 
-    public FoodItemDTO getFoodItem() {
-        return foodItem;
+    public List<CartFoodItemsDTO> getCartFoodItemsDTOList() {
+        return cartFoodItemsDTOList;
     }
 
-    public void setFoodItem(FoodItemDTO foodItem) {
-        this.foodItem = foodItem;
+    public void setCartFoodItemsDTOList(List<CartFoodItemsDTO> cartFoodItemsDTOList) {
+        this.cartFoodItemsDTOList = cartFoodItemsDTOList;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public double getTotalPrice() {
+        return totalPrice;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     @Override
     public String toString() {
         return "ShoppingCartDTO{" +
                 "userId=" + userId +
-                ", foodItemDTO=" + foodItem +
-                ", quantity=" + quantity +
+                ", cartFoodItemsDTOList=" + cartFoodItemsDTOList +
+                ", totalPrice=" + totalPrice +
                 '}';
     }
 }

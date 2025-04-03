@@ -31,7 +31,7 @@ public class PostReviewController extends HttpServlet {
             List<ReviewDTO> reviewDTOList = ObjectMapperUtil.toObject(request.getReader(), new TypeReference<>() {
             });
             reviewServices.postReview(reviewDTOList);
-            sendResponse(response, null, Message.Common.ENTRY_ADDED, null, HttpServletResponse.SC_CREATED);
+            sendResponse(response, null, Message.Review.REVIEW_POSTED, null, HttpServletResponse.SC_CREATED);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

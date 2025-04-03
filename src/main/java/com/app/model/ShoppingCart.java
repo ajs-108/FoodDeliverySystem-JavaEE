@@ -1,9 +1,11 @@
 package com.app.model;
 
+import java.util.List;
+
 public class ShoppingCart {
     private int userId;
-    private FoodItem foodItem;
-    private int quantity;
+    private List<CartFoodItems> cartFoodItemsList;
+    private double totalPrice;
 
     public int getUserId() {
         return userId;
@@ -13,28 +15,28 @@ public class ShoppingCart {
         this.userId = userId;
     }
 
-    public FoodItem getFoodItem() {
-        return foodItem;
+    public List<CartFoodItems> getCartFoodItemsList() {
+        return cartFoodItemsList;
     }
 
-    public void setFoodItem(FoodItem foodItem) {
-        this.foodItem = foodItem;
+    public void setCartFoodItemsList(List<CartFoodItems> cartFoodItemsList) {
+        this.cartFoodItemsList = cartFoodItemsList;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public double getTotalPrice() {
+        return totalPrice;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     @Override
     public String toString() {
         return "ShoppingCart{" +
                 "userId=" + userId +
-                ", foodItem=" + foodItem +
-                ", quantity=" + quantity +
+                ", cartFoodItemsList=" + cartFoodItemsList +
+                ", totalPrice=" + totalPrice +
                 '}';
     }
 }

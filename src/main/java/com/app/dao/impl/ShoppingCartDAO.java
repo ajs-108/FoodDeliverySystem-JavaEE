@@ -3,6 +3,7 @@ package com.app.dao.impl;
 import com.app.common.exception.DBException;
 import com.app.config.DBConnector;
 import com.app.dao.IShoppingCartDAO;
+import com.app.model.CartFoodItems;
 import com.app.model.Category;
 import com.app.model.FoodItem;
 import com.app.model.ShoppingCart;
@@ -22,9 +23,9 @@ public class ShoppingCartDAO implements IShoppingCartDAO {
                 values (?,?,?);
                 """;
         try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
-            preparedStatement.setInt(1, shoppingCart.getFoodItem().getFoodItemId());
+            preparedStatement.setInt(1, shoppingCart.getCartFoodItemsList().get(0).getFoodItem().getFoodItemId());
             preparedStatement.setInt(2, shoppingCart.getUserId());
-            preparedStatement.setInt(3, shoppingCart.getQuantity());
+            preparedStatement.setInt(3, shoppingCart.getCartFoodItemsList().get(0).getQuantity());
             preparedStatement.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
             throw new DBException(e);
@@ -54,9 +55,9 @@ public class ShoppingCartDAO implements IShoppingCartDAO {
                 where user_id = ? and food_item_id = ?;
                 """;
         try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
-            preparedStatement.setInt(1, shoppingCart.getQuantity());
+            preparedStatement.setInt(1, shoppingCart.getCartFoodItemsList().get(0).getQuantity());
             preparedStatement.setInt(2, shoppingCart.getUserId());
-            preparedStatement.setInt(3, shoppingCart.getFoodItem().getFoodItemId());
+            preparedStatement.setInt(3, shoppingCart.getCartFoodItemsList().get(0).getFoodItem().getFoodItemId());
             preparedStatement.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
             throw new DBException(e);
@@ -64,7 +65,7 @@ public class ShoppingCartDAO implements IShoppingCartDAO {
     }
 
     @Override
-    public List<ShoppingCart> getShoppingCart(int userId) throws DBException {
+    public ShoppingCart getShoppingCart(int userId) throws DBException {
         String sql = """
                 select u.user_id, fi.food_item_id, fi.food_name, fi.food_description, c.category_name,
                  fi.price, fi.image_path, sc.quantity
@@ -76,28 +77,44 @@ public class ShoppingCartDAO implements IShoppingCartDAO {
         try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
             preparedStatement.setInt(1, userId);
             resultSet = preparedStatement.executeQuery();
-            List<ShoppingCart> shoppingCartList = new ArrayList<>();
+            ShoppingCart shoppingCart = new ShoppingCart();
+            List<CartFoodItems> cartFoodItemsList = new ArrayList<>();
             while(resultSet.next()) {
-                ShoppingCart shoppingCart = new ShoppingCart();
-                FoodItem foodItem = new FoodItem();
                 Category category = new Category();
-                shoppingCart.setUserId(resultSet.getInt("user_id"));
+                category.setCategoryName(resultSet.getString("category_name"));
+                FoodItem foodItem = new FoodItem();
                 foodItem.setFoodItemId(resultSet.getInt("food_item_id"));
                 foodItem.setFoodName(resultSet.getString("food_name"));
                 foodItem.setFoodDescription(resultSet.getString("food_description"));
-                category.setCategoryName(resultSet.getString("category_name"));
                 foodItem.setCategory(category);
                 foodItem.setPrice(resultSet.getDouble("price"));
                 foodItem.setImagePath(resultSet.getString("image_path"));
-                shoppingCart.setFoodItem(foodItem);
-                shoppingCart.setQuantity(resultSet.getInt("quantity"));
-                shoppingCartList.add(shoppingCart);
+                CartFoodItems cartFoodItems = new CartFoodItems();
+                cartFoodItems.setFoodItem(foodItem);
+                cartFoodItems.setQuantity(resultSet.getInt("quantity"));
+                cartFoodItemsList.add(cartFoodItems);
+                shoppingCart.setUserId(resultSet.getInt("user_id"));
             }
-            return shoppingCartList;
+            shoppingCart.setCartFoodItemsList(cartFoodItemsList);
+            return shoppingCart;
         } catch (SQLException | ClassNotFoundException e) {
             throw new DBException(e);
         } finally {
             DBConnector.resourceCloser(null, resultSet, null);
+        }
+    }
+
+    @Override
+    public void deleteCartOfUser(int userId) throws DBException {
+        String sql = """
+                delete from shopping_cart
+                where user_id = ?;
+                """;
+        try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
+            preparedStatement.setInt(1, userId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new DBException(e);
         }
     }
 }

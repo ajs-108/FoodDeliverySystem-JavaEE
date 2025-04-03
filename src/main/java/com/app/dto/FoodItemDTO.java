@@ -88,7 +88,7 @@ public class FoodItemDTO {
 
     @Override
     public String toString() {
-        return "FoodItemDTO{" +
+        return "FoodItem{" +
                 "foodItemId=" + foodItemId +
                 ", foodName='" + foodName + '\'' +
                 ", foodDescription='" + foodDescription + '\'' +

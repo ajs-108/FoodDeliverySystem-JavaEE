@@ -4,10 +4,12 @@ import com.app.common.enums.OrderStatus;
 import com.app.common.enums.PaymentStatus;
 import com.app.model.OrderFoodItems;
 import com.app.model.User;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OrderDTO {
     private int orderId;
     private UserDTO user;

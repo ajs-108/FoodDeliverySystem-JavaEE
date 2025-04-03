@@ -13,14 +13,19 @@ import java.util.List;
 public class OrderServices {
     private IOrderDAO orderDAO;
     private OrderMapper orderMapper;
+    private ShoppingCartServices shoppingCartServices;
 
     public OrderServices() {
         orderDAO = new OrderDAOImpl();
         orderMapper = new OrderMapper();
+        shoppingCartServices = new ShoppingCartServices();
     }
 
     public void placeOrder(int userId, OrderDTO orderDTO) throws DBException {
-        orderDAO.placeOrder(userId, orderMapper.toOrder(orderDTO));
+        int i = orderDAO.placeOrder(userId, orderMapper.toOrder(orderDTO));
+        if (i > 0) {
+            shoppingCartServices.deleteCartDataOfUser(userId);
+        }
     }
 
     public List<OrderDTO> getAllOrder() throws DBException {

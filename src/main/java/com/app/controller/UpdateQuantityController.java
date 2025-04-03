@@ -28,8 +28,9 @@ public class UpdateQuantityController extends HttpServlet {
             AuthUtils.checkAuthentication(request);
             UserDTO userDTO = AuthUtils.getCurrentUser(request);
             ShoppingCartDTO shoppingCartDTO = ObjectMapperUtil.toObject(request.getReader(), ShoppingCartDTO.class);
-            if(shoppingCartDTO.getQuantity() == 0) {
-                shoppingCartServices.removeFoodItem(userDTO.getUserId(), shoppingCartDTO.getFoodItem().getFoodItemId());
+            if(shoppingCartDTO.getCartFoodItemsDTOList().get(0).getQuantity() == 0) {
+                shoppingCartServices.removeFoodItem(userDTO.getUserId(),
+                        shoppingCartDTO.getCartFoodItemsDTOList().get(0).getFoodItemDTO().getFoodItemId());
                 sendResponse(response, null, Message.ShoppingCart.FOOD_ITEM_REMOVED, null, HttpServletResponse.SC_OK);
                 return;
             }

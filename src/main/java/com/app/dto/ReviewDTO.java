@@ -1,5 +1,8 @@
 package com.app.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ReviewDTO {
     private int reviewId;
     private UserDTO userDTO;

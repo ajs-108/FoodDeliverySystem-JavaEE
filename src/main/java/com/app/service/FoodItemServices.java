@@ -7,7 +7,6 @@ import com.app.dto.FoodItemDTO;
 import com.app.mapper.FoodItemMapper;
 
 import java.util.List;
-import java.util.Objects;
 
 public class FoodItemServices {
     private IFoodItemDAO foodItemDAO;
@@ -46,12 +45,15 @@ public class FoodItemServices {
     }
 
     public boolean isFoodItemExists(FoodItemDTO foodItemDTO) throws DBException {
-        List<FoodItemDTO> foodItemsList = getAllFoodItems();
-        for (FoodItemDTO foodItem : foodItemsList) {
-            if (Objects.equals(foodItem.getFoodItemId(), foodItemDTO.getFoodItemId())) {
-                return true;
-            }
+        return getFoodItem(foodItemDTO.getFoodItemId()) != null;
+    }
+
+    public void updateRatings(int foodItem, int rating) throws DBException{
+        double preRating = getFoodItem(foodItem).getRating();
+        if (preRating != 1) {
+            double newRating = (preRating + rating) / 2;
+            foodItemDAO.updateFoodItemRating(foodItem, newRating);
         }
-        return false;
+        foodItemDAO.updateFoodItemRating(foodItem, rating);
     }
 }

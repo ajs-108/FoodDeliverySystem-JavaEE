@@ -10,6 +10,6 @@ public interface IFoodItemDAO {
     FoodItem getFoodItem(int foodItemId) throws DBException;
     List<FoodItem> getAllFoodItems() throws DBException;
     void updateFoodItem(FoodItem foodItem) throws DBException;
-    void updateFoodItemAvailability(int FoodItem, boolean isAvailable) throws DBException;
-    void updateFoodItemRating(FoodItem foodItem) throws DBException;
+    void updateFoodItemAvailability(int foodItemId, boolean isAvailable) throws DBException;
+    void updateFoodItemRating(int foodItemId, double rating) throws DBException;
 }

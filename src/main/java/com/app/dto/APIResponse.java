@@ -1,6 +1,5 @@
 package com.app.dto;
 
-import com.fasterxml.jackson.annotation.JacksonAnnotation;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**

@@ -54,11 +54,12 @@ public class Message {
 
     public static class FoodItem {
         public static final String FOOD_NAME_LENGTH = "Name should be less than or equal to 30 characters";
-        public static final String FOOD_DESCRIPTION_LENGTH = "Description should be less than or equal to 255 characters";
+        public static final String FOOD_DESCRIPTION_LENGTH = "Description should be <= 255 characters";
         public static final String PRICE_DISCOUNT_DATATYPE = "Value should be Decimal/Integer number";
         public static final String FOOD_ITEM_UPDATED = "Food Item information is updated successfully";
         public static final String FOOD_ITEM_EXISTS = "Food Item you have entered already exists, Please enter " +
                                                     "another one";
+        public static final String FOOD_ITEM_DOES_NOT_EXISTS = "No record found for requested food item";
     }
 
     public static class ShoppingCart {
@@ -76,5 +77,12 @@ public class Message {
         public static final String NOT_A_ORDER_STATUS = "Invalid order status";
         public static final String NOT_A_PAYMENT_STATUS = "Invalid payment status";
         public static final String ORDER_DOES_NOT_EXISTS = "Order doesn't exists";
+    }
+
+    public static class Review {
+        public static final String REVIEW_POSTED = "Review posted successfully";
+        public static final String REVIEW_DOES_NOT_EXISTS = "No Record of review found";
+        public static final String INVALID_RATING = "Rating should be 1-5";
+        public static final String REVIEW_LENGTH_EXCEEDED = "Review length exceeded the limit, should be <= 255 characters";
     }
 }

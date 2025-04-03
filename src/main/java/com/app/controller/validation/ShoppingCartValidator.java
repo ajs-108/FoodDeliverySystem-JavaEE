@@ -20,19 +20,20 @@ public class ShoppingCartValidator {
         if (userServices.getUser(shoppingCartDTO.getUserId()) == null) {
             throw new ApplicationException(Message.User.NO_SUCH_USER);
         }
-        if (shoppingCartDTO.getFoodItem().getFoodItemId() == 0) {
+        if (shoppingCartDTO.getCartFoodItemsDTOList().get(0).getFoodItemDTO().getFoodItemId() == 0) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
-        if (!foodItemServices.isFoodItemExists(shoppingCartDTO.getFoodItem())) {
+        if (!foodItemServices.isFoodItemExists(shoppingCartDTO.getCartFoodItemsDTOList().get(0).getFoodItemDTO())) {
             throw new ApplicationException(Message.Common.RESOURCE_NOT_AVAILABLE);
         }
-        if (shoppingCartServices.isFoodItemExists(shoppingCartDTO)) {
+        if (shoppingCartServices.isFoodItemExists(shoppingCartDTO)
+                && shoppingCartServices.isUserExists(shoppingCartDTO)) {
             throw new ApplicationException(Message.ShoppingCart.FOOD_ITEM_EXISTS);
         }
-        if (shoppingCartDTO.getQuantity() == 0) {
+        if (shoppingCartDTO.getCartFoodItemsDTOList().get(0).getQuantity() == 0) {
             throw new ApplicationException(Message.ShoppingCart.QUANTITY);
         }
-        if (shoppingCartDTO.getQuantity() > 15) {
+        if (shoppingCartDTO.getCartFoodItemsDTOList().get(0).getQuantity() > 15) {
             throw new ApplicationException(Message.ShoppingCart.QUANTITY_VALUE);
         }
     }
@@ -56,25 +57,27 @@ public class ShoppingCartValidator {
         if (foodItemId == 0) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
-        if (!foodItemServices.isFoodItemExists(foodItemId)) {
+        if (foodItemServices.isFoodItemExists(foodItemId)) {
             throw new ApplicationException(Message.Common.RESOURCE_NOT_AVAILABLE);
         }
     }
 
-    public static void validateQuantityUpdate(ShoppingCartDTO shoppingCartDTO) throws ApplicationException, DBException {
+    public static void validateQuantityUpdate(ShoppingCartDTO shoppingCartDTO) throws ApplicationException,
+            DBException {
         if (shoppingCartDTO.getUserId() == 0) {
             throw new ApplicationException(Message.Error.GENERIC_ERROR);
         }
         if (userServices.getUser(shoppingCartDTO.getUserId()) == null) {
             throw new ApplicationException(Message.User.NO_SUCH_USER);
         }
-        if (shoppingCartDTO.getFoodItem().getFoodItemId() == 0) {
+        if (shoppingCartDTO.getCartFoodItemsDTOList().get(0).getFoodItemDTO().getFoodItemId() == 0) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
-        if (!foodItemServices.isFoodItemExists(shoppingCartDTO.getFoodItem().getFoodItemId())) {
+        if (foodItemServices.isFoodItemExists(
+                shoppingCartDTO.getCartFoodItemsDTOList().get(0).getFoodItemDTO().getFoodItemId())) {
             throw new ApplicationException(Message.Common.RESOURCE_NOT_AVAILABLE);
         }
-        if (shoppingCartDTO.getQuantity() > 15) {
+        if (shoppingCartDTO.getCartFoodItemsDTOList().get(0).getQuantity() > 15) {
             throw new ApplicationException(Message.ShoppingCart.QUANTITY_VALUE);
         }
     }

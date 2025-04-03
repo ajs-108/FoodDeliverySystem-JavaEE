@@ -9,7 +9,7 @@ public class OrderFoodItemsMapper {
     public OrderFoodItemsDTO toDTO(OrderFoodItems orderFoodItems) {
         OrderFoodItemsDTO orderFoodItemsDTO = new OrderFoodItemsDTO();
         if (orderFoodItems != null) {
-            orderFoodItemsDTO.setFoodItem(foodItemMapper.toDTO(orderFoodItems.getFoodItem()));
+            orderFoodItemsDTO.setFoodItemDTO(foodItemMapper.toDTO(orderFoodItems.getFoodItem()));
             orderFoodItemsDTO.setQuantity(orderFoodItems.getQuantity());
         } else {
             return null;
@@ -20,7 +20,7 @@ public class OrderFoodItemsMapper {
     public OrderFoodItems toOrderFoodItems(OrderFoodItemsDTO orderFoodItemsDTO) {
         OrderFoodItems orderFoodItems = new OrderFoodItems();
         if (orderFoodItemsDTO != null) {
-            orderFoodItems.setFoodItem(foodItemMapper.toFoodItem(orderFoodItemsDTO.getFoodItem()));
+            orderFoodItems.setFoodItem(foodItemMapper.toFoodItem(orderFoodItemsDTO.getFoodItemDTO()));
             orderFoodItems.setQuantity(orderFoodItemsDTO.getQuantity());
         } else {
             return null;

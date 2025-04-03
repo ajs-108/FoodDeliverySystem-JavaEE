@@ -40,11 +40,14 @@ public class OrderMapper {
         order.setOrderStatus(orderDTO.getOrderStatus());
         order.setOrderDateTime(orderDTO.getOrderDateTime());
         order.setPaymentStatus(orderDTO.getPaymentStatus());
-        order.setOrderFoodItems(
-                orderDTO.getOrderFoodItems()
-                        .stream()
-                        .map(orderFoodItemsMapper::toOrderFoodItems)
-                        .toList());
+        if (orderDTO.getOrderFoodItems() != null) {
+            order.setOrderFoodItems(
+                    orderDTO.getOrderFoodItems()
+                            .stream()
+                            .map(orderFoodItemsMapper::toOrderFoodItems)
+                            .toList());
+        }
+        order.setOrderFoodItems(null);
         return order;
     }
 }

@@ -7,8 +7,6 @@ import com.app.dto.FoodItemDTO;
 import com.app.service.CategoryServices;
 import com.app.service.FoodItemServices;
 
-import java.util.Objects;
-
 import static com.app.controller.validation.CategoryValidator.CATEGORY_NAME_LENGTH;
 
 public class FoodItemValidator {
@@ -42,7 +40,7 @@ public class FoodItemValidator {
         if (!validator.isPositiveInteger(foodItemId)) {
             throw new ApplicationException(Message.Common.NOT_A_POSITIVE_INTEGER);
         }
-        if (!foodItemServices.isFoodItemExists(Integer.parseInt(foodItemId))) {
+        if (foodItemServices.isFoodItemExists(Integer.parseInt(foodItemId))) {
             throw new ApplicationException(Message.Common.RESOURCE_NOT_AVAILABLE);
         }
         if (isAvailable == null || isAvailable.isBlank()) {
