@@ -8,23 +8,21 @@ public class CartFoodItemsMapper {
 
     public CartFoodItemsDTO toDTO(CartFoodItems cartFoodItems) {
         CartFoodItemsDTO cartFoodItemsDTO = new CartFoodItemsDTO();
-        if (cartFoodItems != null) {
-            cartFoodItemsDTO.setFoodItemDTO(foodItemMapper.toDTO(cartFoodItems.getFoodItem()));
-            cartFoodItemsDTO.setQuantity(cartFoodItems.getQuantity());
-        } else {
+        if (cartFoodItems == null) {
             return null;
         }
+        cartFoodItemsDTO.setFoodItemDTO(foodItemMapper.toDTO(cartFoodItems.getFoodItem()));
+        cartFoodItemsDTO.setQuantity(cartFoodItems.getQuantity());
         return cartFoodItemsDTO;
     }
 
     public CartFoodItems toCartFoodItems(CartFoodItemsDTO cartFoodItemsDTO) {
         CartFoodItems cartFoodItems = new CartFoodItems();
-        if (cartFoodItemsDTO != null) {
-            cartFoodItems.setFoodItem(foodItemMapper.toFoodItem(cartFoodItemsDTO.getFoodItemDTO()));
-            cartFoodItems.setQuantity(cartFoodItemsDTO.getQuantity());
-        } else {
+        if (cartFoodItemsDTO == null) {
             return null;
         }
+        cartFoodItems.setFoodItem(foodItemMapper.toFoodItem(cartFoodItemsDTO.getFoodItemDTO()));
+        cartFoodItems.setQuantity(cartFoodItemsDTO.getQuantity());
         return cartFoodItems;
     }
 }
