@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShoppingCartDAO implements IShoppingCartDAO {
+public class ShoppingCartDAOImpl implements IShoppingCartDAO {
     @Override
     public void addFoodItem(ShoppingCart shoppingCart) throws DBException {
         String sql = """
@@ -67,8 +67,8 @@ public class ShoppingCartDAO implements IShoppingCartDAO {
     @Override
     public ShoppingCart getShoppingCart(int userId) throws DBException {
         String sql = """
-                select u.user_id, fi.food_item_id, fi.food_name, fi.food_description, c.category_name,
-                 fi.price, fi.image_path, sc.quantity
+                select u.user_id, fi.food_item_id, fi.food_name, fi.food_description, c.category_id, c.category_name,
+                 fi.price, fi.discount, fi.image_path, sc.quantity
                 from shopping_cart sc, user_ u, food_item fi, category c
                 where sc.user_id = u.user_id and fi.food_item_id = sc.food_item_id
                  and c.category_id = fi.category_id and u.user_id = ?;
@@ -81,6 +81,7 @@ public class ShoppingCartDAO implements IShoppingCartDAO {
             List<CartFoodItems> cartFoodItemsList = new ArrayList<>();
             while(resultSet.next()) {
                 Category category = new Category();
+                category.setCategoryId(resultSet.getInt("category_id"));
                 category.setCategoryName(resultSet.getString("category_name"));
                 FoodItem foodItem = new FoodItem();
                 foodItem.setFoodItemId(resultSet.getInt("food_item_id"));
@@ -88,6 +89,7 @@ public class ShoppingCartDAO implements IShoppingCartDAO {
                 foodItem.setFoodDescription(resultSet.getString("food_description"));
                 foodItem.setCategory(category);
                 foodItem.setPrice(resultSet.getDouble("price"));
+                foodItem.setDiscount(resultSet.getDouble("discount"));
                 foodItem.setImagePath(resultSet.getString("image_path"));
                 CartFoodItems cartFoodItems = new CartFoodItems();
                 cartFoodItems.setFoodItem(foodItem);

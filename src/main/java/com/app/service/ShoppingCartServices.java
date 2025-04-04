@@ -2,13 +2,11 @@ package com.app.service;
 
 import com.app.common.exception.DBException;
 import com.app.dao.IShoppingCartDAO;
-import com.app.dao.impl.ShoppingCartDAO;
+import com.app.dao.impl.ShoppingCartDAOImpl;
 import com.app.dto.CartFoodItemsDTO;
 import com.app.dto.ShoppingCartDTO;
 import com.app.mapper.ShoppingCartMapper;
-import com.app.model.CartFoodItems;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,7 +15,7 @@ public class ShoppingCartServices {
     private ShoppingCartMapper shoppingCartMapper;
 
     public ShoppingCartServices() {
-        this.shoppingCartDAO = new ShoppingCartDAO();
+        this.shoppingCartDAO = new ShoppingCartDAOImpl();
         this.shoppingCartMapper = new ShoppingCartMapper();
     }
 
@@ -37,9 +35,11 @@ public class ShoppingCartServices {
         ShoppingCartDTO shoppingCartDTO = shoppingCartMapper.toDTO(shoppingCartDAO.getShoppingCart(userId));
         List<CartFoodItemsDTO> cartFoodItemsDTOList = shoppingCartDTO.getCartFoodItemsDTOList();
         double totalPrice = 0;
-        for (CartFoodItemsDTO cartFoodItemsDTO : cartFoodItemsDTOList) {
-            totalPrice += calculateTotalPrice(cartFoodItemsDTO.getFoodItemDTO().getPrice(),
-                    cartFoodItemsDTO.getFoodItemDTO().getDiscount(), cartFoodItemsDTO.getQuantity());
+        if (cartFoodItemsDTOList != null) {
+            for (CartFoodItemsDTO cartFoodItemsDTO : cartFoodItemsDTOList) {
+                totalPrice += calculateTotalPrice(cartFoodItemsDTO.getFoodItemDTO().getPrice(),
+                        cartFoodItemsDTO.getFoodItemDTO().getDiscount(), cartFoodItemsDTO.getQuantity());
+            }
         }
         shoppingCartDTO.setTotalPrice(totalPrice);
         return shoppingCartDTO;
@@ -48,10 +48,12 @@ public class ShoppingCartServices {
     public boolean isFoodItemExists(ShoppingCartDTO shoppingCartDTO) throws DBException {
         List<CartFoodItemsDTO> cartFoodItemsListDTO =
                 showShoppingCart(shoppingCartDTO.getUserId()).getCartFoodItemsDTOList();
-        for (CartFoodItemsDTO cartFoodItemsDTO : cartFoodItemsListDTO) {
-            if (Objects.equals(cartFoodItemsDTO.getFoodItemDTO().getFoodItemId(),
-                    shoppingCartDTO.getCartFoodItemsDTOList().get(0).getFoodItemDTO().getFoodItemId())) {
-                return true;
+        if (cartFoodItemsListDTO != null) {
+            for (CartFoodItemsDTO cartFoodItemsDTO : cartFoodItemsListDTO) {
+                if (Objects.equals(cartFoodItemsDTO.getFoodItemDTO().getFoodItemId(),
+                        shoppingCartDTO.getCartFoodItemsDTOList().get(0).getFoodItemDTO().getFoodItemId())) {
+                    return true;
+                }
             }
         }
         return false;
@@ -70,7 +72,7 @@ public class ShoppingCartServices {
 
     public double calculateTotalPrice(double price, double discount, int quantity) {
         double totalPrice = 0;
-        double discountedPrice = (price + (price * (discount/100))) * quantity;
+        double discountedPrice = Math.round((price - (price * (discount/100))) * quantity);
         totalPrice += discountedPrice;
         return totalPrice;
     }

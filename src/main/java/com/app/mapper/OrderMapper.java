@@ -25,8 +25,9 @@ public class OrderMapper {
                             .stream()
                             .map(orderFoodItemsMapper::toDTO)
                             .toList());
+        } else {
+            orderDTO.setOrderFoodItems(null);
         }
-        orderDTO.setOrderFoodItems(null);
         return orderDTO;
     }
 
@@ -48,8 +49,9 @@ public class OrderMapper {
                             .stream()
                             .map(orderFoodItemsMapper::toOrderFoodItems)
                             .toList());
+        } else {
+            order.setOrderFoodItems(null);
         }
-        order.setOrderFoodItems(null);
         return order;
     }
 }

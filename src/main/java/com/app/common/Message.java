@@ -74,6 +74,7 @@ public class Message {
     public static class Order {
         public static final String PLACE_ORDER = "Order Placed";
         public static final String ORDER_STATUS = "Order status updated";
+        public static final String INCORRECT_TOTAL_PRICE = "Total price doesn't match the cart's total price";
         public static final String NOT_A_ORDER_STATUS = "Invalid order status";
         public static final String NOT_A_PAYMENT_STATUS = "Invalid payment status";
         public static final String ORDER_DOES_NOT_EXISTS = "Order doesn't exists";

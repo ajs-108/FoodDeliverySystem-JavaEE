@@ -9,18 +9,23 @@ import com.app.common.exception.DBException;
 import com.app.dto.OrderDTO;
 import com.app.dto.UserDTO;
 import com.app.service.OrderServices;
+import com.app.service.ShoppingCartServices;
 import com.app.service.UserServices;
 
 import java.util.Objects;
 
 public class OrderValidator {
     private static UserServices userServices = new UserServices();
+    private static ShoppingCartServices shoppingCartServices = new ShoppingCartServices();
     private static OrderServices orderServices = new OrderServices();
     private static Validator validator = new Validator();
 
     public static void validateOrder(int userId, OrderDTO orderDTO) throws DBException, ApplicationException {
         if (userServices.getUser(userId) == null) {
             throw new ApplicationException(Message.User.NO_SUCH_USER);
+        }
+        if (orderDTO.getTotalPrice() != shoppingCartServices.showShoppingCart(userId).getTotalPrice()) {
+            throw new ApplicationException(Message.Order.INCORRECT_TOTAL_PRICE);
         }
         if (orderDTO.getOrderStatus() == null) {
             throw new ApplicationException(Message.Common.MANDATORY);

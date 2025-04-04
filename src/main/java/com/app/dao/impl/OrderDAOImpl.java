@@ -20,9 +20,8 @@ public class OrderDAOImpl implements IOrderDAO {
     public int placeOrder(int userId, Order order) throws DBException {
         String orderSQL = """
                 insert into order_(user_id, total_price, order_status, payment_status)
-                select u.user_id, (sum(fi.price*sc.quantity)), ?, ?
-                from shopping_cart sc, food_item fi, user_ u
-                where sc.user_id = u.user_id and fi.food_item_id = sc.food_item_id and u.user_id = ?
+                select u.user_id, ?, ?, ?
+                from user_ u where u.user_id = ?
                 """;
         String orderFoodItemSQL = """
                 insert into order_food_items(food_item_id, order_id, quantity)
@@ -37,9 +36,10 @@ public class OrderDAOImpl implements IOrderDAO {
             connection = DBConnector.getInstance().getConnection();
             connection.setAutoCommit(false);
             psForOrder = connection.prepareStatement(orderSQL, Statement.RETURN_GENERATED_KEYS);
-            psForOrder.setString(1, order.getOrderStatus().name());
-            psForOrder.setString(2, order.getPaymentStatus().name());
-            psForOrder.setInt(3, userId);
+            psForOrder.setDouble(1, order.getTotalPrice());
+            psForOrder.setString(2, order.getOrderStatus().name());
+            psForOrder.setString(3, order.getPaymentStatus().name());
+            psForOrder.setInt(4, userId);
             int i = psForOrder.executeUpdate();
             setOfGeneratedKeys = psForOrder.getGeneratedKeys();
             int generatedKey = 0;

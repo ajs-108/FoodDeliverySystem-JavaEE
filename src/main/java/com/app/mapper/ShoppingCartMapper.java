@@ -18,8 +18,9 @@ public class ShoppingCartMapper {
                     .stream()
                     .map(cartFoodItemsMapper::toDTO)
                     .toList());
+        } else {
+            shoppingCartDTO.setCartFoodItemsDTOList(null);
         }
-        shoppingCartDTO.setCartFoodItemsDTOList(null);
         return shoppingCartDTO;
     }
 
@@ -35,8 +36,9 @@ public class ShoppingCartMapper {
                     .stream()
                     .map(cartFoodItemsMapper::toCartFoodItems)
                     .toList());
+        } else {
+            shoppingCart.setCartFoodItemsList(null);
         }
-        shoppingCart.setCartFoodItemsList(null);
         return shoppingCart;
     }
 }
