@@ -6,7 +6,7 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
-import com.app.controller.validation.UserUpdateValidator;
+import com.app.controller.validation.UserValidator;
 import com.app.dto.APIResponse;
 import com.app.dto.UserDTO;
 import com.app.service.UserServices;
@@ -53,7 +53,7 @@ public class UserController extends HttpServlet {
         try {
             AuthUtils.checkAuthentication(request);
             UserDTO userDTO = ObjectMapperUtil.toObject(request.getReader(), UserDTO.class);
-            UserUpdateValidator.validate(userDTO);
+            UserValidator.validateUpdate(userDTO);
             UserDTO currentUserDTO = (UserDTO) AuthUtils.getCurrentUserSession(request).getAttribute("user");
             userServices.updateUser(userDTO, currentUserDTO.getUserId());
             sendResponse(response, null, Message.User.USER_INFO_UPDATED, null, HttpServletResponse.SC_OK);

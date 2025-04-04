@@ -15,7 +15,7 @@ public enum AccountStatus {
         return null;
     }
 
-    public static boolean isStatusExists(String status) {
+    public static boolean isAccountStatus(String status) {
         for (AccountStatus accountStatus : AccountStatus.values()) {
             if (Objects.equals(accountStatus.name(), status)) {
                 return true;

@@ -52,7 +52,7 @@ public class OrderValidator {
         if (orderServices.getOrder(Integer.parseInt(orderId)) == null) {
             throw new ApplicationException(Message.Order.ORDER_DOES_NOT_EXISTS);
         }
-        if (orderStatus == null) {
+        if (orderStatus == null || orderStatus.isBlank()) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
         if (!OrderStatus.isOrderStatus(orderStatus)) {
@@ -79,6 +79,9 @@ public class OrderValidator {
         }
         if (userServices.getUser(Integer.parseInt(deliveryPersonId)) == null) {
             throw new ApplicationException(Message.User.NO_SUCH_DELIVERY_PERSON);
+        }
+        if (roles == null || roles.isBlank()) {
+            throw new ApplicationException(Message.Common.MANDATORY);
         }
         if (!Objects.equals(roles, Roles.ROLE_DELIVERY_PERSON.name())) {
             throw new ApplicationException(Message.User.NOT_A_DELIVERY_PERSON);

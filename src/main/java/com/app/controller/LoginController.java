@@ -5,7 +5,7 @@ import com.app.common.Message;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.ObjectMapperUtil;
-import com.app.controller.validation.LoginValidator;
+import com.app.controller.validation.UserValidator;
 import com.app.dto.APIResponse;
 import com.app.dto.UserDTO;
 import com.app.service.UserServices;
@@ -40,7 +40,7 @@ public class LoginController extends HttpServlet {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             UserDTO userLogin = ObjectMapperUtil.toObject(request.getReader(), UserDTO.class);
-            LoginValidator.validateLogin(userLogin);
+            UserValidator.validateLogin(userLogin);
             UserDTO userDTO = userServices.getUser(userLogin.getEmail());
             HttpSession session = request.getSession();
             session.setAttribute("user", userDTO);

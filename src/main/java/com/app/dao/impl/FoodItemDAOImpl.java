@@ -34,8 +34,8 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
     @Override
     public FoodItem getFoodItem(int foodItemId) throws DBException {
         String sql = """
-                select * from food_item, category
-                where food_item.category_id = category.category_id and food_item_id = ?;
+                select * from menu, category
+                where menu.category_id = category.category_id and food_item_id = ?;
                 """;
         Connection connection = null;
         FoodItem foodItem;
@@ -73,7 +73,7 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
 
     @Override
     public List<FoodItem> getAllFoodItems() throws DBException {
-        String sql = "select * from food_item, category where food_item.category_id = category.category_id;";
+        String sql = "select * from menu, category where menu.category_id = category.category_id;";
         Connection connection = null;
         List<FoodItem> foodItemList = new LinkedList<>();
         Statement statement = null;

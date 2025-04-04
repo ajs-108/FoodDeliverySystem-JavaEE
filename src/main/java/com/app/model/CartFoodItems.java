@@ -3,6 +3,8 @@ package com.app.model;
 public class CartFoodItems {
     private FoodItem foodItem;
     private int quantity;
+    private double priceBeforeDiscount;
+    private double priceAfterDiscount;
 
     public FoodItem getFoodItem() {
         return foodItem;

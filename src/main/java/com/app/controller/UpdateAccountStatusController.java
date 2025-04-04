@@ -2,10 +2,12 @@ package com.app.controller;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
+import com.app.common.enums.AccountStatus;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
+import com.app.controller.validation.QueryParameterValidator;
 import com.app.controller.validation.UserValidator;
 import com.app.dto.APIResponse;
 import com.app.dto.UserDTO;
@@ -16,10 +18,8 @@ import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 
-@WebServlet(
-        name = "Changepassword",
-        value = "/changePassword")
-public class ChangePasswordController extends HttpServlet {
+@WebServlet(name = "updateAccountStatus", value = "/updateAccountStatus")
+public class UpdateAccountStatusController extends HttpServlet {
     private UserServices userServices = new UserServices();
 
     @Override
@@ -27,10 +27,15 @@ public class ChangePasswordController extends HttpServlet {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            UserDTO userDTO = ObjectMapperUtil.toObject(request.getReader(), UserDTO.class);
-            UserValidator.validateChangePassword(userDTO);
-            userServices.changePassword(userDTO);
-            sendResponse(response, null, Message.User.PASSWORD_UPDATED, null, HttpServletResponse.SC_OK);
+            if (!AuthUtils.isAdmin(request)) {
+                throw new ApplicationException(Message.Error.ACCESS_DENIED);
+            }
+            QueryParameterValidator.validateQueryParameters(request, "userId", "accountStatus");
+            String userId = request.getParameter("userId");
+            String accountStatus = request.getParameter("accountStatus");
+            UserValidator.validateAccountStatusUpdate(userId, accountStatus);
+            userServices.updateAccountStatus(Integer.parseInt(userId), AccountStatus.toEnum(accountStatus));
+            sendResponse(response, null, Message.User.STATUS_UPDATED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

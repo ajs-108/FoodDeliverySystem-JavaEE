@@ -44,6 +44,9 @@ public class Message {
         public static final String SAME_PASSWORD = "Please choose a different password";
         public static final String PASSWORD_UPDATED = "Password updated successfully";
         public static final String NOT_A_DELIVERY_PERSON = "Not a Delivery Person";
+        public static final String STATUS_UPDATED = "Account status updated";
+        public static final String ACCOUNTED_DEACTIVATED = "Your account has been deactivated. Please " +
+                                                        "contact Customer Service Center";
     }
 
     public static class Category {

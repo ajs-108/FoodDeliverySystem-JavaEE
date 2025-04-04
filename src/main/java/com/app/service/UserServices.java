@@ -1,9 +1,10 @@
 package com.app.service;
 
+import com.app.common.enums.AccountStatus;
 import com.app.common.enums.Roles;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
-import com.app.controller.validation.SignUpValidator;
+import com.app.controller.validation.UserValidator;
 import com.app.dao.IUserDAO;
 import com.app.dao.impl.UserDAOImpl;
 import com.app.dto.UserDTO;
@@ -30,7 +31,7 @@ public class UserServices {
     }
 
     public void signUp(UserDTO userDTO) throws DBException, ApplicationException {
-        SignUpValidator.validate(userDTO);
+        UserValidator.validateSignUp(userDTO);
         saveUser(userDTO);
     }
 
@@ -87,5 +88,9 @@ public class UserServices {
 
     public void changePassword(UserDTO userDTO) throws DBException {
         userDAO.updatePassword(userDTO.getEmail(), userDTO.getNewPassword());
+    }
+
+    public void updateAccountStatus(int userId, AccountStatus accountStatus) throws DBException {
+        userDAO.updateAccountStatus(userId, accountStatus);
     }
 }

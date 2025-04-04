@@ -1,5 +1,6 @@
 package com.app.dao.impl;
 
+import com.app.common.enums.AccountStatus;
 import com.app.common.enums.Roles;
 import com.app.common.exception.DBException;
 import com.app.config.DBConnector;
@@ -54,6 +55,7 @@ public class UserDAOImpl implements IUserDAO {
                 user.setPhoneNumber(resultSet.getString("phone_number"));
                 user.setAddress(resultSet.getString("address"));
                 user.setRole(Roles.fromId(resultSet.getInt("role_id")));
+                user.setAccountStatus(AccountStatus.toEnum(resultSet.getString("account_status")));
                 return user;
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -84,6 +86,7 @@ public class UserDAOImpl implements IUserDAO {
                 user.setPhoneNumber(resultSet.getString("phone_number"));
                 user.setAddress(resultSet.getString("address"));
                 user.setRole(Roles.fromId(resultSet.getInt("role_id")));
+                user.setAccountStatus(AccountStatus.toEnum(resultSet.getString("account_status")));
                 return user;
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -116,6 +119,7 @@ public class UserDAOImpl implements IUserDAO {
                 user.setAddress(resultSet.getString("address"));
                 user.setCreatedOn(resultSet.getTimestamp("created_on"));
                 user.setUpdatedOn(resultSet.getTimestamp("update_on"));
+                user.setAccountStatus(AccountStatus.toEnum(resultSet.getString("account_status")));
                 for (Roles role : Roles.values()) {
                     if (roleId == role.getRoleId()) {
                         user.setRole(role);
@@ -133,11 +137,11 @@ public class UserDAOImpl implements IUserDAO {
 
     @Override
     public void updateUser(User user, int userID) throws DBException {
-        String sql1 = """
+        String sql = """
                 update user_ set first_name = ?, last_name = ?, phone_number = ?, address = ?
                 where user_id = ?;
                 """;
-        try (Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql1)) {
+        try (Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, user.getFirstName());
             preparedStatement.setString(2, user.getLastName());
             preparedStatement.setString(3, user.getPhoneNumber());
@@ -176,13 +180,28 @@ public class UserDAOImpl implements IUserDAO {
 
     @Override
     public void updatePassword(String email , String newPassword) throws DBException {
-        String sql1 = """
+        String sql = """
                 update user_ set password_ = ?
                 where email = ?;
                 """;
-        try (Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql1)) {
+        try (Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, newPassword);
             preparedStatement.setString(2, email);
+            preparedStatement.executeUpdate();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new DBException(e);
+        }
+    }
+
+    @Override
+    public void updateAccountStatus(int userId, AccountStatus accountStatus) throws DBException {
+        String sql= """
+                update user_ set account_status = ?
+                where user_id = ?;
+                """;
+        try (Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, accountStatus.name());
+            preparedStatement.setInt(2, userId);
             preparedStatement.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
             throw new DBException(e);

@@ -1,5 +1,6 @@
 package com.app.model;
 
+import com.app.common.enums.AccountStatus;
 import com.app.common.enums.Roles;
 
 import java.sql.Timestamp;
@@ -16,6 +17,7 @@ public class User {
     private LocalDateTime createdOn;
     private LocalDateTime updatedOn;
     private Roles role;
+    private AccountStatus accountStatus;
 
     public int getUserId() {
         return userId;
@@ -97,6 +99,14 @@ public class User {
         this.role = role;
     }
 
+    public AccountStatus getAccountStatus() {
+        return accountStatus;
+    }
+
+    public void setAccountStatus(AccountStatus accountStatus) {
+        this.accountStatus = accountStatus;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -107,7 +117,10 @@ public class User {
                 ", password='" + password + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", address='" + address + '\'' +
+                ", createdOn=" + createdOn +
+                ", updatedOn=" + updatedOn +
                 ", role=" + role +
+                ", accountStatus=" + accountStatus +
                 '}';
     }
 }

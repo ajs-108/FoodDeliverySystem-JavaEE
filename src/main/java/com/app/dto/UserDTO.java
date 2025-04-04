@@ -1,5 +1,6 @@
 package com.app.dto;
 
+import com.app.common.enums.AccountStatus;
 import com.app.common.enums.Roles;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -7,7 +8,6 @@ import java.time.LocalDateTime;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO {
-
     private int userId;
     private String firstName;
     private String lastName;
@@ -19,6 +19,7 @@ public class UserDTO {
     private LocalDateTime createdOn;
     private LocalDateTime updatedOn;
     private Roles role;
+    private AccountStatus accountStatus;
 
     public int getUserId() {
         return userId;
@@ -108,6 +109,14 @@ public class UserDTO {
         this.role = role;
     }
 
+    public AccountStatus getAccountStatus() {
+        return accountStatus;
+    }
+
+    public void setAccountStatus(AccountStatus accountStatus) {
+        this.accountStatus = accountStatus;
+    }
+
     @Override
     public String toString() {
         return "UserDTO{" +
@@ -122,6 +131,7 @@ public class UserDTO {
                 ", createdOn=" + createdOn +
                 ", updatedOn=" + updatedOn +
                 ", role=" + role +
+                ", accountStatus=" + accountStatus +
                 '}';
     }
 }

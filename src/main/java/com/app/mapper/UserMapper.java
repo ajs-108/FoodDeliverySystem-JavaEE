@@ -19,6 +19,7 @@ public class UserMapper {
         userDTO.setCreatedOn(user.getCreatedOn());
         userDTO.setUpdatedOn(user.getUpdatedOn());
         userDTO.setRole(user.getRole());
+        userDTO.setAccountStatus(user.getAccountStatus());
         return userDTO;
     }
 
@@ -35,6 +36,7 @@ public class UserMapper {
         user.setPhoneNumber(userDTO.getPhoneNumber());
         user.setAddress(userDTO.getAddress());
         user.setRole(userDTO.getRole());
+        user.setAccountStatus(userDTO.getAccountStatus());
         return user;
     }
 }

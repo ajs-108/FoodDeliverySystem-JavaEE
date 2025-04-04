@@ -1,5 +1,6 @@
 package com.app.dao;
 
+import com.app.common.enums.AccountStatus;
 import com.app.common.exception.DBException;
 import com.app.model.User;
 
@@ -19,4 +20,6 @@ public interface IUserDAO {
     User getUserLoginCredentials(String email) throws DBException;
 
     void updatePassword(String email, String newPassword) throws DBException;
+
+    void updateAccountStatus(int userId, AccountStatus accountStatus) throws DBException;
 }
