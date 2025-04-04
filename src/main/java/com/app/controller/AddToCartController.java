@@ -35,7 +35,7 @@ public class AddToCartController extends HttpServlet {
             shoppingCartDTO.setUserId(userDTO.getUserId());
             ShoppingCartValidator.validateAddToCart(shoppingCartDTO);
             shoppingCartServices.addFoodItem(shoppingCartDTO);
-            sendResponse(response, null, Message.Common.ENTRY_ADDED, null, HttpServletResponse.SC_OK);
+            sendResponse(response, null, Message.ShoppingCart.FOOD_ITEM_ADDED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

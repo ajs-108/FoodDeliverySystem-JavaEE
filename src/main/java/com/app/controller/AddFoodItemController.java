@@ -40,7 +40,7 @@ public class AddFoodItemController extends HttpServlet {
             FoodItemDTO foodItemDTO = ObjectMapperUtil.toObject(foodItemPart.getInputStream(), FoodItemDTO.class);
             foodItemDTO.setImagePath(FileUtil.getFilePath(AppConstant.FOOD_ITEM_IMAGE_FOLDER, imagePart));
             foodItemServices.createFoodItem(foodItemDTO);
-            sendResponse(response, null, Message.ShoppingCart.FOOD_ITEM_ADDED, null, HttpServletResponse.SC_CREATED);
+            sendResponse(response, null, Message.Common.ENTRY_ADDED, null, HttpServletResponse.SC_CREATED);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

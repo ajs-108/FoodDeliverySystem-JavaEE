@@ -11,6 +11,8 @@ import com.app.dto.UserDTO;
 import com.app.service.OrderServices;
 import com.app.service.UserServices;
 
+import java.util.Objects;
+
 public class OrderValidator {
     private static UserServices userServices = new UserServices();
     private static OrderServices orderServices = new OrderServices();
@@ -53,7 +55,7 @@ public class OrderValidator {
         }
     }
 
-    public static void validateAssignDeliveryPerson(String orderId, String deliveryPersonId, Roles roles)
+    public static void validateAssignDeliveryPerson(String orderId, String deliveryPersonId, String roles)
             throws ApplicationException, DBException {
         if (orderId == null || orderId.isBlank()) {
             throw new ApplicationException(Message.Common.MANDATORY);
@@ -73,7 +75,7 @@ public class OrderValidator {
         if (userServices.getUser(Integer.parseInt(deliveryPersonId)) == null) {
             throw new ApplicationException(Message.User.NO_SUCH_DELIVERY_PERSON);
         }
-        if (roles.getRoleId() != 1003) {
+        if (!Objects.equals(roles, Roles.ROLE_DELIVERY_PERSON.name())) {
             throw new ApplicationException(Message.User.NOT_A_DELIVERY_PERSON);
         }
     }

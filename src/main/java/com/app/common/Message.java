@@ -77,6 +77,7 @@ public class Message {
         public static final String NOT_A_ORDER_STATUS = "Invalid order status";
         public static final String NOT_A_PAYMENT_STATUS = "Invalid payment status";
         public static final String ORDER_DOES_NOT_EXISTS = "Order doesn't exists";
+        public static final String DELIVERY_PERSON_ASSIGNED = "Delivery Person Assigned for Order";
     }
 
     public static class Review {

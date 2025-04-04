@@ -57,7 +57,7 @@ public class ShoppingCartValidator {
         if (foodItemId == 0) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
-        if (foodItemServices.isFoodItemExists(foodItemId)) {
+        if (!foodItemServices.isFoodItemExists(foodItemId)) {
             throw new ApplicationException(Message.Common.RESOURCE_NOT_AVAILABLE);
         }
     }
@@ -73,7 +73,7 @@ public class ShoppingCartValidator {
         if (shoppingCartDTO.getCartFoodItemsDTOList().get(0).getFoodItemDTO().getFoodItemId() == 0) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
-        if (foodItemServices.isFoodItemExists(
+        if (!foodItemServices.isFoodItemExists(
                 shoppingCartDTO.getCartFoodItemsDTOList().get(0).getFoodItemDTO().getFoodItemId())) {
             throw new ApplicationException(Message.Common.RESOURCE_NOT_AVAILABLE);
         }

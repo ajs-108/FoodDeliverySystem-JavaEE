@@ -9,22 +9,24 @@ public class OrderMapper {
 
     public OrderDTO toDTO(Order order) {
         OrderDTO orderDTO = new OrderDTO();
-        if (order != null) {
-            orderDTO.setOrderId(order.getOrderId());
-            orderDTO.setUser(userMapper.toDTO(order.getUser()));
-            orderDTO.setDeliveryPersonId(order.getDeliveryPersonId());
-            orderDTO.setTotalPrice(order.getTotalPrice());
-            orderDTO.setOrderStatus(order.getOrderStatus());
-            orderDTO.setOrderDateTime(order.getOrderDateTime());
-            orderDTO.setPaymentStatus(order.getPaymentStatus());
+        if (order == null) {
+            return null;
+        }
+        orderDTO.setOrderId(order.getOrderId());
+        orderDTO.setUser(userMapper.toDTO(order.getUser()));
+        orderDTO.setDeliveryPersonId(order.getDeliveryPersonId());
+        orderDTO.setTotalPrice(order.getTotalPrice());
+        orderDTO.setOrderStatus(order.getOrderStatus());
+        orderDTO.setOrderDateTime(order.getOrderDateTime());
+        orderDTO.setPaymentStatus(order.getPaymentStatus());
+        if (order.getOrderFoodItems() != null) {
             orderDTO.setOrderFoodItems(
                     order.getOrderFoodItems()
                             .stream()
                             .map(orderFoodItemsMapper::toDTO)
                             .toList());
-        } else {
-            return null;
         }
+        orderDTO.setOrderFoodItems(null);
         return orderDTO;
     }
 

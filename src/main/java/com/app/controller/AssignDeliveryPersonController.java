@@ -34,10 +34,10 @@ public class AssignDeliveryPersonController extends HttpServlet {
             QueryParameterValidator.validateQueryParameters(request, "orderId", "deliveryPersonId", "role");
             String orderId = request.getParameter("orderId");
             String deliveryPersonId = request.getParameter("deliveryPersonId");
-            Roles roles = Roles.toEnum(request.getParameter("role"));
+            String roles = request.getParameter("role");
             OrderValidator.validateAssignDeliveryPerson(orderId, deliveryPersonId, roles);
             orderServices.assignDeliveryPerson(Integer.parseInt(orderId), Integer.parseInt(deliveryPersonId));
-            sendResponse(response, null, Message.Order.ORDER_STATUS, null, HttpServletResponse.SC_OK);
+            sendResponse(response, null, Message.Order.DELIVERY_PERSON_ASSIGNED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
