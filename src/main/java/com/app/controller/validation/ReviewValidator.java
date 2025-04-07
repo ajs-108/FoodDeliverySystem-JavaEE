@@ -23,7 +23,7 @@ public class ReviewValidator {
         if (userServices.getUser(reviewDTO.getUserDTO().getUserId()) == null) {
             throw new ApplicationException(Message.User.NO_SUCH_USER);
         }
-        if (foodItemServices.isFoodItemExists(reviewDTO.getFoodItemDTO().getFoodItemId())) {
+        if (!foodItemServices.isFoodItemExists(reviewDTO.getFoodItemDTO().getFoodItemId())) {
             throw new ApplicationException(Message.FoodItem.FOOD_ITEM_DOES_NOT_EXISTS);
         }
         if (orderServices.getOrder(reviewDTO.getOrderId()) == null) {
