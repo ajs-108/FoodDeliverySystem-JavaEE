@@ -15,6 +15,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class UserDAOImpl implements IUserDAO {
+    protected static final String USER_ID = "user_id";
+    protected static final String FIRST_NAME = "first_name";
+    protected static final String LAST_NAME = "last_name";
+    protected static final String EMAIL = "email";
+    protected static final String PASSWORD = "password_";
+    protected static final String PHONE_NUMBER = "phone_number";
+    protected static final String ADDRESS = "address";
+    protected static final String CREATED_ON = "created_on";
+    protected static final String UPDATED_ON = "update_on";
+    protected static final String ROLE_ID = "role_id";
+    protected static final String ACCOUNT_STATUS = "account_status";
+
     @Override
     public void saveUser(User user) throws DBException {
         String sql = """
@@ -49,14 +61,14 @@ public class UserDAOImpl implements IUserDAO {
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 User user = new User();
-                user.setUserId(resultSet.getInt("user_id"));
-                user.setFirstName(resultSet.getString("first_name"));
-                user.setLastName(resultSet.getString("last_name"));
-                user.setEmail(resultSet.getString("email"));
-                user.setPhoneNumber(resultSet.getString("phone_number"));
-                user.setAddress(resultSet.getString("address"));
-                user.setRole(Roles.fromId(resultSet.getInt("role_id")));
-                user.setAccountStatus(AccountStatus.toEnum(resultSet.getString("account_status")));
+                user.setUserId(resultSet.getInt(USER_ID));
+                user.setFirstName(resultSet.getString(FIRST_NAME));
+                user.setLastName(resultSet.getString(LAST_NAME));
+                user.setEmail(resultSet.getString(EMAIL));
+                user.setPhoneNumber(resultSet.getString(PHONE_NUMBER));
+                user.setAddress(resultSet.getString(ADDRESS));
+                user.setRole(Roles.fromId(resultSet.getInt(ROLE_ID)));
+                user.setAccountStatus(AccountStatus.toEnum(resultSet.getString(ACCOUNT_STATUS)));
                 return user;
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -80,14 +92,14 @@ public class UserDAOImpl implements IUserDAO {
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 User user = new User();
-                user.setUserId(resultSet.getInt("user_id"));
-                user.setFirstName(resultSet.getString("first_name"));
-                user.setLastName(resultSet.getString("last_name"));
-                user.setEmail(resultSet.getString("email"));
-                user.setPhoneNumber(resultSet.getString("phone_number"));
-                user.setAddress(resultSet.getString("address"));
-                user.setRole(Roles.fromId(resultSet.getInt("role_id")));
-                user.setAccountStatus(AccountStatus.toEnum(resultSet.getString("account_status")));
+                user.setUserId(resultSet.getInt(USER_ID));
+                user.setFirstName(resultSet.getString(FIRST_NAME));
+                user.setLastName(resultSet.getString(LAST_NAME));
+                user.setEmail(resultSet.getString(EMAIL));
+                user.setPhoneNumber(resultSet.getString(PHONE_NUMBER));
+                user.setAddress(resultSet.getString(ADDRESS));
+                user.setRole(Roles.fromId(resultSet.getInt(ROLE_ID)));
+                user.setAccountStatus(AccountStatus.toEnum(resultSet.getString(ACCOUNT_STATUS)));
                 return user;
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -112,15 +124,15 @@ public class UserDAOImpl implements IUserDAO {
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 User user = new User();
-                user.setUserId(resultSet.getInt("user_id"));
-                user.setFirstName(resultSet.getString("first_name"));
-                user.setLastName(resultSet.getString("last_name"));
-                user.setEmail(resultSet.getString("email"));
-                user.setPhoneNumber(resultSet.getString("phone_number"));
-                user.setAddress(resultSet.getString("address"));
-                user.setCreatedOn(resultSet.getTimestamp("created_on"));
-                user.setUpdatedOn(resultSet.getTimestamp("update_on"));
-                user.setAccountStatus(AccountStatus.toEnum(resultSet.getString("account_status")));
+                user.setUserId(resultSet.getInt(USER_ID));
+                user.setFirstName(resultSet.getString(FIRST_NAME));
+                user.setLastName(resultSet.getString(LAST_NAME));
+                user.setEmail(resultSet.getString(EMAIL));
+                user.setPhoneNumber(resultSet.getString(PHONE_NUMBER));
+                user.setAddress(resultSet.getString(ADDRESS));
+                user.setCreatedOn(resultSet.getTimestamp(CREATED_ON));
+                user.setUpdatedOn(resultSet.getTimestamp(UPDATED_ON));
+                user.setAccountStatus(AccountStatus.toEnum(resultSet.getString(ACCOUNT_STATUS)));
                 for (Roles role : Roles.values()) {
                     if (roleId == role.getRoleId()) {
                         user.setRole(role);
@@ -168,8 +180,8 @@ public class UserDAOImpl implements IUserDAO {
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 User user = new User();
-                user.setEmail(resultSet.getString("email"));
-                user.setPassword(resultSet.getString("password_"));
+                user.setEmail(resultSet.getString(EMAIL));
+                user.setPassword(resultSet.getString(PASSWORD));
                 return user;
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -181,7 +193,7 @@ public class UserDAOImpl implements IUserDAO {
     }
 
     @Override
-    public void updatePassword(String email , String newPassword) throws DBException {
+    public void updatePassword(String email, String newPassword) throws DBException {
         String sql = """
                 update user_ set password_ = ?
                 where email = ?;
@@ -198,7 +210,7 @@ public class UserDAOImpl implements IUserDAO {
 
     @Override
     public void updateAccountStatus(int userId, AccountStatus accountStatus) throws DBException {
-        String sql= """
+        String sql = """
                 update user_ set account_status = ?
                 where user_id = ?;
                 """;

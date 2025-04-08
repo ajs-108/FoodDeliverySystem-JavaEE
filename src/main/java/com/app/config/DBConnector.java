@@ -33,11 +33,6 @@ public class DBConnector {
         return instance;
     }
 
-    public Connection getConnection() throws SQLException, ClassNotFoundException {
-        Class.forName(driver);
-        return DriverManager.getConnection(url, username, password);
-    }
-
     public static void resourceCloser(Statement statement, ResultSet resultSet, Connection connection) throws DBException {
         try {
             if (statement != null) {
@@ -52,5 +47,10 @@ public class DBConnector {
         } catch (SQLException e) {
             throw new DBException(Message.Error.GENERIC_ERROR, e);
         }
+    }
+
+    public Connection getConnection() throws SQLException, ClassNotFoundException {
+        Class.forName(driver);
+        return DriverManager.getConnection(url, username, password);
     }
 }

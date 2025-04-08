@@ -1,7 +1,6 @@
 package com.app.common.exception;
 
-public class ApplicationException extends Exception{
-
+public class ApplicationException extends Exception {
     public ApplicationException(String message) {
         super(message);
     }

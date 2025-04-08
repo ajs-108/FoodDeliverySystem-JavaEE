@@ -12,9 +12,12 @@ import static com.app.controller.validation.CategoryValidator.CATEGORY_NAME_LENG
 public class FoodItemValidator {
     private static final int FOOD_NAME_LENGTH = 30;
     private static final int FOOD_DESCRIPTION_LENGTH = 30;
-    private static FoodItemServices foodItemServices = new FoodItemServices();
-    private static CategoryServices categoryServices = new CategoryServices();
-    private static Validator validator = new Validator();
+    private static final FoodItemServices foodItemServices = new FoodItemServices();
+    private static final CategoryServices categoryServices = new CategoryServices();
+    private static final Validator validator = new Validator();
+
+    private FoodItemValidator() {
+    }
 
     public static void validateFoodItem(FoodItemDTO foodItemDTO) throws ApplicationException, DBException {
         commonValidations(foodItemDTO);

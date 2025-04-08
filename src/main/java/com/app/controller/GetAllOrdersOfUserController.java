@@ -11,9 +11,11 @@ import com.app.dto.APIResponse;
 import com.app.dto.OrderDTO;
 import com.app.dto.UserDTO;
 import com.app.service.OrderServices;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.List;
 @WebServlet(name = "getAllOrdersOfUser", value = "/getAllOrdersOfUser")
 public class GetAllOrdersOfUserController extends HttpServlet {
     private OrderServices orderServices = new OrderServices();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);

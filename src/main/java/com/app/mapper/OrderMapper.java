@@ -38,7 +38,7 @@ public class OrderMapper {
         }
         order.setOrderId(orderDTO.getOrderId());
         order.setUser(userMapper.toUser(orderDTO.getUser()));
-        order.setDeliveryPersonId(order.getDeliveryPersonId());
+        order.setDeliveryPersonId(orderDTO.getDeliveryPersonId());
         order.setTotalPrice(orderDTO.getTotalPrice());
         order.setOrderStatus(orderDTO.getOrderStatus());
         order.setOrderDateTime(orderDTO.getOrderDateTime());

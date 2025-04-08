@@ -10,9 +10,11 @@ import com.app.controller.validation.UserValidator;
 import com.app.dto.APIResponse;
 import com.app.dto.UserDTO;
 import com.app.service.UserServices;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
@@ -21,6 +23,14 @@ import java.io.IOException;
         value = "/changePassword")
 public class ChangePasswordController extends HttpServlet {
     private UserServices userServices = new UserServices();
+
+    public static void sendResponse(HttpServletResponse response, String techMessage, String message, Object data, int statusCode) throws IOException {
+        response.setStatus(statusCode);
+        APIResponse apiResponse = new APIResponse();
+        apiResponse.setMessage(message);
+        apiResponse.setData(data);
+        response.getWriter().println(ObjectMapperUtil.toString(apiResponse));
+    }
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -41,13 +51,5 @@ public class ChangePasswordController extends HttpServlet {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-    }
-
-    public static void sendResponse(HttpServletResponse response, String techMessage, String message, Object data, int statusCode) throws IOException {
-        response.setStatus(statusCode);
-        APIResponse apiResponse = new APIResponse();
-        apiResponse.setMessage(message);
-        apiResponse.setData(data);
-        response.getWriter().println(ObjectMapperUtil.toString(apiResponse));
     }
 }

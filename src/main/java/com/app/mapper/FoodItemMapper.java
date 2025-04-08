@@ -18,6 +18,8 @@ public class FoodItemMapper {
         foodItemDTO.setDiscount(foodItem.getDiscount());
         foodItemDTO.setAvailable(foodItem.isAvailable());
         foodItemDTO.setCategory(categoryMapper.toDTO(foodItem.getCategory()));
+        foodItemDTO.setCreatedOn(foodItem.getCreatedOn());
+        foodItemDTO.setUpdatedOn(foodItem.getUpdatedOn());
         foodItemDTO.setImagePath(foodItem.getImagePath());
         foodItemDTO.setRating(foodItem.getRating());
         return foodItemDTO;
@@ -35,6 +37,8 @@ public class FoodItemMapper {
         foodItem.setDiscount(foodItemDTO.getDiscount());
         foodItem.setAvailable(foodItemDTO.isAvailable());
         foodItem.setCategory(categoryMapper.toCategory(foodItemDTO.getCategory()));
+        foodItem.setCreatedOn(foodItemDTO.getCreatedOn());
+        foodItem.setUpdatedOn(foodItemDTO.getUpdatedOn());
         foodItem.setImagePath(foodItemDTO.getImagePath());
         foodItem.setRating(foodItemDTO.getRating());
         return foodItem;

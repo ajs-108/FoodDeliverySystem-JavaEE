@@ -15,7 +15,17 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.app.dao.impl.FoodItemDAOImpl.*;
+import static com.app.dao.impl.ShoppingCartDAOImpl.QUANTITY;
+import static com.app.dao.impl.UserDAOImpl.USER_ID;
+
 public class OrderDAOImpl implements IOrderDAO {
+    protected static final String ORDER_ID = "order_id";
+    protected static final String DELIVERY_PERSON_ID = "delivery_person_id";
+    protected static final String TOTAL_PRICE = "total_price";
+    protected static final String ORDER_STATUS = "order_status";
+    protected static final String ORDER_DATE_TIME = "order_date_time";
+    protected static final String PAYMENT_STATUS = "payment_status";
     private static final String ORDER_FOOD_ITEM_SQL = """
             select * from order_food_items ofi, food_item fi
             where order_id = ? and fi.food_item_id = ofi.food_item_id
@@ -58,7 +68,9 @@ public class OrderDAOImpl implements IOrderDAO {
             return i;
         } catch (SQLException | ClassNotFoundException | NullPointerException e) {
             try {
-                connection.rollback();
+                if (connection != null) {
+                    connection.rollback();
+                }
             } catch (SQLException | NullPointerException ex) {
                 throw new DBException(ex);
             }
@@ -85,27 +97,27 @@ public class OrderDAOImpl implements IOrderDAO {
             while (resultSet.next()) {
                 Order order = new Order();
                 User user = new User();
-                order.setOrderId(resultSet.getInt("order_id"));
-                user.setUserId(resultSet.getInt("user_id"));
+                order.setOrderId(resultSet.getInt(ORDER_ID));
+                user.setUserId(resultSet.getInt(USER_ID));
                 order.setUser(user);
-                order.setOrderStatus(OrderStatus.toEnum(resultSet.getString("order_status")));
-                order.setOrderDateTime(resultSet.getTimestamp("order_date_time").toLocalDateTime());
-                order.setTotalPrice(resultSet.getInt("total_price"));
-                order.setPaymentStatus(PaymentStatus.toEnum(resultSet.getString("payment_status")));
+                order.setOrderStatus(OrderStatus.toEnum(resultSet.getString(ORDER_STATUS)));
+                order.setOrderDateTime(resultSet.getTimestamp(ORDER_DATE_TIME).toLocalDateTime());
+                order.setTotalPrice(resultSet.getInt(TOTAL_PRICE));
+                order.setPaymentStatus(PaymentStatus.toEnum(resultSet.getString(PAYMENT_STATUS)));
                 psForOrderFoodItem = connection.prepareStatement(ORDER_FOOD_ITEM_SQL);
-                psForOrderFoodItem.setInt(1, resultSet.getInt("order_id"));
+                psForOrderFoodItem.setInt(1, resultSet.getInt(ORDER_ID));
                 foodItemSet = psForOrderFoodItem.executeQuery();
                 List<OrderFoodItems> orderFoodItemsList = new ArrayList<>();
                 while (foodItemSet.next()) {
                     OrderFoodItems orderFoodItems = new OrderFoodItems();
                     FoodItem foodItem = new FoodItem();
-                    foodItem.setFoodItemId(foodItemSet.getInt("food_item_id"));
-                    foodItem.setFoodName(foodItemSet.getString("food_name"));
-                    foodItem.setFoodDescription(foodItemSet.getString("food_description"));
-                    foodItem.setPrice(foodItemSet.getDouble("price"));
-                    foodItem.setDiscount(foodItemSet.getDouble("discount"));
+                    foodItem.setFoodItemId(foodItemSet.getInt(FOOD_ITEM_ID));
+                    foodItem.setFoodName(foodItemSet.getString(FOOD_NAME));
+                    foodItem.setFoodDescription(foodItemSet.getString(FOOD_DESCRIPTION));
+                    foodItem.setPrice(foodItemSet.getDouble(PRICE));
+                    foodItem.setDiscount(foodItemSet.getDouble(DISCOUNT));
                     orderFoodItems.setFoodItem(foodItem);
-                    orderFoodItems.setQuantity(foodItemSet.getInt("quantity"));
+                    orderFoodItems.setQuantity(foodItemSet.getInt(QUANTITY));
                     orderFoodItemsList.add(orderFoodItems);
                 }
                 order.setOrderFoodItems(orderFoodItemsList);
@@ -124,10 +136,10 @@ public class OrderDAOImpl implements IOrderDAO {
     public List<Order> getAllOrder(int userId, Roles roles) throws DBException {
         String users = "";
         if (roles == Roles.ROLE_DELIVERY_PERSON) {
-            users = "delivery_person_id";
+            users = DELIVERY_PERSON_ID;
         }
         if (roles == Roles.ROLE_CUSTOMER) {
-            users = "user_id";
+            users = USER_ID;
         }
         String orderSQL = String.format("select * from order_ where %s = ?", users);
         Connection connection = null;
@@ -144,27 +156,27 @@ public class OrderDAOImpl implements IOrderDAO {
             while (resultSet.next()) {
                 Order order = new Order();
                 User user = new User();
-                order.setOrderId(resultSet.getInt("order_id"));
-                user.setUserId(resultSet.getInt("user_id"));
+                order.setOrderId(resultSet.getInt(ORDER_ID));
+                user.setUserId(resultSet.getInt(USER_ID));
                 order.setUser(user);
-                order.setOrderStatus(OrderStatus.toEnum(resultSet.getString("order_status")));
-                order.setOrderDateTime(resultSet.getTimestamp("order_date_time").toLocalDateTime());
-                order.setTotalPrice(resultSet.getInt("total_price"));
-                order.setPaymentStatus(PaymentStatus.toEnum(resultSet.getString("payment_status")));
+                order.setOrderStatus(OrderStatus.toEnum(resultSet.getString(ORDER_STATUS)));
+                order.setOrderDateTime(resultSet.getTimestamp(ORDER_DATE_TIME).toLocalDateTime());
+                order.setTotalPrice(resultSet.getInt(TOTAL_PRICE));
+                order.setPaymentStatus(PaymentStatus.toEnum(resultSet.getString(PAYMENT_STATUS)));
                 psForOrderFoodItem = connection.prepareStatement(ORDER_FOOD_ITEM_SQL);
-                psForOrderFoodItem.setInt(1, resultSet.getInt("order_id"));
+                psForOrderFoodItem.setInt(1, resultSet.getInt(ORDER_ID));
                 foodItemSet = psForOrderFoodItem.executeQuery();
                 List<OrderFoodItems> orderFoodItemsList = new ArrayList<>();
                 while (foodItemSet.next()) {
                     OrderFoodItems orderFoodItems = new OrderFoodItems();
                     FoodItem foodItem = new FoodItem();
-                    foodItem.setFoodItemId(foodItemSet.getInt("food_item_id"));
-                    foodItem.setFoodName(foodItemSet.getString("food_name"));
-                    foodItem.setFoodDescription(foodItemSet.getString("food_description"));
-                    foodItem.setPrice(foodItemSet.getDouble("price"));
-                    foodItem.setDiscount(foodItemSet.getDouble("discount"));
+                    foodItem.setFoodItemId(foodItemSet.getInt(FOOD_ITEM_ID));
+                    foodItem.setFoodName(foodItemSet.getString(FOOD_NAME));
+                    foodItem.setFoodDescription(foodItemSet.getString(FOOD_DESCRIPTION));
+                    foodItem.setPrice(foodItemSet.getDouble(PRICE));
+                    foodItem.setDiscount(foodItemSet.getDouble(DISCOUNT));
                     orderFoodItems.setFoodItem(foodItem);
-                    orderFoodItems.setQuantity(foodItemSet.getInt("quantity"));
+                    orderFoodItems.setQuantity(foodItemSet.getInt(QUANTITY));
                     orderFoodItemsList.add(orderFoodItems);
                 }
                 order.setOrderFoodItems(orderFoodItemsList);
@@ -197,27 +209,27 @@ public class OrderDAOImpl implements IOrderDAO {
             while (resultSet.next()) {
                 Order order = new Order();
                 User user = new User();
-                order.setOrderId(resultSet.getInt("order_id"));
-                user.setUserId(resultSet.getInt("user_id"));
+                order.setOrderId(resultSet.getInt(ORDER_ID));
+                user.setUserId(resultSet.getInt(USER_ID));
                 order.setUser(user);
-                order.setOrderStatus(OrderStatus.toEnum(resultSet.getString("order_status")));
-                order.setOrderDateTime(resultSet.getTimestamp("order_date_time").toLocalDateTime());
-                order.setTotalPrice(resultSet.getInt("total_price"));
-                order.setPaymentStatus(PaymentStatus.toEnum(resultSet.getString("payment_status")));
+                order.setOrderStatus(OrderStatus.toEnum(resultSet.getString(ORDER_STATUS)));
+                order.setOrderDateTime(resultSet.getTimestamp(ORDER_STATUS).toLocalDateTime());
+                order.setTotalPrice(resultSet.getInt(TOTAL_PRICE));
+                order.setPaymentStatus(PaymentStatus.toEnum(resultSet.getString(PAYMENT_STATUS)));
                 psForOrderFoodItem = connection.prepareStatement(ORDER_FOOD_ITEM_SQL);
-                psForOrderFoodItem.setInt(1, resultSet.getInt("order_id"));
+                psForOrderFoodItem.setInt(1, resultSet.getInt(ORDER_ID));
                 foodItemSet = psForOrderFoodItem.executeQuery();
                 List<OrderFoodItems> orderFoodItemsList = new ArrayList<>();
                 while (foodItemSet.next()) {
                     OrderFoodItems orderFoodItems = new OrderFoodItems();
                     FoodItem foodItem = new FoodItem();
-                    foodItem.setFoodItemId(foodItemSet.getInt("food_item_id"));
-                    foodItem.setFoodName(foodItemSet.getString("food_name"));
-                    foodItem.setFoodDescription(foodItemSet.getString("food_description"));
-                    foodItem.setPrice(foodItemSet.getDouble("price"));
-                    foodItem.setDiscount(foodItemSet.getDouble("discount"));
+                    foodItem.setFoodItemId(foodItemSet.getInt(FOOD_ITEM_ID));
+                    foodItem.setFoodName(foodItemSet.getString(FOOD_NAME));
+                    foodItem.setFoodDescription(foodItemSet.getString(FOOD_DESCRIPTION));
+                    foodItem.setPrice(foodItemSet.getDouble(PRICE));
+                    foodItem.setDiscount(foodItemSet.getDouble(DISCOUNT));
                     orderFoodItems.setFoodItem(foodItem);
-                    orderFoodItems.setQuantity(foodItemSet.getInt("quantity"));
+                    orderFoodItems.setQuantity(foodItemSet.getInt(QUANTITY));
                     orderFoodItemsList.add(orderFoodItems);
                 }
                 order.setOrderFoodItems(orderFoodItemsList);
@@ -253,27 +265,27 @@ public class OrderDAOImpl implements IOrderDAO {
             if (resultSet.next()) {
                 order = new Order();
                 User user = new User();
-                order.setOrderId(resultSet.getInt("order_id"));
-                user.setUserId(resultSet.getInt("user_id"));
+                order.setOrderId(resultSet.getInt(ORDER_ID));
+                user.setUserId(resultSet.getInt(USER_ID));
                 order.setUser(user);
-                order.setOrderStatus(OrderStatus.toEnum(resultSet.getString("order_status")));
-                order.setOrderDateTime(resultSet.getTimestamp("order_date_time").toLocalDateTime());
-                order.setTotalPrice(resultSet.getInt("total_price"));
-                order.setPaymentStatus(PaymentStatus.toEnum(resultSet.getString("payment_status")));
+                order.setOrderStatus(OrderStatus.toEnum(resultSet.getString(ORDER_STATUS)));
+                order.setOrderDateTime(resultSet.getTimestamp(ORDER_DATE_TIME).toLocalDateTime());
+                order.setTotalPrice(resultSet.getInt(TOTAL_PRICE));
+                order.setPaymentStatus(PaymentStatus.toEnum(resultSet.getString(PAYMENT_STATUS)));
                 psForOrderFoodItem = connection.prepareStatement(ORDER_FOOD_ITEM_SQL);
-                psForOrderFoodItem.setInt(1, resultSet.getInt("order_id"));
+                psForOrderFoodItem.setInt(1, resultSet.getInt(ORDER_ID));
                 foodItemSet = psForOrderFoodItem.executeQuery();
                 List<OrderFoodItems> orderFoodItemsList = new ArrayList<>();
                 while (foodItemSet.next()) {
                     OrderFoodItems orderFoodItems = new OrderFoodItems();
                     FoodItem foodItem = new FoodItem();
-                    foodItem.setFoodItemId(foodItemSet.getInt("food_item_id"));
-                    foodItem.setFoodName(foodItemSet.getString("food_name"));
-                    foodItem.setFoodDescription(foodItemSet.getString("food_description"));
-                    foodItem.setPrice(foodItemSet.getDouble("price"));
-                    foodItem.setDiscount(foodItemSet.getDouble("discount"));
+                    foodItem.setFoodItemId(foodItemSet.getInt(FOOD_ITEM_ID));
+                    foodItem.setFoodName(foodItemSet.getString(FOOD_NAME));
+                    foodItem.setFoodDescription(foodItemSet.getString(FOOD_DESCRIPTION));
+                    foodItem.setPrice(foodItemSet.getDouble(PRICE));
+                    foodItem.setDiscount(foodItemSet.getDouble(DISCOUNT));
                     orderFoodItems.setFoodItem(foodItem);
-                    orderFoodItems.setQuantity(foodItemSet.getInt("quantity"));
+                    orderFoodItems.setQuantity(foodItemSet.getInt(QUANTITY));
                     orderFoodItemsList.add(orderFoodItems);
                 }
                 order.setOrderFoodItems(orderFoodItemsList);
@@ -311,27 +323,27 @@ public class OrderDAOImpl implements IOrderDAO {
             if (resultSet.next()) {
                 order = new Order();
                 User user = new User();
-                order.setOrderId(resultSet.getInt("order_id"));
-                user.setUserId(resultSet.getInt("user_id"));
+                order.setOrderId(resultSet.getInt(ORDER_ID));
+                user.setUserId(resultSet.getInt(USER_ID));
                 order.setUser(user);
-                order.setOrderStatus(OrderStatus.toEnum(resultSet.getString("order_status")));
-                order.setOrderDateTime(resultSet.getTimestamp("order_date_time").toLocalDateTime());
-                order.setTotalPrice(resultSet.getInt("total_price"));
-                order.setPaymentStatus(PaymentStatus.toEnum(resultSet.getString("payment_status")));
+                order.setOrderStatus(OrderStatus.toEnum(resultSet.getString(ORDER_STATUS)));
+                order.setOrderDateTime(resultSet.getTimestamp(ORDER_DATE_TIME).toLocalDateTime());
+                order.setTotalPrice(resultSet.getInt(TOTAL_PRICE));
+                order.setPaymentStatus(PaymentStatus.toEnum(resultSet.getString(PAYMENT_STATUS)));
                 psForOrderFoodItem = connection.prepareStatement(orderFoodItemSQL);
-                psForOrderFoodItem.setInt(1, resultSet.getInt("order_id"));
+                psForOrderFoodItem.setInt(1, resultSet.getInt(ORDER_ID));
                 foodItemSet = psForOrderFoodItem.executeQuery();
                 List<OrderFoodItems> orderFoodItemsList = new ArrayList<>();
                 while (foodItemSet.next()) {
                     OrderFoodItems orderFoodItems = new OrderFoodItems();
                     FoodItem foodItem = new FoodItem();
-                    foodItem.setFoodItemId(foodItemSet.getInt("food_item_id"));
-                    foodItem.setFoodName(foodItemSet.getString("food_name"));
-                    foodItem.setFoodDescription(foodItemSet.getString("food_description"));
-                    foodItem.setPrice(foodItemSet.getDouble("price"));
-                    foodItem.setDiscount(foodItemSet.getDouble("discount"));
+                    foodItem.setFoodItemId(foodItemSet.getInt(FOOD_ITEM_ID));
+                    foodItem.setFoodName(foodItemSet.getString(FOOD_NAME));
+                    foodItem.setFoodDescription(foodItemSet.getString(FOOD_DESCRIPTION));
+                    foodItem.setPrice(foodItemSet.getDouble(PRICE));
+                    foodItem.setDiscount(foodItemSet.getDouble(DISCOUNT));
                     orderFoodItems.setFoodItem(foodItem);
-                    orderFoodItems.setQuantity(foodItemSet.getInt("quantity"));
+                    orderFoodItems.setQuantity(foodItemSet.getInt(QUANTITY));
                     orderFoodItemsList.add(orderFoodItems);
                 }
                 order.setOrderFoodItems(orderFoodItemsList);

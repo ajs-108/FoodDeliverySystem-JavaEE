@@ -2,8 +2,6 @@ package com.app.dto;
 
 import com.app.common.enums.OrderStatus;
 import com.app.common.enums.PaymentStatus;
-import com.app.model.OrderFoodItems;
-import com.app.model.User;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;

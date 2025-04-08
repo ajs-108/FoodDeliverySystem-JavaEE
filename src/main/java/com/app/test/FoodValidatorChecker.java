@@ -10,7 +10,6 @@ public class FoodValidatorChecker {
     public static void main(String[] args) throws IOException {
         Path path = FileSystems.getDefault().getPath("/src/main/webapp");
         System.out.println(Paths.get("")
-                .toAbsolutePath()
-                .toString());
+                .toAbsolutePath());
     }
 }

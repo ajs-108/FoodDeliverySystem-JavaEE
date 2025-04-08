@@ -39,4 +39,12 @@ public class ReviewServices {
     public ReviewDTO getReview(int reviewId) throws DBException {
         return reviewMapper.toDTO(reviewDAO.getReview(reviewId));
     }
+
+    public void updateReview(ReviewDTO reviewDTO) throws DBException {
+        reviewDAO.updateReview(reviewMapper.toReview(reviewDTO));
+    }
+
+    public void deleteReview(int reviewId) throws DBException {
+        reviewDAO.deleteReview(reviewId);
+    }
 }

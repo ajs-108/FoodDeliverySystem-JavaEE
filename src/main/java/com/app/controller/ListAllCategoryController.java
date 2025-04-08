@@ -9,11 +9,12 @@ import com.app.common.util.ObjectMapperUtil;
 import com.app.dto.APIResponse;
 import com.app.dto.CategoryDTO;
 import com.app.service.CategoryServices;
-import jakarta.servlet.*;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.List;
 

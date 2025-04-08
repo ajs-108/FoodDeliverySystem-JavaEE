@@ -2,13 +2,13 @@ package com.app.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(value = JsonInclude.Include.NON_NULL,
+        content = JsonInclude.Include.NON_DEFAULT)
 public class CartFoodItemsDTO {
     private FoodItemDTO foodItemDTO;
     private int quantity;
     private double beforeDiscountPrice;
     private double afterDiscountPrice;
-
 
     public FoodItemDTO getFoodItemDTO() {
         return foodItemDTO;

@@ -15,10 +15,13 @@ import com.app.service.UserServices;
 import java.util.Objects;
 
 public class OrderValidator {
-    private static UserServices userServices = new UserServices();
-    private static ShoppingCartServices shoppingCartServices = new ShoppingCartServices();
-    private static OrderServices orderServices = new OrderServices();
-    private static Validator validator = new Validator();
+    private static final UserServices userServices = new UserServices();
+    private static final ShoppingCartServices shoppingCartServices = new ShoppingCartServices();
+    private static final OrderServices orderServices = new OrderServices();
+    private static final Validator validator = new Validator();
+
+    private OrderValidator() {
+    }
 
     public static void validateOrder(int userId, OrderDTO orderDTO) throws DBException, ApplicationException {
         if (userServices.getUser(userId) == null) {
@@ -88,7 +91,7 @@ public class OrderValidator {
         }
     }
 
-    public static void validateGetOrdersByStatus(String orderStatus) throws ApplicationException, DBException {
+    public static void validateGetOrdersByStatus(String orderStatus) throws ApplicationException {
         if (orderStatus == null) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }

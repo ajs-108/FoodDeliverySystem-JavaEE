@@ -7,8 +7,11 @@ import com.app.dto.CategoryDTO;
 import com.app.service.CategoryServices;
 
 public class CategoryValidator {
-    private static final CategoryServices categoryServices = new CategoryServices();
     protected static final int CATEGORY_NAME_LENGTH = 40;
+    private static CategoryServices categoryServices = new CategoryServices();
+
+    private CategoryValidator () {
+    }
 
     public static void validateCategory(CategoryDTO categoryDTO) throws ApplicationException, DBException {
         if (categoryDTO.getCategoryName() == null || categoryDTO.getCategoryName().isBlank()) {

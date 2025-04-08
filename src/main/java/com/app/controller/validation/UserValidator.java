@@ -15,6 +15,10 @@ public class UserValidator {
     private static final int ADDRESS_LENGTH = 255;
     private static UserServices userServices = new UserServices();
     private static Validator validate = new Validator();
+
+    private UserValidator() {
+    }
+
     /**
      * This method is used to validate the incoming SignUp form data.
      *
@@ -22,7 +26,7 @@ public class UserValidator {
      * @throws ApplicationException - thrown if incoming data violets the constraint
      */
     public static void validateLogin(UserDTO userDTO) throws ApplicationException, DBException {
-        if(!userServices.isUserValid(userDTO.getEmail())) {
+        if (!userServices.isUserValid(userDTO.getEmail())) {
             throw new ApplicationException(Message.User.NO_SUCH_USER);
         }
         if (userDTO.getEmail() == null || userDTO.getEmail().isBlank()) {
@@ -64,6 +68,10 @@ public class UserValidator {
         if (userServices.isEmailExists(signUpDTO.getEmail(), signUpDTO.getRole().getRoleId())) {
             throw new ApplicationException(Message.User.EMAIL_EXISTS);
         }
+        validateSignUpInternal(signUpDTO);
+    }
+
+    private static void validateSignUpInternal(UserDTO signUpDTO) throws ApplicationException, DBException {
         if (signUpDTO.getPassword() == null || signUpDTO.getPassword().isBlank()) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
@@ -84,7 +92,7 @@ public class UserValidator {
         }
     }
 
-    public static void validateUpdate(UserDTO userDTO) throws ApplicationException, DBException {
+    public static void validateUpdate(UserDTO userDTO) throws ApplicationException {
 
         if (userDTO.getFirstName() == null || userDTO.getFirstName().isBlank()) {
             throw new ApplicationException(Message.Common.MANDATORY);
@@ -112,10 +120,10 @@ public class UserValidator {
     public static void validateChangePassword(UserDTO userDTO) throws ApplicationException, DBException {
         UserDTO userFromDB = userServices.getUserLoginCredentials(userDTO.getEmail());
 
-        if(!userServices.isUserValid(userDTO.getEmail())) {
+        if (!userServices.isUserValid(userDTO.getEmail())) {
             throw new ApplicationException(Message.User.NO_SUCH_USER);
         }
-        if(!Objects.equals(userDTO.getPassword(), userFromDB.getPassword())) {
+        if (!Objects.equals(userDTO.getPassword(), userFromDB.getPassword())) {
             throw new ApplicationException(Message.User.INCORRECT_PASSWORD);
         }
         if (userDTO.getPassword() == null || userDTO.getPassword().isBlank()) {
@@ -124,7 +132,7 @@ public class UserValidator {
         if (!validate.checkPassword(userDTO.getNewPassword())) {
             throw new ApplicationException(Message.User.INVALID_PASSWORD);
         }
-        if(Objects.equals(userDTO.getPassword(), userDTO.getNewPassword())) {
+        if (Objects.equals(userDTO.getPassword(), userDTO.getNewPassword())) {
             throw new ApplicationException(Message.User.SAME_PASSWORD);
         }
     }

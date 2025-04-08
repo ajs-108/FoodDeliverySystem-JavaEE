@@ -10,7 +10,21 @@ import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.app.dao.impl.CategoryDAOImpl.CATEGORY_ID;
+import static com.app.dao.impl.CategoryDAOImpl.CATEGORY_NAME;
+
 public class FoodItemDAOImpl implements IFoodItemDAO {
+    protected static final String FOOD_ITEM_ID = "food_item_id";
+    protected static final String FOOD_NAME = "food_name";
+    protected static final String FOOD_DESCRIPTION = "food_description";
+    protected static final String PRICE = "price";
+    protected static final String DISCOUNT = "discount";
+    protected static final String IS_AVAILABLE = "is_available";
+    protected static final String CREATED_ON = "created_on";
+    protected static final String UPDATED_ON = "updated_on";
+    protected static final String IMAGE_PATH = "image_path";
+    protected static final String RATING = "rating";
+
     @Override
     public void saveFoodItem(FoodItem foodItem) throws DBException {
         String sql = """
@@ -48,16 +62,16 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
                 FoodItem foodItem;
                 foodItem = new FoodItem();
                 Category category = new Category();
-                foodItem.setFoodItemId(resultSet.getInt("food_item_id"));
-                foodItem.setFoodName(resultSet.getString("food_name"));
-                foodItem.setFoodDescription(resultSet.getString("food_description"));
-                foodItem.setPrice(resultSet.getDouble("price"));
-                foodItem.setDiscount(resultSet.getDouble("discount"));
-                foodItem.setAvailable(resultSet.getBoolean("is_available"));
-                foodItem.setImagePath(resultSet.getString("image_path"));
-                foodItem.setRating(resultSet.getDouble("rating"));
-                category.setCategoryId(resultSet.getInt("category_id"));
-                category.setCategoryName(resultSet.getString("category_name"));
+                foodItem.setFoodItemId(resultSet.getInt(FOOD_ITEM_ID));
+                foodItem.setFoodName(resultSet.getString(FOOD_NAME));
+                foodItem.setFoodDescription(resultSet.getString(FOOD_DESCRIPTION));
+                foodItem.setPrice(resultSet.getDouble(PRICE));
+                foodItem.setDiscount(resultSet.getDouble(DISCOUNT));
+                foodItem.setAvailable(resultSet.getBoolean(IS_AVAILABLE));
+                foodItem.setImagePath(resultSet.getString(IMAGE_PATH));
+                foodItem.setRating(resultSet.getDouble(RATING));
+                category.setCategoryId(resultSet.getInt(CATEGORY_ID));
+                category.setCategoryName(resultSet.getString(CATEGORY_NAME));
                 foodItem.setCategory(category);
                 return foodItem;
             }
@@ -79,16 +93,18 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
             while (resultSet.next()) {
                 FoodItem foodItem = new FoodItem();
                 Category category = new Category();
-                foodItem.setFoodItemId(resultSet.getInt("food_item_id"));
-                foodItem.setFoodName(resultSet.getString("food_name"));
-                foodItem.setFoodDescription(resultSet.getString("food_description"));
-                foodItem.setPrice(resultSet.getDouble("price"));
-                foodItem.setDiscount(resultSet.getDouble("discount"));
-                foodItem.setAvailable(resultSet.getBoolean("is_available"));
-                foodItem.setImagePath(resultSet.getString("image_path"));
-                foodItem.setRating(resultSet.getDouble("rating"));
-                category.setCategoryId(resultSet.getInt("category_id"));
-                category.setCategoryName(resultSet.getString("category_name"));
+                foodItem.setFoodItemId(resultSet.getInt(FOOD_ITEM_ID));
+                foodItem.setFoodName(resultSet.getString(FOOD_NAME));
+                foodItem.setFoodDescription(resultSet.getString(FOOD_DESCRIPTION));
+                foodItem.setPrice(resultSet.getDouble(PRICE));
+                foodItem.setDiscount(resultSet.getDouble(DISCOUNT));
+                foodItem.setAvailable(resultSet.getBoolean(IS_AVAILABLE));
+                foodItem.setImagePath(resultSet.getString(IMAGE_PATH));
+                foodItem.setRating(resultSet.getDouble(RATING));
+                foodItem.setCreatedOn(resultSet.getTimestamp(CREATED_ON));
+                foodItem.setUpdatedOn(resultSet.getTimestamp(UPDATED_ON));
+                category.setCategoryId(resultSet.getInt(CATEGORY_ID));
+                category.setCategoryName(resultSet.getString(CATEGORY_NAME));
                 foodItem.setCategory(category);
                 foodItemList.add(foodItem);
             }

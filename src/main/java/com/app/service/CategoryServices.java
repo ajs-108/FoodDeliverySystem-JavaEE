@@ -7,11 +7,8 @@ import com.app.dao.ICategoryDAO;
 import com.app.dao.impl.CategoryDAOImpl;
 import com.app.dto.CategoryDTO;
 import com.app.mapper.CategoryMapper;
-import com.app.model.Category;
-import com.mysql.cj.jdbc.jmx.ReplicationGroupManager;
 
 import java.util.List;
-import java.util.Objects;
 
 public class CategoryServices {
     private ICategoryDAO categoryDAO;

@@ -1,5 +1,8 @@
 package com.app.model;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 public class FoodItem {
     private int foodItemId;
     private String foodName;
@@ -8,6 +11,8 @@ public class FoodItem {
     private double discount;
     private boolean isAvailable;
     private Category category;
+    private LocalDateTime createdOn;
+    private LocalDateTime updatedOn;
     private String imagePath;
     private double rating;
 
@@ -65,6 +70,30 @@ public class FoodItem {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(LocalDateTime createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public void setCreatedOn(Timestamp createdOn) {
+        this.createdOn = createdOn == null ? null : createdOn.toLocalDateTime();
+    }
+
+    public LocalDateTime getUpdatedOn() {
+        return updatedOn;
+    }
+
+    public void setUpdatedOn(LocalDateTime updatedOn) {
+        this.updatedOn = updatedOn;
+    }
+
+    public void setUpdatedOn(Timestamp updatedOn) {
+        this.updatedOn = updatedOn == null ? null : updatedOn.toLocalDateTime();
     }
 
     public String getImagePath() {

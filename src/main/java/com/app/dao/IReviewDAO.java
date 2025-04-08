@@ -11,4 +11,8 @@ public interface IReviewDAO {
     List<Review> getAllReview() throws DBException;
 
     Review getReview(int reviewId) throws DBException;
+
+    void updateReview(Review review) throws DBException;
+
+    void deleteReview(int reviewId) throws DBException;
 }

@@ -10,6 +10,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class CategoryDAOImpl implements ICategoryDAO {
+    protected static final String CATEGORY_ID = "category_id";
+    protected static final String CATEGORY_NAME = "category_name";
+
     @Override
     public void saveCategory(Category category) throws DBException {
         Connection connection = null;
@@ -37,8 +40,8 @@ public class CategoryDAOImpl implements ICategoryDAO {
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 Category category = new Category();
-                category.setCategoryId(resultSet.getInt("category_id"));
-                category.setCategoryName(resultSet.getString("category_name"));
+                category.setCategoryId(resultSet.getInt(CATEGORY_ID));
+                category.setCategoryName(resultSet.getString(CATEGORY_NAME));
                 return category;
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -59,8 +62,8 @@ public class CategoryDAOImpl implements ICategoryDAO {
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 Category category = new Category();
-                category.setCategoryId(resultSet.getInt("category_id"));
-                category.setCategoryName(resultSet.getString("category_name"));
+                category.setCategoryId(resultSet.getInt(CATEGORY_ID));
+                category.setCategoryName(resultSet.getString(CATEGORY_NAME));
                 return category;
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -81,8 +84,8 @@ public class CategoryDAOImpl implements ICategoryDAO {
             while (resultSet.next()) {
                 Category category;
                 category = new Category();
-                category.setCategoryId(resultSet.getInt("category_id"));
-                category.setCategoryName(resultSet.getString("category_name"));
+                category.setCategoryId(resultSet.getInt(CATEGORY_ID));
+                category.setCategoryName(resultSet.getString(CATEGORY_NAME));
                 categoryList.add(category);
             }
             return categoryList;

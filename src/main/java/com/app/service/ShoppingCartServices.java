@@ -87,6 +87,6 @@ public class ShoppingCartServices {
     }
 
     public double calculatePostDiscountPrice(double price, double discount, int quantity) {
-        return Math.round((price - (price * (discount/100))) * quantity);
+        return Math.round((price - (price * (discount / 100))) * quantity);
     }
 }

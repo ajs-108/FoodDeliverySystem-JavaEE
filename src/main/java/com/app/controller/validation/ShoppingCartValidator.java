@@ -9,10 +9,13 @@ import com.app.service.ShoppingCartServices;
 import com.app.service.UserServices;
 
 public class ShoppingCartValidator {
-    private static UserServices userServices = new UserServices();
-    private static FoodItemServices foodItemServices = new FoodItemServices();
-    private static ShoppingCartServices shoppingCartServices = new ShoppingCartServices();
-    private static Validator validator = new Validator();
+    private static final UserServices userServices = new UserServices();
+    private static final FoodItemServices foodItemServices = new FoodItemServices();
+    private static final ShoppingCartServices shoppingCartServices = new ShoppingCartServices();
+    private static final Validator validator = new Validator();
+
+    private ShoppingCartValidator() {
+    }
 
     public static void validateAddToCart(ShoppingCartDTO shoppingCartDTO) throws ApplicationException, DBException {
         if (shoppingCartDTO.getUserId() == 0) {
@@ -32,7 +35,7 @@ public class ShoppingCartValidator {
             throw new ApplicationException(Message.ShoppingCart.FOOD_ITEM_EXISTS);
         }
         if (shoppingCartDTO.getCartFoodItemsDTOList().get(0).getQuantity() == 0) {
-            throw new ApplicationException(Message.ShoppingCart.QUANTITY);
+            throw new ApplicationException(Message.ShoppingCart.MIN_QUANTITY_VALUE);
         }
         if (shoppingCartDTO.getCartFoodItemsDTOList().get(0).getQuantity() > 15) {
             throw new ApplicationException(Message.ShoppingCart.QUANTITY_VALUE);

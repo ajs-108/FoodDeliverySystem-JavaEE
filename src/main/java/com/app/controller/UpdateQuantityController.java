@@ -11,9 +11,11 @@ import com.app.dto.APIResponse;
 import com.app.dto.ShoppingCartDTO;
 import com.app.dto.UserDTO;
 import com.app.service.ShoppingCartServices;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
@@ -28,7 +30,7 @@ public class UpdateQuantityController extends HttpServlet {
             AuthUtils.checkAuthentication(request);
             UserDTO userDTO = AuthUtils.getCurrentUser(request);
             ShoppingCartDTO shoppingCartDTO = ObjectMapperUtil.toObject(request.getReader(), ShoppingCartDTO.class);
-            if(shoppingCartDTO.getCartFoodItemsDTOList().get(0).getQuantity() == 0) {
+            if (shoppingCartDTO.getCartFoodItemsDTOList().get(0).getQuantity() == 0) {
                 shoppingCartServices.removeFoodItem(userDTO.getUserId(),
                         shoppingCartDTO.getCartFoodItemsDTOList().get(0).getFoodItemDTO().getFoodItemId());
                 sendResponse(response, null, Message.ShoppingCart.FOOD_ITEM_REMOVED, null, HttpServletResponse.SC_OK);

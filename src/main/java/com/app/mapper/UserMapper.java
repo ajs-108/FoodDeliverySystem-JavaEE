@@ -35,6 +35,8 @@ public class UserMapper {
         user.setPassword(userDTO.getPassword());
         user.setPhoneNumber(userDTO.getPhoneNumber());
         user.setAddress(userDTO.getAddress());
+        user.setCreatedOn(userDTO.getCreatedOn());
+        user.setUpdatedOn(userDTO.getUpdatedOn());
         user.setRole(userDTO.getRole());
         user.setAccountStatus(userDTO.getAccountStatus());
         return user;

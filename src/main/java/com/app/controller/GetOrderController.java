@@ -11,9 +11,11 @@ import com.app.dto.APIResponse;
 import com.app.dto.OrderDTO;
 import com.app.dto.UserDTO;
 import com.app.service.OrderServices;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
@@ -42,6 +44,7 @@ public class GetOrderController extends HttpServlet {
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
+
     public void sendResponse(HttpServletResponse response, String techMessage, String message, Object data, int status) throws IOException {
         APIResponse apiResponse = new APIResponse();
         apiResponse.setMessage(message);

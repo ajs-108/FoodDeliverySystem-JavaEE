@@ -2,13 +2,12 @@ package com.app.controller;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
-import com.app.common.enums.Roles;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
-import com.app.controller.validation.QueryParameterValidator;
 import com.app.controller.validation.OrderValidator;
+import com.app.controller.validation.QueryParameterValidator;
 import com.app.dto.APIResponse;
 import com.app.service.OrderServices;
 import jakarta.servlet.ServletException;

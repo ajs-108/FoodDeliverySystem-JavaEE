@@ -79,12 +79,20 @@ public class User {
         return createdOn;
     }
 
+    public void setCreatedOn(LocalDateTime createdOn) {
+        this.createdOn = createdOn;
+    }
+
     public void setCreatedOn(Timestamp createdOn) {
         this.createdOn = createdOn == null ? null : createdOn.toLocalDateTime();
     }
 
     public LocalDateTime getUpdatedOn() {
         return updatedOn;
+    }
+
+    public void setUpdatedOn(LocalDateTime updatedOn) {
+        this.updatedOn = updatedOn;
     }
 
     public void setUpdatedOn(Timestamp updatedOn) {

@@ -2,6 +2,8 @@ package com.app.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.time.LocalDateTime;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FoodItemDTO {
     private int foodItemId;
@@ -11,6 +13,8 @@ public class FoodItemDTO {
     private double discount;
     private boolean isAvailable;
     private CategoryDTO category;
+    private LocalDateTime createdOn;
+    private LocalDateTime updatedOn;
     private String imagePath;
     private double rating;
 
@@ -68,6 +72,22 @@ public class FoodItemDTO {
 
     public void setCategory(CategoryDTO category) {
         this.category = category;
+    }
+
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(LocalDateTime createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public LocalDateTime getUpdatedOn() {
+        return updatedOn;
+    }
+
+    public void setUpdatedOn(LocalDateTime updatedOn) {
+        this.updatedOn = updatedOn;
     }
 
     public String getImagePath() {

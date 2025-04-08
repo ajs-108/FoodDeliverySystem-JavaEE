@@ -15,7 +15,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.app.dao.impl.CategoryDAOImpl.CATEGORY_ID;
+import static com.app.dao.impl.CategoryDAOImpl.CATEGORY_NAME;
+import static com.app.dao.impl.FoodItemDAOImpl.*;
+import static com.app.dao.impl.UserDAOImpl.USER_ID;
+
 public class ShoppingCartDAOImpl implements IShoppingCartDAO {
+    protected static final String QUANTITY = "quantity";
+
     @Override
     public void addFoodItem(ShoppingCart shoppingCart) throws DBException {
         String sql = """
@@ -85,21 +92,21 @@ public class ShoppingCartDAOImpl implements IShoppingCartDAO {
             List<CartFoodItems> cartFoodItemsList = new ArrayList<>();
             while (resultSet.next()) {
                 Category category = new Category();
-                category.setCategoryId(resultSet.getInt("category_id"));
-                category.setCategoryName(resultSet.getString("category_name"));
+                category.setCategoryId(resultSet.getInt(CATEGORY_ID));
+                category.setCategoryName(resultSet.getString(CATEGORY_NAME));
                 FoodItem foodItem = new FoodItem();
-                foodItem.setFoodItemId(resultSet.getInt("food_item_id"));
-                foodItem.setFoodName(resultSet.getString("food_name"));
-                foodItem.setFoodDescription(resultSet.getString("food_description"));
+                foodItem.setFoodItemId(resultSet.getInt(FOOD_ITEM_ID));
+                foodItem.setFoodName(resultSet.getString(FOOD_NAME));
+                foodItem.setFoodDescription(resultSet.getString(FOOD_DESCRIPTION));
                 foodItem.setCategory(category);
-                foodItem.setPrice(resultSet.getDouble("price"));
-                foodItem.setDiscount(resultSet.getDouble("discount"));
-                foodItem.setImagePath(resultSet.getString("image_path"));
+                foodItem.setPrice(resultSet.getDouble(PRICE));
+                foodItem.setDiscount(resultSet.getDouble(DISCOUNT));
+                foodItem.setImagePath(resultSet.getString(IMAGE_PATH));
                 CartFoodItems cartFoodItems = new CartFoodItems();
                 cartFoodItems.setFoodItem(foodItem);
-                cartFoodItems.setQuantity(resultSet.getInt("quantity"));
+                cartFoodItems.setQuantity(resultSet.getInt(QUANTITY));
                 cartFoodItemsList.add(cartFoodItems);
-                shoppingCart.setUserId(resultSet.getInt("user_id"));
+                shoppingCart.setUserId(resultSet.getInt(USER_ID));
             }
             shoppingCart.setCartFoodItemsList(cartFoodItemsList);
             return shoppingCart;
