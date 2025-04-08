@@ -58,7 +58,7 @@ public class ShoppingCartValidator {
         if (foodItemId == null || foodItemId.isBlank()) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
-        if (validator.isPositiveInteger(foodItemId)) {
+        if (!validator.isPositiveInteger(foodItemId)) {
             throw new ApplicationException(Message.Common.NOT_A_POSITIVE_INTEGER);
         }
         if (!foodItemServices.isFoodItemExists(Integer.parseInt(foodItemId))) {
