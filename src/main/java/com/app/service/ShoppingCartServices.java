@@ -37,6 +37,12 @@ public class ShoppingCartServices {
         double totalPrice = 0;
         if (cartFoodItemsDTOList != null) {
             for (CartFoodItemsDTO cartFoodItemsDTO : cartFoodItemsDTOList) {
+                cartFoodItemsDTO.setBeforeDiscountPrice(calculatePreDiscountPrice(
+                        cartFoodItemsDTO.getFoodItemDTO().getPrice(), cartFoodItemsDTO.getQuantity()));
+                cartFoodItemsDTO.setAfterDiscountPrice(calculatePostDiscountPrice(
+                        cartFoodItemsDTO.getFoodItemDTO().getPrice(),
+                        cartFoodItemsDTO.getFoodItemDTO().getDiscount(),
+                        cartFoodItemsDTO.getQuantity()));
                 totalPrice += calculateTotalPrice(cartFoodItemsDTO.getFoodItemDTO().getPrice(),
                         cartFoodItemsDTO.getFoodItemDTO().getDiscount(), cartFoodItemsDTO.getQuantity());
             }
@@ -72,8 +78,15 @@ public class ShoppingCartServices {
 
     public double calculateTotalPrice(double price, double discount, int quantity) {
         double totalPrice = 0;
-        double discountedPrice = Math.round((price - (price * (discount/100))) * quantity);
-        totalPrice += discountedPrice;
+        totalPrice += calculatePostDiscountPrice(price, discount, quantity);
         return totalPrice;
+    }
+
+    public double calculatePreDiscountPrice(double price, int quantity) {
+        return Math.round(price * quantity);
+    }
+
+    public double calculatePostDiscountPrice(double price, double discount, int quantity) {
+        return Math.round((price - (price * (discount/100))) * quantity);
     }
 }

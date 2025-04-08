@@ -21,7 +21,8 @@ public class ReviewDAOImpl implements IReviewDAO {
                 insert into review_rating_table(user_id, food_item_id, order_id, rating, review)
                 values(?,?,?,?,?);
                 """;
-        try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
+        try (Connection connect = DBConnector.getInstance().getConnection();
+             PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
             preparedStatement.setInt(1, review.getUser().getUserId());
             preparedStatement.setInt(2, review.getFoodItem().getFoodItemId());
             preparedStatement.setInt(3, review.getOrderId());
@@ -41,9 +42,9 @@ public class ReviewDAOImpl implements IReviewDAO {
                 from review_rating_table r, user_ u, food_item fi
                 where u.user_id = r.user_id and fi.food_item_id = r.food_item_id;
                 """;
-        ResultSet resultSet = null;
-        try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
-            resultSet = preparedStatement.executeQuery();
+        try (Connection connect = DBConnector.getInstance().getConnection();
+             PreparedStatement preparedStatement = connect.prepareStatement(sql);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
             List<Review> reviewList = new ArrayList<>();
             while (resultSet.next()) {
                 User user = new User();
@@ -75,9 +76,9 @@ public class ReviewDAOImpl implements IReviewDAO {
                 from review_rating_table r, user_ u, food_item fi
                 where u.user_id = r.user_id and fi.food_item_id = r.food_item_id;
                 """;
-        ResultSet resultSet = null;
-        try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
-            resultSet = preparedStatement.executeQuery();
+        try (Connection connect = DBConnector.getInstance().getConnection();
+             PreparedStatement preparedStatement = connect.prepareStatement(sql);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
             Review review = null;
             if (resultSet.next()) {
                 User user = new User();

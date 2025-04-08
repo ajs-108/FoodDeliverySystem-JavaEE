@@ -23,7 +23,7 @@ public class OrderServices {
 
     public void placeOrder(int userId, OrderDTO orderDTO) throws DBException {
         int i = orderDAO.placeOrder(userId, orderMapper.toOrder(orderDTO));
-        if (i > 0) {
+        if (i > 1) {
             shoppingCartServices.deleteCartDataOfUser(userId);
         }
     }

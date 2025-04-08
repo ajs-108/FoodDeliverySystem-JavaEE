@@ -7,6 +7,8 @@ import com.app.dao.ICategoryDAO;
 import com.app.dao.impl.CategoryDAOImpl;
 import com.app.dto.CategoryDTO;
 import com.app.mapper.CategoryMapper;
+import com.app.model.Category;
+import com.mysql.cj.jdbc.jmx.ReplicationGroupManager;
 
 import java.util.List;
 import java.util.Objects;
@@ -38,24 +40,7 @@ public class CategoryServices {
         return categoryMapper.toDTO(categoryDAO.getCategory(categoryId));
     }
 
-    public boolean isCategoryExists(CategoryDTO categoryDTO) throws DBException {
-        List<CategoryDTO> categoryList = getAllCategories();
-        for (CategoryDTO category : categoryList) {
-            if (Objects.equals(category.getCategoryName(), categoryDTO.getCategoryName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean isCategoryExistsById(CategoryDTO categoryDTO) throws DBException {
-        List<CategoryDTO> categoryList = getAllCategories();
-        for (CategoryDTO category : categoryList) {
-            if (Objects.equals(category.getCategoryName(), categoryDTO.getCategoryName())
-                && category.getCategoryId() == categoryDTO.getCategoryId()) {
-                return true;
-            }
-        }
-        return false;
+    public CategoryDTO getCategory(String categoryName) throws DBException {
+        return categoryMapper.toDTO(categoryDAO.getCategory(categoryName));
     }
 }

@@ -10,5 +10,7 @@ public interface ICategoryDAO {
 
     Category getCategory(int categoryId) throws DBException;
 
+    Category getCategory(String categoryName) throws DBException;
+
     List<Category> getAllCategories() throws DBException;
 }

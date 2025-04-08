@@ -21,7 +21,8 @@ public class UserDAOImpl implements IUserDAO {
                 insert into user_ (first_name, last_name, email, password_, phone_number, address, role_id)
                 values (?,?,?,?,?,?,?);
                 """;
-        try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
+        try (Connection connect = DBConnector.getInstance().getConnection();
+             PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
             preparedStatement.setString(1, user.getFirstName());
             preparedStatement.setString(2, user.getLastName());
             preparedStatement.setString(3, user.getEmail());
@@ -127,12 +128,12 @@ public class UserDAOImpl implements IUserDAO {
                 }
                 userList.add(user);
             }
+            return userList;
         } catch (SQLException | ClassNotFoundException e) {
             throw new DBException(e);
         } finally {
             DBConnector.resourceCloser(preparedStatement, resultSet, connection);
         }
-        return userList;
     }
 
     @Override
@@ -141,7 +142,8 @@ public class UserDAOImpl implements IUserDAO {
                 update user_ set first_name = ?, last_name = ?, phone_number = ?, address = ?
                 where user_id = ?;
                 """;
-        try (Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = DBConnector.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, user.getFirstName());
             preparedStatement.setString(2, user.getLastName());
             preparedStatement.setString(3, user.getPhoneNumber());
@@ -184,7 +186,8 @@ public class UserDAOImpl implements IUserDAO {
                 update user_ set password_ = ?
                 where email = ?;
                 """;
-        try (Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = DBConnector.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, newPassword);
             preparedStatement.setString(2, email);
             preparedStatement.executeUpdate();
@@ -199,7 +202,8 @@ public class UserDAOImpl implements IUserDAO {
                 update user_ set account_status = ?
                 where user_id = ?;
                 """;
-        try (Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = DBConnector.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, accountStatus.name());
             preparedStatement.setInt(2, userId);
             preparedStatement.executeUpdate();

@@ -17,4 +17,6 @@ public interface IFoodItemDAO {
     void updateFoodItemAvailability(int foodItemId, boolean isAvailable) throws DBException;
 
     void updateFoodItemRating(int foodItemId, double rating) throws DBException;
+
+    void removeFoodItem(int foodItemId) throws DBException;
 }

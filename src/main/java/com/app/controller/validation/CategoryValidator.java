@@ -17,7 +17,7 @@ public class CategoryValidator {
         if (categoryDTO.getCategoryName().length() > CATEGORY_NAME_LENGTH) {
             throw new ApplicationException(Message.Category.CATEGORY_NAME_LENGTH);
         }
-        if (categoryServices.isCategoryExists(categoryDTO)) {
+        if (categoryServices.getCategory(categoryDTO.getCategoryName()) == null) {
             throw new ApplicationException(Message.Category.CATEGORY_EXISTS);
         }
     }

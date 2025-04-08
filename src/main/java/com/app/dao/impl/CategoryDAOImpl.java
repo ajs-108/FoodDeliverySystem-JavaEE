@@ -16,7 +16,6 @@ public class CategoryDAOImpl implements ICategoryDAO {
         PreparedStatement preparedStatement = null;
         String sql = "insert into category(category_name) values (?)";
         try {
-            System.out.println("&&"+category.getCategoryName());
             connection = DBConnector.getInstance().getConnection();
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, category.getCategoryName());
@@ -30,13 +29,10 @@ public class CategoryDAOImpl implements ICategoryDAO {
 
     @Override
     public Category getCategory(int categoryId) throws DBException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
         String sql = "Select * from category where category_id = ?";
-        try {
-            connection = DBConnector.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(sql);
+        ResultSet resultSet = null;
+        try (Connection connection = DBConnector.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, categoryId);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -48,34 +44,50 @@ public class CategoryDAOImpl implements ICategoryDAO {
         } catch (SQLException | ClassNotFoundException e) {
             throw new DBException(e);
         } finally {
-            DBConnector.resourceCloser(preparedStatement, resultSet, connection);
+            DBConnector.resourceCloser(null, resultSet, null);
+        }
+        return null;
+    }
+
+    @Override
+    public Category getCategory(String categoryName) throws DBException {
+        String sql = "Select * from category where category_name = ?";
+        ResultSet resultSet = null;
+        try (Connection connection = DBConnector.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, categoryName);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                Category category = new Category();
+                category.setCategoryId(resultSet.getInt("category_id"));
+                category.setCategoryName(resultSet.getString("category_name"));
+                return category;
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new DBException(e);
+        } finally {
+            DBConnector.resourceCloser(null, resultSet, null);
         }
         return null;
     }
 
     @Override
     public List<Category> getAllCategories() throws DBException {
-        Connection connection = null;
-        List<Category> categoryList = new LinkedList<>();
-        Category category;
-        Statement statement = null;
-        ResultSet resultSet = null;
         String sql = "Select * from category";
-        try {
-            connection = DBConnector.getInstance().getConnection();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(sql);
+        try (Connection connection = DBConnector.getInstance().getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+            List<Category> categoryList = new LinkedList<>();
             while (resultSet.next()) {
+                Category category;
                 category = new Category();
                 category.setCategoryId(resultSet.getInt("category_id"));
                 category.setCategoryName(resultSet.getString("category_name"));
                 categoryList.add(category);
             }
+            return categoryList;
         } catch (SQLException | ClassNotFoundException e) {
             throw new DBException(e);
-        } finally {
-            DBConnector.resourceCloser(statement, resultSet, connection);
         }
-        return categoryList;
     }
 }

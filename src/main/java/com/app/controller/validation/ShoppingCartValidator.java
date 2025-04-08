@@ -12,6 +12,7 @@ public class ShoppingCartValidator {
     private static UserServices userServices = new UserServices();
     private static FoodItemServices foodItemServices = new FoodItemServices();
     private static ShoppingCartServices shoppingCartServices = new ShoppingCartServices();
+    private static Validator validator = new Validator();
 
     public static void validateAddToCart(ShoppingCartDTO shoppingCartDTO) throws ApplicationException, DBException {
         if (shoppingCartDTO.getUserId() == 0) {
@@ -47,17 +48,20 @@ public class ShoppingCartValidator {
         }
     }
 
-    public static void validateRemoval(int userId, int foodItemId) throws ApplicationException, DBException {
+    public static void validateRemoval(int userId, String foodItemId) throws ApplicationException, DBException {
         if (userId == 0) {
             throw new ApplicationException(Message.Error.GENERIC_ERROR);
         }
         if (userServices.getUser(userId) == null) {
             throw new ApplicationException(Message.User.NO_SUCH_USER);
         }
-        if (foodItemId == 0) {
+        if (foodItemId == null || foodItemId.isBlank()) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
-        if (!foodItemServices.isFoodItemExists(foodItemId)) {
+        if (validator.isPositiveInteger(foodItemId)) {
+            throw new ApplicationException(Message.Common.NOT_A_POSITIVE_INTEGER);
+        }
+        if (!foodItemServices.isFoodItemExists(Integer.parseInt(foodItemId))) {
             throw new ApplicationException(Message.Common.RESOURCE_NOT_AVAILABLE);
         }
     }

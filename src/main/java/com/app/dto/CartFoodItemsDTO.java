@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class CartFoodItemsDTO {
     private FoodItemDTO foodItemDTO;
     private int quantity;
+    private double beforeDiscountPrice;
+    private double afterDiscountPrice;
+
 
     public FoodItemDTO getFoodItemDTO() {
         return foodItemDTO;
@@ -23,11 +26,29 @@ public class CartFoodItemsDTO {
         this.quantity = quantity;
     }
 
+    public double getBeforeDiscountPrice() {
+        return beforeDiscountPrice;
+    }
+
+    public void setBeforeDiscountPrice(double beforeDiscountPrice) {
+        this.beforeDiscountPrice = beforeDiscountPrice;
+    }
+
+    public double getAfterDiscountPrice() {
+        return afterDiscountPrice;
+    }
+
+    public void setAfterDiscountPrice(double afterDiscountPrice) {
+        this.afterDiscountPrice = afterDiscountPrice;
+    }
+
     @Override
     public String toString() {
         return "CartFoodItemsDTO{" +
                 "foodItemDTO=" + foodItemDTO +
                 ", quantity=" + quantity +
+                ", beforeDiscountPrice=" + beforeDiscountPrice +
+                ", afterDiscountPrice=" + afterDiscountPrice +
                 '}';
     }
 }

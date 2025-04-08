@@ -16,6 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDAOImpl implements IOrderDAO {
+    private static final String ORDER_FOOD_ITEM_SQL = """
+            select * from order_food_items ofi, food_item fi
+            where order_id = ? and fi.food_item_id = ofi.food_item_id
+            """;
+
     @Override
     public int placeOrder(int userId, Order order) throws DBException {
         String orderSQL = """
@@ -48,7 +53,7 @@ public class OrderDAOImpl implements IOrderDAO {
             }
             psForOrderFoodItems = connection.prepareStatement(orderFoodItemSQL);
             psForOrderFoodItems.setInt(1, generatedKey);
-            i = psForOrderFoodItems.executeUpdate();
+            i += psForOrderFoodItems.executeUpdate();
             connection.commit();
             return i;
         } catch (SQLException | ClassNotFoundException | NullPointerException e) {
@@ -67,10 +72,6 @@ public class OrderDAOImpl implements IOrderDAO {
     @Override
     public List<Order> getAllOrder() throws DBException {
         String orderSQL = "select * from order_";
-        String orderFoodItemSQL = """
-                select * from order_food_items ofi, food_item fi
-                where order_id = ? and fi.food_item_id = ofi.food_item_id
-                """;
         Connection connection = null;
         PreparedStatement psForOrder = null;
         PreparedStatement psForOrderFoodItem = null;
@@ -91,7 +92,7 @@ public class OrderDAOImpl implements IOrderDAO {
                 order.setOrderDateTime(resultSet.getTimestamp("order_date_time").toLocalDateTime());
                 order.setTotalPrice(resultSet.getInt("total_price"));
                 order.setPaymentStatus(PaymentStatus.toEnum(resultSet.getString("payment_status")));
-                psForOrderFoodItem = connection.prepareStatement(orderFoodItemSQL);
+                psForOrderFoodItem = connection.prepareStatement(ORDER_FOOD_ITEM_SQL);
                 psForOrderFoodItem.setInt(1, resultSet.getInt("order_id"));
                 foodItemSet = psForOrderFoodItem.executeQuery();
                 List<OrderFoodItems> orderFoodItemsList = new ArrayList<>();
@@ -121,18 +122,14 @@ public class OrderDAOImpl implements IOrderDAO {
 
     @Override
     public List<Order> getAllOrder(int userId, Roles roles) throws DBException {
-        String usersId = "";
+        String users = "";
         if (roles == Roles.ROLE_DELIVERY_PERSON) {
-            usersId = "delivery_person_id";
+            users = "delivery_person_id";
         }
         if (roles == Roles.ROLE_CUSTOMER) {
-            usersId = "user_id";
+            users = "user_id";
         }
-        String orderSQL = String.format("select * from order_ where %s = ?", usersId);
-        String orderFoodItemSQL = """
-                select * from order_food_items ofi, food_item fi
-                where order_id = ? and fi.food_item_id = ofi.food_item_id
-                """;
+        String orderSQL = String.format("select * from order_ where %s = ?", users);
         Connection connection = null;
         PreparedStatement psForOrder = null;
         PreparedStatement psForOrderFoodItem = null;
@@ -154,7 +151,7 @@ public class OrderDAOImpl implements IOrderDAO {
                 order.setOrderDateTime(resultSet.getTimestamp("order_date_time").toLocalDateTime());
                 order.setTotalPrice(resultSet.getInt("total_price"));
                 order.setPaymentStatus(PaymentStatus.toEnum(resultSet.getString("payment_status")));
-                psForOrderFoodItem = connection.prepareStatement(orderFoodItemSQL);
+                psForOrderFoodItem = connection.prepareStatement(ORDER_FOOD_ITEM_SQL);
                 psForOrderFoodItem.setInt(1, resultSet.getInt("order_id"));
                 foodItemSet = psForOrderFoodItem.executeQuery();
                 List<OrderFoodItems> orderFoodItemsList = new ArrayList<>();
@@ -185,10 +182,7 @@ public class OrderDAOImpl implements IOrderDAO {
     @Override
     public List<Order> getAllOrder(OrderStatus orderStatus) throws DBException {
         String orderSQL = "select * from order_ where order_status = ?";
-        String orderFoodItemSQL = """
-                select * from order_food_items ofi, food_item fi
-                where order_id = ? and fi.food_item_id = ofi.food_item_id;
-                """;
+
         Connection connection = null;
         PreparedStatement psForOrder = null;
         PreparedStatement psForOrderFoodItem = null;
@@ -210,7 +204,7 @@ public class OrderDAOImpl implements IOrderDAO {
                 order.setOrderDateTime(resultSet.getTimestamp("order_date_time").toLocalDateTime());
                 order.setTotalPrice(resultSet.getInt("total_price"));
                 order.setPaymentStatus(PaymentStatus.toEnum(resultSet.getString("payment_status")));
-                psForOrderFoodItem = connection.prepareStatement(orderFoodItemSQL);
+                psForOrderFoodItem = connection.prepareStatement(ORDER_FOOD_ITEM_SQL);
                 psForOrderFoodItem.setInt(1, resultSet.getInt("order_id"));
                 foodItemSet = psForOrderFoodItem.executeQuery();
                 List<OrderFoodItems> orderFoodItemsList = new ArrayList<>();
@@ -244,10 +238,6 @@ public class OrderDAOImpl implements IOrderDAO {
                 select * from order_
                 where order_id = ? and user_id = ?
                 """;
-        String orderFoodItemSQL = """
-                select * from order_food_items ofi, food_item fi
-                where order_id = ? and fi.food_item_id = ofi.food_item_id
-                """;
         Connection connection = null;
         PreparedStatement psForOrder = null;
         PreparedStatement psForOrderFoodItem = null;
@@ -270,7 +260,7 @@ public class OrderDAOImpl implements IOrderDAO {
                 order.setOrderDateTime(resultSet.getTimestamp("order_date_time").toLocalDateTime());
                 order.setTotalPrice(resultSet.getInt("total_price"));
                 order.setPaymentStatus(PaymentStatus.toEnum(resultSet.getString("payment_status")));
-                psForOrderFoodItem = connection.prepareStatement(orderFoodItemSQL);
+                psForOrderFoodItem = connection.prepareStatement(ORDER_FOOD_ITEM_SQL);
                 psForOrderFoodItem.setInt(1, resultSet.getInt("order_id"));
                 foodItemSet = psForOrderFoodItem.executeQuery();
                 List<OrderFoodItems> orderFoodItemsList = new ArrayList<>();
@@ -305,7 +295,7 @@ public class OrderDAOImpl implements IOrderDAO {
                 """;
         String orderFoodItemSQL = """
                 select * from order_food_items ofi, food_item fi
-                where order_id = ? and fi.food_item_id = ofi.food_item_id;         
+                where order_id = ? and fi.food_item_id = ofi.food_item_id;
                 """;
         Connection connection = null;
         PreparedStatement psForOrder = null;

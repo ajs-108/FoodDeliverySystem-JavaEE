@@ -28,7 +28,7 @@ public class FoodItemValidator {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
         commonValidations(foodItemDTO);
-        if (!categoryServices.isCategoryExistsById(foodItemDTO.getCategory())) {
+        if (categoryServices.getCategory(foodItemDTO.getCategory().getCategoryId()) == null) {
             throw new ApplicationException(Message.Common.RESOURCE_NOT_AVAILABLE);
         }
     }
@@ -87,6 +87,18 @@ public class FoodItemValidator {
         }
         if (foodItemDTO.getImagePath() == null || foodItemDTO.getImagePath().isBlank()) {
             throw new ApplicationException(Message.Common.MANDATORY);
+        }
+    }
+
+    public static void validateRemoval(String foodItemId) throws ApplicationException, DBException {
+        if (foodItemId == null || foodItemId.isBlank()) {
+            throw new ApplicationException(Message.Common.MANDATORY);
+        }
+        if (!validator.isPositiveInteger(foodItemId)) {
+            throw new ApplicationException(Message.Common.NOT_A_POSITIVE_INTEGER);
+        }
+        if (!foodItemServices.isFoodItemExists(Integer.parseInt(foodItemId))) {
+            throw new ApplicationException(Message.FoodItem.FOOD_ITEM_DOES_NOT_EXISTS);
         }
     }
 }

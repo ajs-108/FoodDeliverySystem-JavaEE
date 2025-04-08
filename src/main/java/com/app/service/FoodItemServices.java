@@ -48,12 +48,16 @@ public class FoodItemServices {
         return getFoodItem(foodItemDTO.getFoodItemId()) != null;
     }
 
-    public void updateRatings(int foodItem, int rating) throws DBException{
+    public void updateRatings(int foodItem, int rating) throws DBException {
         double preRating = getFoodItem(foodItem).getRating();
         if (preRating != 1) {
             double newRating = (preRating + rating) / 2;
             foodItemDAO.updateFoodItemRating(foodItem, newRating);
         }
         foodItemDAO.updateFoodItemRating(foodItem, rating);
+    }
+
+    public void removeFoodItem(int foodItemId) throws DBException {
+        foodItemDAO.removeFoodItem(foodItemId);
     }
 }

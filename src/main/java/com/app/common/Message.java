@@ -63,6 +63,7 @@ public class Message {
         public static final String FOOD_ITEM_EXISTS = "Food Item you have entered already exists, Please enter " +
                                                     "another one";
         public static final String FOOD_ITEM_DOES_NOT_EXISTS = "No record found for requested food item";
+        public static final String FOOD_ITEM_REMOVED = "Food Item removed from Menu";
     }
 
     public static class ShoppingCart {

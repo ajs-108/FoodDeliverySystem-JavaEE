@@ -22,7 +22,8 @@ public class ShoppingCartDAOImpl implements IShoppingCartDAO {
                 insert into shopping_cart
                 values (?,?,?);
                 """;
-        try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
+        try (Connection connect = DBConnector.getInstance().getConnection();
+             PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
             preparedStatement.setInt(1, shoppingCart.getCartFoodItemsList().get(0).getFoodItem().getFoodItemId());
             preparedStatement.setInt(2, shoppingCart.getUserId());
             preparedStatement.setInt(3, shoppingCart.getCartFoodItemsList().get(0).getQuantity());
@@ -38,7 +39,8 @@ public class ShoppingCartDAOImpl implements IShoppingCartDAO {
                 delete from shopping_cart
                 where user_id = ? and food_item_id = ?;
                 """;
-        try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
+        try (Connection connect = DBConnector.getInstance().getConnection();
+             PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
             preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, foodItemId);
             preparedStatement.executeUpdate();
@@ -54,7 +56,8 @@ public class ShoppingCartDAOImpl implements IShoppingCartDAO {
                 set quantity = ?
                 where user_id = ? and food_item_id = ?;
                 """;
-        try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
+        try (Connection connect = DBConnector.getInstance().getConnection();
+             PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
             preparedStatement.setInt(1, shoppingCart.getCartFoodItemsList().get(0).getQuantity());
             preparedStatement.setInt(2, shoppingCart.getUserId());
             preparedStatement.setInt(3, shoppingCart.getCartFoodItemsList().get(0).getFoodItem().getFoodItemId());
@@ -74,12 +77,13 @@ public class ShoppingCartDAOImpl implements IShoppingCartDAO {
                  and c.category_id = fi.category_id and u.user_id = ?;
                 """;
         ResultSet resultSet = null;
-        try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
+        try (Connection connect = DBConnector.getInstance().getConnection();
+             PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
             preparedStatement.setInt(1, userId);
             resultSet = preparedStatement.executeQuery();
             ShoppingCart shoppingCart = new ShoppingCart();
             List<CartFoodItems> cartFoodItemsList = new ArrayList<>();
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 Category category = new Category();
                 category.setCategoryId(resultSet.getInt("category_id"));
                 category.setCategoryName(resultSet.getString("category_name"));
@@ -112,7 +116,8 @@ public class ShoppingCartDAOImpl implements IShoppingCartDAO {
                 delete from shopping_cart
                 where user_id = ?;
                 """;
-        try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
+        try (Connection connect = DBConnector.getInstance().getConnection();
+             PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
             preparedStatement.setInt(1, userId);
             preparedStatement.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
