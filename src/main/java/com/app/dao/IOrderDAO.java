@@ -4,17 +4,18 @@ import com.app.common.enums.OrderStatus;
 import com.app.common.enums.Roles;
 import com.app.common.exception.DBException;
 import com.app.model.Order;
+import com.app.model.ShoppingCart;
 
 import java.util.List;
 
 public interface IOrderDAO {
-    int placeOrder(int userId, Order order) throws DBException;
+    int placeOrder(ShoppingCart shoppingCart, Order order) throws DBException;
 
-    List<Order> getAllOrder() throws DBException;
+    List<Order> getAllOrders() throws DBException;
 
-    List<Order> getAllOrder(int userId, Roles roles) throws DBException;
+    List<Order> getAllPreviousOrders(int userId, Roles roles) throws DBException;
 
-    List<Order> getAllOrder(OrderStatus orderStatus) throws DBException;
+    List<Order> getAllOrders(OrderStatus orderStatus) throws DBException;
 
     Order getOrder(int orderId, int userId) throws DBException;
 

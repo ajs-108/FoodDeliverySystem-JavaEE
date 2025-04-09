@@ -3,6 +3,7 @@ package com.app.model;
 public class OrderFoodItems {
     private FoodItem foodItem;
     private int quantity;
+    private double foodItemsTotal;
 
     public FoodItem getFoodItem() {
         return foodItem;
@@ -20,11 +21,20 @@ public class OrderFoodItems {
         this.quantity = quantity;
     }
 
+    public double getFoodItemsTotal() {
+        return foodItemsTotal;
+    }
+
+    public void setFoodItemsTotal(double foodItemsTotal) {
+        this.foodItemsTotal = foodItemsTotal;
+    }
+
     @Override
     public String toString() {
         return "OrderFoodItems{" +
                 "foodItem=" + foodItem +
                 ", quantity=" + quantity +
+                ", foodItemsTotal=" + foodItemsTotal +
                 '}';
     }
 }

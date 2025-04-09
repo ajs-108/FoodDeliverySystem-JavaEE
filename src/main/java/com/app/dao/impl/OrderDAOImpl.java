@@ -6,10 +6,7 @@ import com.app.common.enums.Roles;
 import com.app.common.exception.DBException;
 import com.app.config.DBConnector;
 import com.app.dao.IOrderDAO;
-import com.app.model.FoodItem;
-import com.app.model.Order;
-import com.app.model.OrderFoodItems;
-import com.app.model.User;
+import com.app.model.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -26,35 +23,38 @@ public class OrderDAOImpl implements IOrderDAO {
     protected static final String ORDER_STATUS = "order_status";
     protected static final String ORDER_DATE_TIME = "order_date_time";
     protected static final String PAYMENT_STATUS = "payment_status";
+    protected static final String FOOD_ITEMS_TOTAL = "food_items_total";
     private static final String ORDER_FOOD_ITEM_SQL = """
             select * from order_food_items ofi, food_item fi
             where order_id = ? and fi.food_item_id = ofi.food_item_id
             """;
 
     @Override
-    public int placeOrder(int userId, Order order) throws DBException {
+    public int placeOrder(ShoppingCart shoppingCart, Order order) throws DBException {
         String orderSQL = """
                 insert into order_(user_id, total_price, order_status, payment_status)
                 select u.user_id, ?, ?, ?
                 from user_ u where u.user_id = ?
                 """;
         String orderFoodItemSQL = """
-                insert into order_food_items(food_item_id, order_id, quantity)
-                select sc.food_item_id, o.order_id, sc.quantity
-                from shopping_cart sc, order_ o where sc.user_id = o.user_id and order_id = ?
+                insert into order_food_items(food_item_id, order_id, quantity, food_items_total)
+                 select sc.food_item_id, o.order_id, sc.quantity,
+                  ((fi.price-(fi.price*(fi.discount/100)))*sc.quantity)
+                 from shopping_cart sc, food_item fi, order_ o
+                 where sc.user_id = o.user_id and sc.food_item_id = fi.food_item_id and order_id = ?;
                 """;
         Connection connection = null;
         PreparedStatement psForOrder = null;
-        ResultSet setOfGeneratedKeys = null;
         PreparedStatement psForOrderFoodItems = null;
+        ResultSet setOfGeneratedKeys = null;
         try {
             connection = DBConnector.getInstance().getConnection();
             connection.setAutoCommit(false);
             psForOrder = connection.prepareStatement(orderSQL, Statement.RETURN_GENERATED_KEYS);
-            psForOrder.setDouble(1, order.getTotalPrice());
+            psForOrder.setDouble(1, shoppingCart.getTotalPrice());
             psForOrder.setString(2, order.getOrderStatus().name());
             psForOrder.setString(3, order.getPaymentStatus().name());
-            psForOrder.setInt(4, userId);
+            psForOrder.setInt(4, shoppingCart.getUserId());
             int i = psForOrder.executeUpdate();
             setOfGeneratedKeys = psForOrder.getGeneratedKeys();
             int generatedKey = 0;
@@ -64,16 +64,13 @@ public class OrderDAOImpl implements IOrderDAO {
             psForOrderFoodItems = connection.prepareStatement(orderFoodItemSQL);
             psForOrderFoodItems.setInt(1, generatedKey);
             i += psForOrderFoodItems.executeUpdate();
-            connection.commit();
+            if (i > 1) {
+                connection.commit();
+            } else {
+                connection.rollback();
+            }
             return i;
         } catch (SQLException | ClassNotFoundException | NullPointerException e) {
-            try {
-                if (connection != null) {
-                    connection.rollback();
-                }
-            } catch (SQLException | NullPointerException ex) {
-                throw new DBException(ex);
-            }
             throw new DBException(e);
         } finally {
             DBConnector.resourceCloser(psForOrder, setOfGeneratedKeys, connection);
@@ -82,7 +79,7 @@ public class OrderDAOImpl implements IOrderDAO {
     }
 
     @Override
-    public List<Order> getAllOrder() throws DBException {
+    public List<Order> getAllOrders() throws DBException {
         String orderSQL = "select * from order_";
         Connection connection = null;
         PreparedStatement psForOrder = null;
@@ -118,6 +115,7 @@ public class OrderDAOImpl implements IOrderDAO {
                     foodItem.setDiscount(foodItemSet.getDouble(DISCOUNT));
                     orderFoodItems.setFoodItem(foodItem);
                     orderFoodItems.setQuantity(foodItemSet.getInt(QUANTITY));
+                    orderFoodItems.setFoodItemsTotal(Math.round(foodItemSet.getDouble(FOOD_ITEMS_TOTAL)));
                     orderFoodItemsList.add(orderFoodItems);
                 }
                 order.setOrderFoodItems(orderFoodItemsList);
@@ -133,7 +131,7 @@ public class OrderDAOImpl implements IOrderDAO {
     }
 
     @Override
-    public List<Order> getAllOrder(int userId, Roles roles) throws DBException {
+    public List<Order> getAllPreviousOrders(int userId, Roles roles) throws DBException {
         String users = "";
         if (roles == Roles.ROLE_DELIVERY_PERSON) {
             users = DELIVERY_PERSON_ID;
@@ -141,7 +139,10 @@ public class OrderDAOImpl implements IOrderDAO {
         if (roles == Roles.ROLE_CUSTOMER) {
             users = USER_ID;
         }
-        String orderSQL = String.format("select * from order_ where %s = ?", users);
+        String orderSQL = String.format("""
+                select * from order_ where %s = ? and
+                (order_status = 'DELIVERED' or order_status = 'CANCELLED')
+                """, users);
         Connection connection = null;
         PreparedStatement psForOrder = null;
         PreparedStatement psForOrderFoodItem = null;
@@ -159,6 +160,7 @@ public class OrderDAOImpl implements IOrderDAO {
                 order.setOrderId(resultSet.getInt(ORDER_ID));
                 user.setUserId(resultSet.getInt(USER_ID));
                 order.setUser(user);
+                order.setDeliveryPersonId(resultSet.getInt(DELIVERY_PERSON_ID));
                 order.setOrderStatus(OrderStatus.toEnum(resultSet.getString(ORDER_STATUS)));
                 order.setOrderDateTime(resultSet.getTimestamp(ORDER_DATE_TIME).toLocalDateTime());
                 order.setTotalPrice(resultSet.getInt(TOTAL_PRICE));
@@ -177,6 +179,7 @@ public class OrderDAOImpl implements IOrderDAO {
                     foodItem.setDiscount(foodItemSet.getDouble(DISCOUNT));
                     orderFoodItems.setFoodItem(foodItem);
                     orderFoodItems.setQuantity(foodItemSet.getInt(QUANTITY));
+                    orderFoodItems.setFoodItemsTotal(Math.round(foodItemSet.getDouble(FOOD_ITEMS_TOTAL)));
                     orderFoodItemsList.add(orderFoodItems);
                 }
                 order.setOrderFoodItems(orderFoodItemsList);
@@ -192,7 +195,7 @@ public class OrderDAOImpl implements IOrderDAO {
     }
 
     @Override
-    public List<Order> getAllOrder(OrderStatus orderStatus) throws DBException {
+    public List<Order> getAllOrders(OrderStatus orderStatus) throws DBException {
         String orderSQL = "select * from order_ where order_status = ?";
 
         Connection connection = null;
@@ -212,6 +215,7 @@ public class OrderDAOImpl implements IOrderDAO {
                 order.setOrderId(resultSet.getInt(ORDER_ID));
                 user.setUserId(resultSet.getInt(USER_ID));
                 order.setUser(user);
+                order.setDeliveryPersonId(resultSet.getInt(DELIVERY_PERSON_ID));
                 order.setOrderStatus(OrderStatus.toEnum(resultSet.getString(ORDER_STATUS)));
                 order.setOrderDateTime(resultSet.getTimestamp(ORDER_STATUS).toLocalDateTime());
                 order.setTotalPrice(resultSet.getInt(TOTAL_PRICE));
@@ -230,6 +234,7 @@ public class OrderDAOImpl implements IOrderDAO {
                     foodItem.setDiscount(foodItemSet.getDouble(DISCOUNT));
                     orderFoodItems.setFoodItem(foodItem);
                     orderFoodItems.setQuantity(foodItemSet.getInt(QUANTITY));
+                    orderFoodItems.setFoodItemsTotal(Math.round(foodItemSet.getDouble(FOOD_ITEMS_TOTAL)));
                     orderFoodItemsList.add(orderFoodItems);
                 }
                 order.setOrderFoodItems(orderFoodItemsList);
@@ -268,6 +273,7 @@ public class OrderDAOImpl implements IOrderDAO {
                 order.setOrderId(resultSet.getInt(ORDER_ID));
                 user.setUserId(resultSet.getInt(USER_ID));
                 order.setUser(user);
+                order.setDeliveryPersonId(resultSet.getInt(DELIVERY_PERSON_ID));
                 order.setOrderStatus(OrderStatus.toEnum(resultSet.getString(ORDER_STATUS)));
                 order.setOrderDateTime(resultSet.getTimestamp(ORDER_DATE_TIME).toLocalDateTime());
                 order.setTotalPrice(resultSet.getInt(TOTAL_PRICE));
@@ -286,6 +292,7 @@ public class OrderDAOImpl implements IOrderDAO {
                     foodItem.setDiscount(foodItemSet.getDouble(DISCOUNT));
                     orderFoodItems.setFoodItem(foodItem);
                     orderFoodItems.setQuantity(foodItemSet.getInt(QUANTITY));
+                    orderFoodItems.setFoodItemsTotal(Math.round(foodItemSet.getDouble(FOOD_ITEMS_TOTAL)));
                     orderFoodItemsList.add(orderFoodItems);
                 }
                 order.setOrderFoodItems(orderFoodItemsList);
@@ -326,6 +333,7 @@ public class OrderDAOImpl implements IOrderDAO {
                 order.setOrderId(resultSet.getInt(ORDER_ID));
                 user.setUserId(resultSet.getInt(USER_ID));
                 order.setUser(user);
+                order.setDeliveryPersonId(resultSet.getInt(DELIVERY_PERSON_ID));
                 order.setOrderStatus(OrderStatus.toEnum(resultSet.getString(ORDER_STATUS)));
                 order.setOrderDateTime(resultSet.getTimestamp(ORDER_DATE_TIME).toLocalDateTime());
                 order.setTotalPrice(resultSet.getInt(TOTAL_PRICE));
@@ -344,6 +352,7 @@ public class OrderDAOImpl implements IOrderDAO {
                     foodItem.setDiscount(foodItemSet.getDouble(DISCOUNT));
                     orderFoodItems.setFoodItem(foodItem);
                     orderFoodItems.setQuantity(foodItemSet.getInt(QUANTITY));
+                    orderFoodItems.setFoodItemsTotal(Math.round(foodItemSet.getDouble(FOOD_ITEMS_TOTAL)));
                     orderFoodItemsList.add(orderFoodItems);
                 }
                 order.setOrderFoodItems(orderFoodItemsList);

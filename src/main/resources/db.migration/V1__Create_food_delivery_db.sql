@@ -34,7 +34,7 @@ create table food_item (
     food_name VARCHAR(30) NOT NULL,
     food_description VARCHAR(255) NOT NULL,
     price DOUBLE NOT NULL,
-    discount DOUBLE NULL,
+    discount DOUBLE DEFAULT 0,
     is_available BOOLEAN NOT NULL DEFAULT(TRUE),
     category_id INT NOT NULL,
     created_on TIMESTAMP NOT NULL default current_timestamp,

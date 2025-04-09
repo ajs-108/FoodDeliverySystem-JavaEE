@@ -29,7 +29,7 @@ public class PlaceOrderController extends HttpServlet {
             AuthUtils.checkAuthentication(request);
             int userId = AuthUtils.getCurrentUser(request).getUserId();
             OrderDTO orderDTO = ObjectMapperUtil.toObject(request.getReader(), OrderDTO.class);
-            OrderValidator.validateOrder(userId, orderDTO);
+            OrderValidator.validatePlaceOrder(userId, orderDTO);
             orderServices.placeOrder(userId, orderDTO);
             sendResponse(response, null, Message.Order.PLACE_ORDER, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {

@@ -13,6 +13,8 @@ public class CartFoodItemsMapper {
         }
         cartFoodItemsDTO.setFoodItemDTO(foodItemMapper.toDTO(cartFoodItems.getFoodItem()));
         cartFoodItemsDTO.setQuantity(cartFoodItems.getQuantity());
+        cartFoodItemsDTO.setAfterDiscountPrice(cartFoodItems.getAfterDiscountPrice());
+        cartFoodItemsDTO.setBeforeDiscountPrice(cartFoodItems.getBeforeDiscountPrice());
         return cartFoodItemsDTO;
     }
 
@@ -23,6 +25,8 @@ public class CartFoodItemsMapper {
         }
         cartFoodItems.setFoodItem(foodItemMapper.toFoodItem(cartFoodItemsDTO.getFoodItemDTO()));
         cartFoodItems.setQuantity(cartFoodItemsDTO.getQuantity());
+        cartFoodItems.setAfterDiscountPrice(cartFoodItemsDTO.getAfterDiscountPrice());
+        cartFoodItems.setBeforeDiscountPrice(cartFoodItemsDTO.getBeforeDiscountPrice());
         return cartFoodItems;
     }
 }

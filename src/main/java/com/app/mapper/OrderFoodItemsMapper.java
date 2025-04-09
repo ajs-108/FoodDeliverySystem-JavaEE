@@ -13,6 +13,7 @@ public class OrderFoodItemsMapper {
         }
         orderFoodItemsDTO.setFoodItemDTO(foodItemMapper.toDTO(orderFoodItems.getFoodItem()));
         orderFoodItemsDTO.setQuantity(orderFoodItems.getQuantity());
+        orderFoodItemsDTO.setFoodItemsTotal(orderFoodItems.getFoodItemsTotal());
         return orderFoodItemsDTO;
     }
 
@@ -23,6 +24,7 @@ public class OrderFoodItemsMapper {
         }
         orderFoodItems.setFoodItem(foodItemMapper.toFoodItem(orderFoodItemsDTO.getFoodItemDTO()));
         orderFoodItems.setQuantity(orderFoodItemsDTO.getQuantity());
+        orderFoodItems.setFoodItemsTotal(orderFoodItemsDTO.getFoodItemsTotal());
         return orderFoodItems;
     }
 }

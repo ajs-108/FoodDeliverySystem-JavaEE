@@ -16,19 +16,15 @@ import java.util.Objects;
 
 public class OrderValidator {
     private static final UserServices userServices = new UserServices();
-    private static final ShoppingCartServices shoppingCartServices = new ShoppingCartServices();
     private static final OrderServices orderServices = new OrderServices();
     private static final Validator validator = new Validator();
 
     private OrderValidator() {
     }
 
-    public static void validateOrder(int userId, OrderDTO orderDTO) throws DBException, ApplicationException {
+    public static void validatePlaceOrder(int userId, OrderDTO orderDTO) throws DBException, ApplicationException {
         if (userServices.getUser(userId) == null) {
             throw new ApplicationException(Message.User.NO_SUCH_USER);
-        }
-        if (orderDTO.getTotalPrice() != shoppingCartServices.showShoppingCart(userId).getTotalPrice()) {
-            throw new ApplicationException(Message.Order.INCORRECT_TOTAL_PRICE);
         }
         if (orderDTO.getOrderStatus() == null) {
             throw new ApplicationException(Message.Common.MANDATORY);

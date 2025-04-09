@@ -1,0 +1,1 @@
+ALTER TABLE order_food_items ADD COLUMN food_items_total DOUBLE NOT NULL;
