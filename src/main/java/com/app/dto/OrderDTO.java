@@ -12,7 +12,7 @@ import java.util.List;
 public class OrderDTO {
     private int orderId;
     private UserDTO user;
-    private int deliveryPersonId;
+    private UserDTO deliveryPerson;
     private double totalPrice;
     private OrderStatus orderStatus;
     private LocalDateTime orderDateTime;
@@ -35,12 +35,12 @@ public class OrderDTO {
         this.user = user;
     }
 
-    public int getDeliveryPersonId() {
-        return deliveryPersonId;
+    public UserDTO getDeliveryPerson() {
+        return deliveryPerson;
     }
 
-    public void setDeliveryPersonId(int deliveryPersonId) {
-        this.deliveryPersonId = deliveryPersonId;
+    public void setDeliveryPerson(UserDTO deliveryPerson) {
+        this.deliveryPerson = deliveryPerson;
     }
 
     public double getTotalPrice() {
@@ -88,7 +88,7 @@ public class OrderDTO {
         return "Order{" +
                 "orderId=" + orderId +
                 ", user=" + user +
-                ", deliveryPersonId=" + deliveryPersonId +
+                ", deliveryPerson=" + deliveryPerson +
                 ", totalPrice=" + totalPrice +
                 ", orderStatus=" + orderStatus +
                 ", orderDateTime=" + orderDateTime +

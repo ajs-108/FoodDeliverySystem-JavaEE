@@ -1,5 +1,6 @@
 package com.app.common.enums;
 
+import java.util.List;
 import java.util.Objects;
 
 public enum OrderStatus {
@@ -28,5 +29,9 @@ public enum OrderStatus {
             }
         }
         return false;
+    }
+
+    public static List<OrderStatus> getAllOrderStatus() {
+         return List.of(OrderStatus.values());
     }
 }

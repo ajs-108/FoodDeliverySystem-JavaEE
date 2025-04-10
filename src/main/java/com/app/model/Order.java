@@ -9,7 +9,7 @@ import java.util.List;
 public class Order {
     private int orderId;
     private User user;
-    private int deliveryPersonId;
+    private User deliveryPerson;
     private double totalPrice;
     private OrderStatus orderStatus;
     private LocalDateTime orderDateTime;
@@ -32,12 +32,12 @@ public class Order {
         this.user = user;
     }
 
-    public int getDeliveryPersonId() {
-        return deliveryPersonId;
+    public User getDeliveryPerson() {
+        return deliveryPerson;
     }
 
-    public void setDeliveryPersonId(int deliveryPersonId) {
-        this.deliveryPersonId = deliveryPersonId;
+    public void setDeliveryPerson(User deliveryPerson) {
+        this.deliveryPerson = deliveryPerson;
     }
 
     public double getTotalPrice() {
@@ -85,7 +85,7 @@ public class Order {
         return "Order{" +
                 "orderId=" + orderId +
                 ", user=" + user +
-                ", deliveryPersonId=" + deliveryPersonId +
+                ", deliveryPerson=" + deliveryPerson +
                 ", totalPrice=" + totalPrice +
                 ", orderStatus=" + orderStatus +
                 ", orderDateTime=" + orderDateTime +

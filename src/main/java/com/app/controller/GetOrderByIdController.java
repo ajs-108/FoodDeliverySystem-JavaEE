@@ -9,18 +9,15 @@ import com.app.common.util.ObjectMapperUtil;
 import com.app.controller.validation.QueryParameterValidator;
 import com.app.dto.APIResponse;
 import com.app.dto.OrderDTO;
-import com.app.dto.UserDTO;
 import com.app.service.OrderServices;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 
-@WebServlet(name = "getOrder", value = "/getOrder")
-public class GetOrderController extends HttpServlet {
+@WebServlet(name = "getOrderById", value = "/getOrderById")
+public class GetOrderByIdController extends HttpServlet {
     private OrderServices orderServices = new OrderServices();
 
     @Override
@@ -28,10 +25,9 @@ public class GetOrderController extends HttpServlet {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            UserDTO userDTO = AuthUtils.getCurrentUser(request);
             QueryParameterValidator.validateQueryParameters(request, "orderId");
             int orderId = Integer.parseInt(request.getParameter("orderId"));
-            OrderDTO orderDTO = orderServices.getOrder(orderId, userDTO.getUserId());
+            OrderDTO orderDTO = orderServices.getOrder(orderId);
             sendResponse(response, null, null, orderDTO, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
