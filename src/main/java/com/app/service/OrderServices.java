@@ -55,10 +55,6 @@ public class OrderServices {
                 .toList();
     }
 
-    public OrderDTO getOrder(int orderId, int userId) throws DBException {
-        return orderMapper.toDTO(orderDAO.getOrder(orderId, userId));
-    }
-
     public OrderDTO getOrder(int orderId) throws DBException {
         return orderMapper.toDTO(orderDAO.getOrder(orderId));
     }

@@ -17,8 +17,6 @@ public interface IOrderDAO {
 
     List<Order> getAllOrders(OrderStatus orderStatus) throws DBException;
 
-    Order getOrder(int orderId, int userId) throws DBException;
-
     Order getOrder(int orderId) throws DBException;
 
     void changeOrderStatus(int orderId, OrderStatus orderStatus) throws DBException;
