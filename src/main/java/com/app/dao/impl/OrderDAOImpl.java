@@ -453,7 +453,6 @@ public class OrderDAOImpl implements IOrderDAO {
                 }
                 order.setOrderFoodItems(orderFoodItemsList);
             }
-            System.out.println(order);
             return order;
         } catch (SQLException | ClassNotFoundException | NullPointerException e) {
             throw new DBException(e);
@@ -491,6 +490,36 @@ public class OrderDAOImpl implements IOrderDAO {
             psForOrder.execute();
         } catch (SQLException | ClassNotFoundException | NullPointerException e) {
             throw new DBException(e);
+        }
+    }
+
+    @Override
+    public Order getRecentOrderOfUser(int userId) throws DBException {
+        String sql = """
+                select o.order_id, o.total_price
+                from user_ u, order_ o
+                where u.user_id = o.user_id and o.order_date_time >= now() - interval 2 minute
+                and o.order_status = 'ORDER_RECEIVED' and u.user_id = ?;
+                """;
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = DBConnector.getInstance().getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, userId);
+            resultSet = preparedStatement.executeQuery();
+            Order order = null;
+            if (resultSet.next()) {
+                order = new Order();
+                order.setOrderId(resultSet.getInt(ORDER_ID));
+                order.setTotalPrice(resultSet.getInt(TOTAL_PRICE));
+            }
+            return order;
+        } catch (SQLException | ClassNotFoundException | NullPointerException e) {
+            throw new DBException(e);
+        } finally {
+            DBConnector.resourceCloser(preparedStatement, resultSet, connection);
         }
     }
 }

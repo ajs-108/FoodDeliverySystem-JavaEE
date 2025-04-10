@@ -70,4 +70,8 @@ public class OrderServices {
     public void assignDeliveryPerson(int orderId, int deliveryPersonId) throws DBException {
         orderDAO.assignDeliveryPerson(orderId, deliveryPersonId);
     }
+
+    public OrderDTO getRecentOrderOfUser(int userId) throws DBException {
+        return orderMapper.toDTO(orderDAO.getRecentOrderOfUser(userId));
+    }
 }

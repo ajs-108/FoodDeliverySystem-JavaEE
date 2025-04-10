@@ -24,4 +24,6 @@ public interface IOrderDAO {
     void changeOrderStatus(int orderId, OrderStatus orderStatus) throws DBException;
 
     void assignDeliveryPerson(int orderId, int deliveryPersonId) throws DBException;
+
+    Order getRecentOrderOfUser(int userId) throws DBException;
 }
