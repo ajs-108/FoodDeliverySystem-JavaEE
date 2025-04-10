@@ -30,11 +30,10 @@ public class AssignDeliveryPersonController extends HttpServlet {
             if (!AuthUtils.isAdmin(request)) {
                 throw new ApplicationException(Message.Error.ACCESS_DENIED);
             }
-            QueryParameterValidator.validateQueryParameters(request, "orderId", "deliveryPersonId", "role");
+            QueryParameterValidator.validateQueryParameters(request, "orderId", "deliveryPersonId");
             String orderId = request.getParameter("orderId");
             String deliveryPersonId = request.getParameter("deliveryPersonId");
-            String roles = request.getParameter("role");
-            OrderValidator.validateAssignDeliveryPerson(orderId, deliveryPersonId, roles);
+            OrderValidator.validateAssignDeliveryPerson(orderId, deliveryPersonId);
             orderServices.assignDeliveryPerson(Integer.parseInt(orderId), Integer.parseInt(deliveryPersonId));
             sendResponse(response, null, Message.Order.DELIVERY_PERSON_ASSIGNED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {

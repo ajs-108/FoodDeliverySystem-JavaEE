@@ -8,10 +8,12 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.dto.OrderDTO;
 import com.app.dto.UserDTO;
+import com.app.model.User;
 import com.app.service.OrderServices;
 import com.app.service.ShoppingCartServices;
 import com.app.service.UserServices;
 
+import javax.management.relation.Role;
 import java.util.Objects;
 
 public class OrderValidator {
@@ -59,7 +61,7 @@ public class OrderValidator {
         }
     }
 
-    public static void validateAssignDeliveryPerson(String orderId, String deliveryPersonId, String roles)
+    public static void validateAssignDeliveryPerson(String orderId, String deliveryPersonId)
             throws ApplicationException, DBException {
         if (orderId == null || orderId.isBlank()) {
             throw new ApplicationException(Message.Common.MANDATORY);
@@ -76,13 +78,11 @@ public class OrderValidator {
         if (!validator.isPositiveInteger(deliveryPersonId)) {
             throw new ApplicationException(Message.Common.NOT_A_POSITIVE_INTEGER);
         }
-        if (userServices.getUser(Integer.parseInt(deliveryPersonId)) == null) {
+        UserDTO userDTO = userServices.getUser(Integer.parseInt(deliveryPersonId));
+        if (userDTO == null) {
             throw new ApplicationException(Message.User.NO_SUCH_DELIVERY_PERSON);
         }
-        if (roles == null || roles.isBlank()) {
-            throw new ApplicationException(Message.Common.MANDATORY);
-        }
-        if (!Objects.equals(roles, Roles.ROLE_DELIVERY_PERSON.name())) {
+        if (!Objects.equals(userDTO.getRole(), Roles.ROLE_DELIVERY_PERSON)) {
             throw new ApplicationException(Message.User.NOT_A_DELIVERY_PERSON);
         }
     }
