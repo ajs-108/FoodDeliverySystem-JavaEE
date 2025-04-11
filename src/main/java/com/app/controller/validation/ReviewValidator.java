@@ -38,6 +38,11 @@ public class ReviewValidator {
         if (reviewDTO.getReview().length() >= REVIEW_LENGTH) {
             throw new ApplicationException(Message.Review.REVIEW_LENGTH_EXCEEDED);
         }
+        if (reviewServices.getReview(reviewDTO.getUserDTO().getUserId(),
+                reviewDTO.getFoodItemDTO().getFoodItemId(),
+                reviewDTO.getOrderId()) != null) {
+            throw  new ApplicationException(Message.Review.REVIEW_EXISTS);
+        }
     }
 
     public static void validateGetReview(String reviewId) throws ApplicationException, DBException {

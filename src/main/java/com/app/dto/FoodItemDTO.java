@@ -6,16 +6,20 @@ import java.time.LocalDateTime;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FoodItemDTO {
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private int foodItemId;
     private String foodName;
     private String foodDescription;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private double price;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private double discount;
     private boolean isAvailable;
     private CategoryDTO category;
     private LocalDateTime createdOn;
     private LocalDateTime updatedOn;
     private String imagePath;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private double rating;
 
     public int getFoodItemId() {

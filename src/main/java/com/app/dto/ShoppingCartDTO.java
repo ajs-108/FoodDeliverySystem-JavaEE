@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class ShoppingCartDTO {
     private int userId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<CartFoodItemsDTO> cartFoodItemsDTOList;
     private double totalPrice;
 

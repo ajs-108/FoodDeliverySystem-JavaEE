@@ -6,11 +6,17 @@ import com.app.model.Review;
 import java.util.List;
 
 public interface IReviewDAO {
-    void addReview(Review review) throws DBException;
+    int addReview(Review review) throws DBException;
 
-    List<Review> getAllReview() throws DBException;
+    List<Review> getAllReviews() throws DBException;
+
+    List<Review> getAllReviewsOfUser(int userId) throws DBException;
+
+    List<Double> getFoodRatings(int foodItemId) throws DBException;
 
     Review getReview(int reviewId) throws DBException;
+
+    Review getReview(int userId, int foodItemId, int orderId) throws DBException;
 
     void updateReview(Review review) throws DBException;
 

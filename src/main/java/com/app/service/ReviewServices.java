@@ -14,6 +14,7 @@ public class ReviewServices {
     private IReviewDAO reviewDAO;
     private ReviewMapper reviewMapper;
     private FoodItemServices foodItemServices;
+    private int i;
 
     public ReviewServices() {
         this.reviewDAO = new ReviewDAOImpl();
@@ -24,13 +25,27 @@ public class ReviewServices {
     public void postReview(List<ReviewDTO> reviewDTOList) throws DBException, ApplicationException {
         for (ReviewDTO reviewDTO : reviewDTOList) {
             ReviewValidator.validateReview(reviewDTO);
-            reviewDAO.addReview(reviewMapper.toReview(reviewDTO));
-            foodItemServices.updateRatings(reviewDTO.getFoodItemDTO().getFoodItemId(), reviewDTO.getRating());
+            i += reviewDAO.addReview(reviewMapper.toReview(reviewDTO));
+            if (i > 0) {
+                updateFoodRating(reviewDTO.getFoodItemDTO().getFoodItemId());
+            }
         }
     }
 
-    public List<ReviewDTO> getAllReview() throws DBException {
-        return reviewDAO.getAllReview()
+    private void updateFoodRating(int foodItemId) throws DBException {
+        List<Double> ratingList = reviewDAO.getFoodRatings(foodItemId);
+        foodItemServices.updateRatings(foodItemId, ratingList);
+    }
+
+    public List<ReviewDTO> getAllReviews() throws DBException {
+        return reviewDAO.getAllReviews()
+                .stream()
+                .map(reviewMapper::toDTO)
+                .toList();
+    }
+
+    public List<ReviewDTO> getAllReviewsOfUser(int userId) throws DBException {
+        return reviewDAO.getAllReviewsOfUser(userId)
                 .stream()
                 .map(reviewMapper::toDTO)
                 .toList();
@@ -38,6 +53,10 @@ public class ReviewServices {
 
     public ReviewDTO getReview(int reviewId) throws DBException {
         return reviewMapper.toDTO(reviewDAO.getReview(reviewId));
+    }
+
+    public ReviewDTO getReview(int userId, int foodItemId, int orderId) throws DBException {
+        return reviewMapper.toDTO(reviewDAO.getReview(userId, foodItemId, orderId));
     }
 
     public void updateReview(ReviewDTO reviewDTO) throws DBException {

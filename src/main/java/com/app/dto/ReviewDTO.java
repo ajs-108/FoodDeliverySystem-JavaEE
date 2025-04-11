@@ -4,10 +4,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ReviewDTO {
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private int reviewId;
     private UserDTO userDTO;
     private FoodItemDTO foodItemDTO;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private int orderId;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private int rating;
     private String review;
 

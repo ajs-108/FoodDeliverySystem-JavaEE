@@ -90,5 +90,6 @@ public class Message {
         public static final String INVALID_RATING = "Rating should be 1-5";
         public static final String REVIEW_LENGTH_EXCEEDED = "Review length exceeded the limit, should " +
                 "be <= 255 characters";
+        public static final String REVIEW_EXISTS = "Review already exists for this order and food item";
     }
 }

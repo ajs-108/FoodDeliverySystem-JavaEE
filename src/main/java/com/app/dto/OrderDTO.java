@@ -7,12 +7,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL,
-        content = JsonInclude.Include.NON_DEFAULT)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OrderDTO {
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private int orderId;
     private UserDTO user;
     private UserDTO deliveryPerson;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private double totalPrice;
     private OrderStatus orderStatus;
     private LocalDateTime orderDateTime;

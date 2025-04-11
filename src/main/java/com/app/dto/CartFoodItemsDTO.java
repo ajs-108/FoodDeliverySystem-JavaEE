@@ -2,9 +2,9 @@ package com.app.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL,
-        content = JsonInclude.Include.NON_DEFAULT)
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class CartFoodItemsDTO {
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private FoodItemDTO foodItemDTO;
     private int quantity;
     private double beforeDiscountPrice;

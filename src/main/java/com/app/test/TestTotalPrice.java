@@ -40,5 +40,7 @@ public class TestTotalPrice {
 
         }
         System.out.println(totalPrice);
+        double newRating = (5.0 + 6.0) / 2.0;
+        System.out.println(newRating);
     }
 }

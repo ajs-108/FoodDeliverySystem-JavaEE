@@ -8,18 +8,17 @@ import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
 import com.app.dto.APIResponse;
 import com.app.dto.ReviewDTO;
+import com.app.dto.UserDTO;
 import com.app.service.ReviewServices;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "getAllReview", value = "/getAllReview")
-public class GetAllReviewController extends HttpServlet {
+@WebServlet(name = "getAllReviewOfUser", value = "/getAllReviewOfUser")
+public class GetAllReviewsOfUser extends HttpServlet {
     private ReviewServices reviewServices = new ReviewServices();
 
     @Override
@@ -27,11 +26,9 @@ public class GetAllReviewController extends HttpServlet {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            if (!AuthUtils.isAdmin(request)) {
-                throw new ApplicationException(Message.Error.ACCESS_DENIED);
-            }
-            List<ReviewDTO> reviewDTOList = reviewServices.getAllReviews();
-            sendResponse(response, null, null, reviewDTOList, HttpServletResponse.SC_OK);
+            UserDTO userDTO = AuthUtils.getCurrentUser(request);
+            List<ReviewDTO> userReviewsDTOList = reviewServices.getAllReviewsOfUser(userDTO.getUserId());
+            sendResponse(response, null, null, userReviewsDTOList, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
