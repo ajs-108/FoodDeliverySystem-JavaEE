@@ -62,7 +62,7 @@ public class ReviewDAOImpl implements IReviewDAO {
                 FoodItem foodItem = new FoodItem();
                 foodItem.setFoodItemId(resultSet.getInt(FOOD_ITEM_ID));
                 foodItem.setFoodName(resultSet.getString(FOOD_NAME));
-                foodItem.setAvailable(resultSet.getBoolean(IS_AVAILABLE));
+                foodItem.setIsAvailable(resultSet.getBoolean(IS_AVAILABLE));
                 foodItem.setImagePath(resultSet.getString(IMAGE_PATH));
                 Review review = new Review();
                 review.setReviewId(resultSet.getInt(REVIEW_ID));
@@ -100,7 +100,7 @@ public class ReviewDAOImpl implements IReviewDAO {
                 FoodItem foodItem = new FoodItem();
                 foodItem.setFoodItemId(resultSet.getInt(FOOD_ITEM_ID));
                 foodItem.setFoodName(resultSet.getString(FOOD_NAME));
-                foodItem.setAvailable(resultSet.getBoolean(IS_AVAILABLE));
+                foodItem.setIsAvailable(resultSet.getBoolean(IS_AVAILABLE));
                 foodItem.setImagePath(resultSet.getString(IMAGE_PATH));
                 Review review = new Review();
                 review.setReviewId(resultSet.getInt(REVIEW_ID));
@@ -162,7 +162,7 @@ public class ReviewDAOImpl implements IReviewDAO {
                 FoodItem foodItem = new FoodItem();
                 foodItem.setFoodItemId(resultSet.getInt(FOOD_ITEM_ID));
                 foodItem.setFoodName(resultSet.getString(FOOD_NAME));
-                foodItem.setAvailable(resultSet.getBoolean(IS_AVAILABLE));
+                foodItem.setIsAvailable(resultSet.getBoolean(IS_AVAILABLE));
                 foodItem.setImagePath(resultSet.getString(IMAGE_PATH));
                 review = new Review();
                 review.setReviewId(resultSet.getInt(REVIEW_ID));

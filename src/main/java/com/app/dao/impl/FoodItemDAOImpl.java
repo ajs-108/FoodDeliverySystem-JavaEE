@@ -40,7 +40,7 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
             preparedStatement.setDouble(4, foodItem.getDiscount());
             preparedStatement.setInt(5, foodItem.getCategory().getCategoryId());
             preparedStatement.setString(6, foodItem.getImagePath());
-            preparedStatement.setBoolean(7, foodItem.isAvailable());
+            preparedStatement.setBoolean(7, foodItem.getIsAvailable());
             preparedStatement.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
             throw new DBException(e);
@@ -67,7 +67,7 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
                 foodItem.setFoodDescription(resultSet.getString(FOOD_DESCRIPTION));
                 foodItem.setPrice(resultSet.getDouble(PRICE));
                 foodItem.setDiscount(resultSet.getDouble(DISCOUNT));
-                foodItem.setAvailable(resultSet.getBoolean(IS_AVAILABLE));
+                foodItem.setIsAvailable(resultSet.getBoolean(IS_AVAILABLE));
                 foodItem.setImagePath(resultSet.getString(IMAGE_PATH));
                 foodItem.setRating(resultSet.getDouble(RATING));
                 category.setCategoryId(resultSet.getInt(CATEGORY_ID));
@@ -98,7 +98,7 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
                 foodItem.setFoodDescription(resultSet.getString(FOOD_DESCRIPTION));
                 foodItem.setPrice(resultSet.getDouble(PRICE));
                 foodItem.setDiscount(resultSet.getDouble(DISCOUNT));
-                foodItem.setAvailable(resultSet.getBoolean(IS_AVAILABLE));
+                foodItem.setIsAvailable(resultSet.getBoolean(IS_AVAILABLE));
                 foodItem.setImagePath(resultSet.getString(IMAGE_PATH));
                 foodItem.setRating(resultSet.getDouble(RATING));
                 foodItem.setCreatedOn(resultSet.getTimestamp(CREATED_ON));

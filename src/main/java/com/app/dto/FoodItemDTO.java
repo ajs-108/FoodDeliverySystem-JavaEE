@@ -118,7 +118,7 @@ public class FoodItemDTO {
                 ", foodDescription='" + foodDescription + '\'' +
                 ", price=" + price +
                 ", discount=" + discount +
-                ", isAvailable=" + isAvailable +
+                ", getIsAvailable=" + isAvailable +
                 ", categoryDTO=" + category +
                 ", imagePath='" + imagePath + '\'' +
                 ", rating=" + rating +

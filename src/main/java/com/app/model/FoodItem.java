@@ -56,11 +56,11 @@ public class FoodItem {
         this.discount = discount;
     }
 
-    public boolean isAvailable() {
+    public boolean getIsAvailable() {
         return isAvailable;
     }
 
-    public void setAvailable(boolean available) {
+    public void setIsAvailable(boolean available) {
         isAvailable = available;
     }
 
@@ -120,7 +120,7 @@ public class FoodItem {
                 ", foodDescription='" + foodDescription + '\'' +
                 ", price=" + price +
                 ", discount=" + discount +
-                ", isAvailable=" + isAvailable +
+                ", getIsAvailable=" + isAvailable +
                 ", category=" + category +
                 ", imagePath='" + imagePath + '\'' +
                 ", rating=" + rating +

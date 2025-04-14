@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="https://jakarta.ee/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence/orm
+                 https://jakarta.ee/xml/ns/persistence/orm/orm_3_0.xsd"
+                 version="3.0">
+    <entity class="com.app.model.FoodItem">
+        <table name="food_item" schema="food_delivery_db"/>
+        <attributes>
+            <id name="foodItemId">
+                <column name="food_item_id" nullable="false"/>
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="foodName">
+                <column name="food_name" nullable="false" length="30"/>
+            </basic>
+            <basic name="foodDescription">
+                <column name="food_description" nullable="false" length="255"/>
+            </basic>
+            <basic name="price">
+                <column name="price" nullable="false"/>
+            </basic>
+            <basic name="discount">
+                <column name="discount" nullable="true"/>
+            </basic>
+            <basic name="isAvailable">
+                <column name="is_available" nullable="false"/>
+            </basic>
+            <basic name="createdOn">
+                <column name="created_on" nullable="false"/>
+            </basic>
+            <basic name="updatedOn">
+                <column name="updated_on" nullable="true"/>
+            </basic>
+            <basic name="imagePath">
+                <column name="image_path" nullable="false" length="255"/>
+            </basic>
+            <basic name="rating">
+                <column name="rating" nullable="false"/>
+            </basic>
+            <many-to-one name="category" fetch="EAGER">
+                <join-column name="category_id"/>
+            </many-to-one>
+        </attributes>
+    </entity>
+</entity-mappings>
