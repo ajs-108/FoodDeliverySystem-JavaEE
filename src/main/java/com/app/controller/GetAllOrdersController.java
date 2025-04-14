@@ -27,6 +27,9 @@ public class GetAllOrdersController extends HttpServlet {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
+            if (!AuthUtils.isAdmin(request)) {
+                throw new ApplicationException(Message.Error.ACCESS_DENIED);
+            }
             List<OrderDTO> orderDTOList = orderServices.getAllOrder();
             sendResponse(response, null, null, orderDTOList, HttpServletResponse.SC_OK);
         } catch (DBException e) {

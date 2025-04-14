@@ -24,7 +24,7 @@ public class ReviewServices {
 
     public void postReview(List<ReviewDTO> reviewDTOList) throws DBException, ApplicationException {
         for (ReviewDTO reviewDTO : reviewDTOList) {
-            ReviewValidator.validateReview(reviewDTO);
+            ReviewValidator.validatePostReview(reviewDTO);
             i += reviewDAO.addReview(reviewMapper.toReview(reviewDTO));
             if (i > 0) {
                 updateFoodRating(reviewDTO.getFoodItemDTO().getFoodItemId());

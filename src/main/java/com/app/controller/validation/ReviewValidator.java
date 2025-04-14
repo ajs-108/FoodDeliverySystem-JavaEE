@@ -22,7 +22,7 @@ public class ReviewValidator {
     private ReviewValidator() {
     }
 
-    public static void validateReview(ReviewDTO reviewDTO) throws ApplicationException, DBException {
+    public static void validatePostReview(ReviewDTO reviewDTO) throws ApplicationException, DBException {
         if (userServices.getUser(reviewDTO.getUserDTO().getUserId()) == null) {
             throw new ApplicationException(Message.User.NO_SUCH_USER);
         }
