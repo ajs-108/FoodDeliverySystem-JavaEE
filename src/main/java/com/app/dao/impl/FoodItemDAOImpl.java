@@ -48,10 +48,77 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
     }
 
     @Override
+    public FoodItem getFoodItemFromMenu(int foodItemId) throws DBException {
+        String sql = """
+                select * from menu m, category c
+                where m.category_id = c.category_id and m.food_item_id = ?;
+                """;
+        ResultSet resultSet = null;
+        try (Connection connection = DBConnector.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, foodItemId);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                FoodItem foodItem;
+                foodItem = new FoodItem();
+                Category category = new Category();
+                foodItem.setFoodItemId(resultSet.getInt(FOOD_ITEM_ID));
+                foodItem.setFoodName(resultSet.getString(FOOD_NAME));
+                foodItem.setFoodDescription(resultSet.getString(FOOD_DESCRIPTION));
+                foodItem.setPrice(resultSet.getDouble(PRICE));
+                foodItem.setDiscount(resultSet.getDouble(DISCOUNT));
+                foodItem.setIsAvailable(resultSet.getBoolean(IS_AVAILABLE));
+                foodItem.setImagePath(resultSet.getString(IMAGE_PATH));
+                foodItem.setRating(resultSet.getDouble(RATING));
+                category.setCategoryId(resultSet.getInt(CATEGORY_ID));
+                category.setCategoryName(resultSet.getString(CATEGORY_NAME));
+                foodItem.setCategory(category);
+                return foodItem;
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new DBException(e);
+        } finally {
+            DBConnector.resourceCloser(null, resultSet, null);
+        }
+        return null;
+    }
+
+    @Override
+    public List<FoodItem> getMenu() throws DBException {
+        String sql = "select * from menu m, category c where m.category_id = c.category_id;";
+        List<FoodItem> foodItemList = new LinkedList<>();
+        try (Connection connection = DBConnector.getInstance().getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+            while (resultSet.next()) {
+                FoodItem foodItem = new FoodItem();
+                Category category = new Category();
+                foodItem.setFoodItemId(resultSet.getInt(FOOD_ITEM_ID));
+                foodItem.setFoodName(resultSet.getString(FOOD_NAME));
+                foodItem.setFoodDescription(resultSet.getString(FOOD_DESCRIPTION));
+                foodItem.setPrice(resultSet.getDouble(PRICE));
+                foodItem.setDiscount(resultSet.getDouble(DISCOUNT));
+                foodItem.setIsAvailable(resultSet.getBoolean(IS_AVAILABLE));
+                foodItem.setImagePath(resultSet.getString(IMAGE_PATH));
+                foodItem.setRating(resultSet.getDouble(RATING));
+                foodItem.setCreatedOn(resultSet.getTimestamp(CREATED_ON));
+                foodItem.setUpdatedOn(resultSet.getTimestamp(UPDATED_ON));
+                category.setCategoryId(resultSet.getInt(CATEGORY_ID));
+                category.setCategoryName(resultSet.getString(CATEGORY_NAME));
+                foodItem.setCategory(category);
+                foodItemList.add(foodItem);
+            }
+            return foodItemList;
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new DBException(e);
+        }
+    }
+
+    @Override
     public FoodItem getFoodItem(int foodItemId) throws DBException {
         String sql = """
-                select * from menu, category
-                where menu.category_id = category.category_id and food_item_id = ?;
+                select * from food_item fi, category c
+                where fi.category_id = c.category_id and fi.food_item_id = ?;
                 """;
         ResultSet resultSet = null;
         try (Connection connection = DBConnector.getInstance().getConnection();
@@ -85,7 +152,7 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
 
     @Override
     public List<FoodItem> getAllFoodItems() throws DBException {
-        String sql = "select * from menu, category where menu.category_id = category.category_id;";
+        String sql = "select * from food_item fi, category c where fi.category_id = c.category_id;";
         List<FoodItem> foodItemList = new LinkedList<>();
         try (Connection connection = DBConnector.getInstance().getConnection();
              Statement statement = connection.createStatement();

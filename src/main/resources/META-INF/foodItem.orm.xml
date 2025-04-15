@@ -4,6 +4,9 @@
                  xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence/orm
                  https://jakarta.ee/xml/ns/persistence/orm/orm_3_0.xsd"
                  version="3.0">
+    <named-query name="FoodItem.getAllFoodItems">
+        <query>Select fi from food_item</query>
+    </named-query>
     <entity class="com.app.model.FoodItem">
         <table name="food_item" schema="food_delivery_db"/>
         <attributes>

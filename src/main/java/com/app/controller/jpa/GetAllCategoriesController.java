@@ -6,7 +6,6 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
-import com.app.dao.jpa.impl.JPACategoryDAO;
 import com.app.dto.APIResponse;
 import com.app.model.Category;
 import com.app.service.jpa.JPACategoryServices;

@@ -5,6 +5,6 @@ import com.app.model.Category;
 
 import java.util.List;
 
-public interface IJPACategoryDAO {
+public interface ICategoryRepository {
     List<Category> findAll() throws DBException;
 }

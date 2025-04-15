@@ -21,7 +21,7 @@ public class FoodItemValidator {
 
     public static void validateFoodItem(FoodItemDTO foodItemDTO) throws ApplicationException, DBException {
         commonValidations(foodItemDTO);
-        if (foodItemServices.isFoodItemExists(foodItemDTO)) {
+        if (foodItemServices.isFoodItemExistsInMenu(foodItemDTO)) {
             throw new ApplicationException(Message.FoodItem.FOOD_ITEM_EXISTS);
         }
     }
@@ -43,7 +43,7 @@ public class FoodItemValidator {
         if (!validator.isPositiveInteger(foodItemId)) {
             throw new ApplicationException(Message.Common.NOT_A_POSITIVE_INTEGER);
         }
-        if (!foodItemServices.isFoodItemExists(Integer.parseInt(foodItemId))) {
+        if (!foodItemServices.isFoodItemExistsInMenu(Integer.parseInt(foodItemId))) {
             throw new ApplicationException(Message.Common.RESOURCE_NOT_AVAILABLE);
         }
         if (isAvailable == null || isAvailable.isBlank()) {
@@ -100,7 +100,7 @@ public class FoodItemValidator {
         if (!validator.isPositiveInteger(foodItemId)) {
             throw new ApplicationException(Message.Common.NOT_A_POSITIVE_INTEGER);
         }
-        if (!foodItemServices.isFoodItemExists(Integer.parseInt(foodItemId))) {
+        if (!foodItemServices.isFoodItemExistsInMenu(Integer.parseInt(foodItemId))) {
             throw new ApplicationException(Message.FoodItem.FOOD_ITEM_DOES_NOT_EXISTS);
         }
     }

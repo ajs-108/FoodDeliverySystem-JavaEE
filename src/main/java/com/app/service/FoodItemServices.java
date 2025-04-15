@@ -22,10 +22,14 @@ public class FoodItemServices {
     }
 
     public List<FoodItemDTO> getAllFoodItems() throws DBException {
-        return foodItemDAO.getAllFoodItems()
+        return foodItemDAO.getMenu()
                 .stream()
                 .map(foodItemMapper::toDTO)
                 .toList();
+    }
+
+    public FoodItemDTO getFoodItemFromMenu(int foodItemId) throws DBException {
+        return foodItemMapper.toDTO(foodItemDAO.getFoodItemFromMenu(foodItemId));
     }
 
     public FoodItemDTO getFoodItem(int foodItemId) throws DBException {
@@ -40,12 +44,16 @@ public class FoodItemServices {
         foodItemDAO.updateFoodItemAvailability(foodItemId, isAvailable);
     }
 
+    public boolean isFoodItemExistsInMenu(int foodItemId) throws DBException {
+        return getFoodItemFromMenu(foodItemId) != null;
+    }
+
     public boolean isFoodItemExists(int foodItemId) throws DBException {
         return getFoodItem(foodItemId) != null;
     }
 
-    public boolean isFoodItemExists(FoodItemDTO foodItemDTO) throws DBException {
-        return getFoodItem(foodItemDTO.getFoodItemId()) != null;
+    public boolean isFoodItemExistsInMenu(FoodItemDTO foodItemDTO) throws DBException {
+        return getFoodItemFromMenu(foodItemDTO.getFoodItemId()) != null;
     }
 
     public void updateRatings(int foodItemId, List<Double> ratings) throws DBException {

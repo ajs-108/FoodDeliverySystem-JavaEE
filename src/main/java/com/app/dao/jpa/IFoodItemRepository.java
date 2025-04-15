@@ -5,6 +5,6 @@ import com.app.model.FoodItem;
 
 import java.util.List;
 
-public interface IJPAFoodItemDAO {
+public interface IFoodItemRepository {
     List<FoodItem> findAll() throws DBException;
 }

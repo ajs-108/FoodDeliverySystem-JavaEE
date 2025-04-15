@@ -8,6 +8,10 @@ import java.util.List;
 public interface IFoodItemDAO {
     void saveFoodItem(FoodItem foodItem) throws DBException;
 
+    FoodItem getFoodItemFromMenu(int foodItemId) throws DBException;
+
+    List<FoodItem> getMenu() throws DBException;
+
     FoodItem getFoodItem(int foodItemId) throws DBException;
 
     List<FoodItem> getAllFoodItems() throws DBException;

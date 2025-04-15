@@ -19,7 +19,7 @@ import java.io.IOException;
 
 @WebServlet(
         name = "Getfooditem",
-        value = "/getFoodItem")
+        value = "/getFoodItemFromMenu")
 public class GetFoodItemController extends HttpServlet {
     private FoodItemServices foodItemServices = new FoodItemServices();
 
@@ -38,7 +38,7 @@ public class GetFoodItemController extends HttpServlet {
             AuthUtils.checkAuthentication(request);
             QueryParameterValidator.validateQueryParameters(request, "foodItemId");
             int foodItemId = Integer.parseInt(request.getParameter("foodItemId"));
-            FoodItemDTO foodItemDTO = foodItemServices.getFoodItem(foodItemId);
+            FoodItemDTO foodItemDTO = foodItemServices.getFoodItemFromMenu(foodItemId);
             sendResponse(response, null, null, foodItemDTO, HttpServletResponse.SC_OK);
         } catch (ApplicationException e) {
             e.printStackTrace();
