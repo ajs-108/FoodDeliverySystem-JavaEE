@@ -1,19 +1,50 @@
 package com.app.model;
 
+import jakarta.persistence.*;
+
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "food_item")
 public class FoodItem {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "food_item_id", nullable = false)
     private int foodItemId;
+
+    @Column(name = "food_name", nullable = false, length = 30)
     private String foodName;
+
+    @Column(name = "food_description", nullable = false)
     private String foodDescription;
+
+    @Column(name = "food_item_id", nullable = false)
     private double price;
+
+    @Column(name = "food_item_id")
     private double discount;
+
+    @Column(name = "food_item_id", nullable = false)
     private boolean isAvailable;
+
+    @ManyToOne(targetEntity = Category.class, cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", referencedColumnName = "category_id",
+            nullable = false)
     private Category category;
+
+    @Column(name = "created_on", nullable = false)
     private LocalDateTime createdOn;
+
+    @Column(name = "updated_on")
     private LocalDateTime updatedOn;
+
+    @Column(name = "image_path", nullable = false)
     private String imagePath;
+
+    @Column(name = "rating", nullable = false)
     private double rating;
 
     public int getFoodItemId() {

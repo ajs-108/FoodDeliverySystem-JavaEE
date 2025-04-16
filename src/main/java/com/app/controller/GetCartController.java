@@ -29,7 +29,7 @@ public class GetCartController extends HttpServlet {
         try {
             AuthUtils.checkAuthentication(request);
             UserDTO userDTO = AuthUtils.getCurrentUser(request);
-            ShoppingCartValidator.validateUserId(userDTO.getUserId());
+            ShoppingCartValidator.validateShowCart(userDTO.getUserId());
             ShoppingCartDTO shoppingCartDTO = shoppingCartServices.showShoppingCart(userDTO.getUserId());
             sendResponse(response, null, null, shoppingCartDTO, HttpServletResponse.SC_OK);
         } catch (DBException e) {

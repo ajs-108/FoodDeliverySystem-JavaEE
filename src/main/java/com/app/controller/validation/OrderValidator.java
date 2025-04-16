@@ -19,6 +19,7 @@ import java.util.Objects;
 public class OrderValidator {
     private static final UserServices userServices = new UserServices();
     private static final OrderServices orderServices = new OrderServices();
+    private static final ShoppingCartServices cartServices = new ShoppingCartServices();
     private static final Validator validator = new Validator();
 
     private OrderValidator() {
@@ -39,6 +40,9 @@ public class OrderValidator {
         }
         if (!PaymentStatus.isPaymentStatus(orderDTO.getPaymentStatus().name())) {
             throw new ApplicationException(Message.Order.NOT_A_PAYMENT_STATUS);
+        }
+        if (cartServices.isCartEmpty(userId)) {
+            throw new ApplicationException(Message.ShoppingCart.CART_IS_EMPTY);
         }
     }
 

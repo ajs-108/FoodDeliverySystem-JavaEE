@@ -21,6 +21,8 @@
         <jackson-datatype-version>2.18.3</jackson-datatype-version>
         <flyway-core-version>11.4.0</flyway-core-version>
         <flyway-mysql-version>11.4.0</flyway-mysql-version>
+        <jpa-version>3.2.0</jpa-version>
+        <hibernate-core-version>6.6.13.Final</hibernate-core-version>
     </properties>
 
     <dependencies>
@@ -67,12 +69,12 @@
         <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
-            <version>3.2.0</version>
+            <version>${jpa-version}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>6.6.13.Final</version>
+            <version>${hibernate-core-version}</version>
         </dependency>
     </dependencies>
 

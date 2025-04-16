@@ -6,8 +6,8 @@
              version="3.0">
   <persistence-unit name="FoodDeliveryPersistentUnit">
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-    <mapping-file>META-INF/category.orm.xml</mapping-file>
-    <mapping-file>META-INF/foodItem.orm.xml</mapping-file>
+    <class>com.app.model.FoodItem</class>
+    <class>com.app.model.Category</class>
     <properties>
       <property name="jakarta.persistence.jdbc.url"   value="jdbc:mysql://localhost:3306/food_delivery_db" />
       <property name="jakarta.persistence.jdbc.driver"  value="com.mysql.cj.jdbc.Driver" />
@@ -15,7 +15,7 @@
       <property name="jakarta.persistence.jdbc.password"  value="password123#" />
 
       <property name="hibernate.dialect"  value="org.hibernate.dialect.MySQLDialect" />
-      <property name="hibernate.hbm2ddl.auto"  value="update"/>
+      <property name="hibernate.hbm2ddl.auto"  value="validate"/>
       <property name="hibernate.show_sql"  value="true" />
       <property name="hibernate.format_sql"  value="true" />
       <property name="hibernate.use_sql_comments"  value="true"/>

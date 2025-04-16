@@ -89,4 +89,8 @@ public class ShoppingCartServices {
     public double calculatePostDiscountPrice(double price, double discount, int quantity) {
         return Math.round((price - (price * (discount / 100))) * quantity);
     }
+
+    public boolean isCartEmpty(int userId) throws DBException {
+        return shoppingCartDAO.getShoppingCart(userId).getCartFoodItemsList().isEmpty();
+    }
 }
