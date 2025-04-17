@@ -28,6 +28,9 @@ public class GetAllFoodItemsController extends HttpServlet {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
+            if (!AuthUtils.isAdmin(request)) {
+                throw new ApplicationException(Message.Error.ACCESS_DENIED);
+            }
             List<FoodItem> foodItems = jpaFoodItemServices.findAll();
             sendResponse(response, null, null, foodItems, HttpServletResponse.SC_OK);
         } catch (DBException e) {

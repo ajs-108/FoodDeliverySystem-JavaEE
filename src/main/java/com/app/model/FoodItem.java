@@ -20,13 +20,13 @@ public class FoodItem {
     @Column(name = "food_description", nullable = false)
     private String foodDescription;
 
-    @Column(name = "food_item_id", nullable = false)
+    @Column(name = "price", nullable = false)
     private double price;
 
-    @Column(name = "food_item_id")
+    @Column(name = "discount")
     private double discount;
 
-    @Column(name = "food_item_id", nullable = false)
+    @Column(name = "is_available", nullable = false)
     private boolean isAvailable;
 
     @ManyToOne(targetEntity = Category.class, cascade = CascadeType.ALL,

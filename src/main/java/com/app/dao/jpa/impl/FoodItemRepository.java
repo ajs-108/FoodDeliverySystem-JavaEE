@@ -8,6 +8,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FoodItemRepository implements IFoodItemRepository {
@@ -16,9 +17,25 @@ public class FoodItemRepository implements IFoodItemRepository {
         try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
             tx = em.getTransaction();
             TypedQuery<FoodItem> findAllQuery =
-                    em.createQuery("SELECT fi from FoodItem fi", FoodItem.class);
+                    em.createQuery("SELECT fi FROM FoodItem fi JOIN FETCH fi.category",
+                            FoodItem.class);
             tx.begin();
-            List<FoodItem> foodItems = findAllQuery.getResultList();
+            List<FoodItem> foodItems = new ArrayList<>();
+            for(FoodItem foodItem : findAllQuery.getResultList()) {
+                FoodItem item = new FoodItem();
+                item.setFoodItemId(foodItem.getFoodItemId());
+                item.setFoodName(foodItem.getFoodName());
+                item.setFoodDescription(foodItem.getFoodDescription());
+                item.setPrice(foodItem.getPrice());
+                item.setDiscount(foodItem.getDiscount());
+                item.setIsAvailable(foodItem.getIsAvailable());
+                item.setCategory(foodItem.getCategory());
+                item.setCreatedOn(foodItem.getCreatedOn());
+                item.setUpdatedOn(foodItem.getUpdatedOn());
+                item.setImagePath(foodItem.getImagePath());
+                item.setRating(foodItem.getRating());
+                foodItems.add(item);
+            }
             tx.commit();
             return foodItems;
         } catch (Exception e) {

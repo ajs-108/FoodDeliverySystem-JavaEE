@@ -7,8 +7,10 @@ import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
 import com.app.dto.APIResponse;
-import com.app.model.Category;
-import com.app.service.jpa.JPACategoryServices;
+import com.app.model.FoodItem;
+import com.app.model.jpa.JPAUser;
+import com.app.service.jpa.JPAFoodItemServices;
+import com.app.service.jpa.JPAUserServices;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,9 +20,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "getAllCategoriesJPA", value = "/getAllCategoriesJPA")
-public class GetAllCategoriesController extends HttpServlet {
-    private JPACategoryServices jpaCategoryServices = new JPACategoryServices();
+@WebServlet(name = "getAllUsersJPA", value = "/getAllUsersJPA")
+public class GetAllUsersController extends HttpServlet {
+    private JPAUserServices jpaUserServices = new JPAUserServices();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -30,8 +32,9 @@ public class GetAllCategoriesController extends HttpServlet {
             if (!AuthUtils.isAdmin(request)) {
                 throw new ApplicationException(Message.Error.ACCESS_DENIED);
             }
-            List<Category> categories = jpaCategoryServices.findAll();
-            sendResponse(response, null, null, categories, HttpServletResponse.SC_OK);
+            String roleId = request.getParameter("roleId");
+            List<JPAUser> users = jpaUserServices.findAll(Integer.parseInt(roleId));
+            sendResponse(response, null, null, users, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
