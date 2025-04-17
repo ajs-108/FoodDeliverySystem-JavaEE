@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            background: linear-gradient(to right, #9AC6F0, #34495e);
+            margin: 0;
+        }
+
+        .sidebar {
+            width: 300px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 280px;
+            width: calc(100% - 300px);
+            height: 60px;
+            background-color: #34495e;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 999; /* Lower than the dropdown but higher than other elements */
+        }
+
+        .profile {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 10px;
+        }
+
+        .dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: white;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            display: none;
+            flex-direction: column;
+            z-index: 1000; /* Ensure it's above other elements */
+        }
+
+        .dropdown a {
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+            display: block;
+        }
+
+        .dropdown a:hover {
+            background-color: #f4f4f4;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            margin-left: 300px;
+            padding: 80px 50px 50px 50px;
+            background-color: #fff;
+            overflow-y: auto;
+        }
+
+        .top-buttons {
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .top-buttons button {
+            padding: 15px 20px;
+            border: none;
+            background-color: #34495e;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .top-buttons button:hover {
+            background-color: #34495e;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table th, table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #34495e;
+            color: white;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .toggle-btn {
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: none;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 100px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-btn.On {
+            background-color: #28a745;
+        }
+
+        .toggle-btn.Off {
+            background-color: #dc3545;
+        }
+
+        .toggle-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .update-btn {
+            background-color: #28a745; /* Green color */
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .update-btn:hover {
+            background-color: #34495e; /* Darker green on hover */
+        }
+
+        .delete-btn {
+            background-color: #dc3545; /* Green color */
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .delete:hover {
+            background-color: #dc3545; /* Darker green on hover */
+        }
+
+        .profile span {
+            font-size: 18px; /* Increase size as needed */
+            font-weight: bold; /* Optional: Make it bold */
+            color: white; /* Optional: Ensure it matches the theme */
+        }
+
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 20px; /* Adjust spacing between notification and profile */
+        }
+
+        .notification {
+            position: relative;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .notification::after {
+            content: "";
+            width: 2px; /* Line thickness */
+            height: 30px; /* Line height */
+            background-color: white; /* White line */
+            margin-left: 10px; /* Space after the icon */
+        }
+
+
+        .notification img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .notification:hover::after {
+            display: block;
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="sidebar" id="sidebar-container"></div>
+
+<div class="navbar">
+    <h2>Admin Panel</h2>
+    <div class="right-section">
+        <div class="notification" title="Notifications" onclick="loadNotificationPage()">
+            <img src="images/logoNotification.png" alt="Notifications" width="50" height="50">
+        </div>
+
+        <div class="profile" id="toggleDropdown">
+            <span>Admin</span>
+            <img src="images/profile.jpg" alt="Profile">
+            <div class="dropdown" id="profile-dropdown">
+                <a href="editProfile.html">Edit Profile</a>
+                <a href="adminViewAllReviews.html">Reviews</a>
+                <a href="changePassword.html">Change Password</a>
+                <a href="#" id="confirmLogout">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="top-buttons">
+    <button onclick="addCategory()">Add Category</button>
+    <button onclick="addFoodItem()">Add Food Item</button>
+</div>
+
+<div class="main-content">
+    <h3>All Food Items</h3>
+    <table id="food-items-table">
+        <tr>
+            <th>ID</th>
+            <th>Image</th> <!-- 🆕 Added Image Column -->
+            <th>Food Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Available</th>
+        </tr>
+    </table>
+</div>
+
+<script type="module" src="js/adminDashboard.js"></script> <!-- Load the main JavaScript file -->
+<script>
+    fetch('sideBar.html')
+    .then(response => response.text())
+    .then(data => {
+        document.getElementById('sidebar-container').innerHTML = data;
+    });
+
+    function addCategory() {
+        window.location.href = "addCategory.html";
+    }
+
+    function addFoodItem() {
+        window.location.href = "addFoodItem.html";
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Give Review</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h2 {
+            font-size: 32px;
+            margin-top: 40px;
+            color: #2c3e50;
+        }
+
+        .review-card {
+            background-color: white;
+            padding: 35px;
+            margin: 30px 20px;
+            max-width: 600px;
+            width: 100%;
+            border-radius: 18px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+            box-sizing: border-box;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 16px;
+            margin: 15px 0 5px;
+            color: #34495e;
+        }
+
+        textarea, select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 15px;
+            resize: none;
+            box-sizing: border-box;
+            transition: border 0.3s;
+        }
+
+        textarea:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 14px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .stars {
+            display: flex;
+            gap: 8px;
+            margin-top: 5px;
+            align-items: center;
+        }
+
+        .star {
+            font-size: 30px;
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .star.selected {
+            color: #f1c40f;
+        }
+
+        .rating-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .word-count {
+            font-size: 14px;
+            color: #888;
+            text-align: right;
+            margin-top: -12px;
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 600px) {
+            h2 {
+                font-size: 24px;
+                margin-top: 20px;
+            }
+
+            .review-card {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h2>Give Your Review</h2>
+
+<div class="review-card" id="reviewContainer">
+    <form id="reviewForm">
+        <!-- Rating -->
+        <label for="rating">Rating (1-5):</label>
+        <div class="stars" id="starRating">
+            <span class="star" data-rating="1">&#9733;</span>
+            <span class="star" data-rating="2">&#9733;</span>
+            <span class="star" data-rating="3">&#9733;</span>
+            <span class="star" data-rating="4">&#9733;</span>
+            <span class="star" data-rating="5">&#9733;</span>
+            <span class="rating-value" id="ratingValue">0</span>
+        </div>
+
+        <!-- Review -->
+        <label for="reviewTextarea">Review (100 words max):</label>
+        <textarea id="reviewTextarea" placeholder="Write your honest feedback..." maxlength="1000"></textarea>
+        <div class="word-count" id="wordCount">0/100 words</div>
+
+        <!-- Submit -->
+        <button type="submit">Submit Review</button>
+    </form>
+</div>
+
+<script type="module" src="js/giveReview.js"></script> <!-- Link to your external JavaScript file -->
+
+</body>
+</html>

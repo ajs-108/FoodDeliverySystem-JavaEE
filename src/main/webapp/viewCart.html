@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Cart</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #9AC6F0, #34495e);
+            color: white;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .cart-container {
+            background: white;
+            color: #333;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+            padding: 12px 0;
+            gap: 15px;
+        }
+
+        .cart-item img {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quantity-controls button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background 0.2s ease-in-out;
+        }
+
+        .quantity-controls button:hover {
+            background: #2980b9;
+        }
+
+        .add-more-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            padding: 0 10px;
+        }
+
+        .add-more-section p {
+            font-weight: bold;
+            font-size: 16px;
+            color: #fff;
+        }
+
+        .add-more-section button {
+            display: flex;
+            align-items: center;
+            background-color: black;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 16px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .cart-summary {
+            background: white;
+            color: #333;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .checkout {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #27ae60;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .checkout:hover {
+            background: #219150;
+        }
+
+        .free-item {
+            color: green;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <h1>Your Cart</h1>
+    <div class="cart-container" id="cartItems"></div>
+
+    <div class="add-more-section">
+        <p>Missed something?</p>
+        <button onclick="window.location.href='customerHome.html'">
+            <span style="font-size: 20px; margin-right: 8px;">+</span> Add More Items
+        </button>
+    </div>
+
+    <div class="cart-summary">
+        <p id="total">Total: ₹0</p>
+        <p id="discount">Discount: ₹0</p>
+        <p id="totalPrice">Final Price: ₹0</p>
+    </div>
+
+    <button id="checkoutBtn" class="checkout">Proceed to Checkout</button>
+</div>
+
+<script type="module" src="js/viewCart.js"></script> <!-- Load the main JavaScript file -->
+
+</body>
+</html>

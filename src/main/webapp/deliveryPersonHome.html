@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Menu</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #9AC6F0, #34495e);
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #34495e;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .profile {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 10px;
+        }
+
+        .dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: white;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            display: none;
+            flex-direction: column;
+            width: 150px;
+        }
+
+        .dropdown a {
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+            display: block;
+        }
+
+        .dropdown a:hover {
+            background: #f1f1f1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 80px auto;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-bar, .category-dropdown {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .food-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .food-card:hover {
+            transform: scale(1.05);
+        }
+
+        .food-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .food-card h3 {
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .food-card p {
+            font-size: 14px;
+            color: #777;
+        }
+
+        .price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #e67e22;
+        }
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <h2>Food Menu</h2>
+    <div class="profile" onclick="toggleDropdown()">
+        <span>Delivery Person</span>
+        <img src="images/profile.jpg" alt="Profile">
+        <div class="dropdown" id="profile-dropdown">
+            <a href="editProfile.html">Edit Profile</a>
+            <a href="changePassword.html">Change Password</a>
+            <a href="#" id="confirmLogout">Logout</a>
+        </div>
+    </div>
+</div>
+</body>
+<script type="module" src="js/deliveryPersonHome.js"><!-- Load the main JavaScript file -->
+
+function toggleDropdown() {
+    let dropdown = document.getElementById('profile-dropdown');
+    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+}
+
+</script>
+</html>

@@ -1,10 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Welcome to FoodDelivery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fff;
+            color: #333;
+            overflow-y: scroll;
+        }
+
+        header {
+            background-color: #34495e;
+            color: #fff;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 26px;
+        }
+
+        .auth-buttons a {
+            text-decoration: none;
+            margin-left: 15px;
+            background-color: #fff;
+            color: #34495e;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: 0.3s ease;
+        }
+
+        .auth-buttons a:hover {
+            background-color: #ffe1dd;
+        }
+
+        .hero {
+            background-image: url("https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=1600&q=80");
+            background-size: cover;
+            background-position: center;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .hero h2 {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            max-width: 600px;
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            padding: 60px 40px;
+            background-color: #f9f9f9;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            overflow: hidden;
+            max-width: 300px;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.05);
+        }
+
+        .feature-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .feature-card .content {
+            padding: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            font-size: 15px;
+            color: #555;
+        }
+
+        footer {
+            background-color: #34495e;
+            color: #fff;
+            text-align: center;
+            padding: 25px 10px;
+            font-size: 14px;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h2 {
+                font-size: 32px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .feature-card {
+                max-width: 90%;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+    </style>
 </head>
 <body>
-<h1> Hello</h1>
+
+<header>
+    <h1>Food Express Restaurant</h1>
+    <div class="auth-buttons">
+        <a href="signup.html">Sign Up</a>
+        <a href="login.html">Login</a>
+    </div>
+</header>
+
+<section class="hero">
+    <h2>Delicious Meals, Delivered Fast</h2>
+    <p>Welcome to your favorite food delivery app. Order from top restaurants near you in just a few taps!</p>
+</section>
+
+<section class="features">
+    <div class="feature-card">
+        <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=700&q=80" alt="Fast Delivery">
+        <div class="content">
+            <h3>Fast Delivery</h3>
+            <p>Lightning-fast delivery to satisfy your cravings while it's hot and fresh.</p>
+        </div>
+    </div>
+
+    <div class="feature-card">
+        <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=700&q=80" alt="Quality Food">
+        <div class="content">
+            <h3>Fresh Ingredients</h3>
+            <p>Only the best quality and freshest ingredients served on your plate.</p>
+        </div>
+    </div>
+
+    <div class="feature-card">
+        <img src="https://images.unsplash.com/photo-1627308595229-7830a5c91f9f?auto=format&fit=crop&w=800&q=80" alt="Variety of Dishes">
+        <div class="content">
+            <h3>Wide Variety</h3>
+            <p>Choose from hundreds of dishes and restaurants to suit every mood and taste.</p>
+        </div>
+    </div>
+</section>
+
+<footer>
+    &copy; 2025 FoodDelivery. All rights reserved.
+</footer>
+
 </body>
 </html>

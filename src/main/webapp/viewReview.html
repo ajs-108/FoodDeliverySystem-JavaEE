@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Review Details</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #9AC6F0, #34495e);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .review-container {
+            background: white;
+            max-width: 700px;
+            width: 100%;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .review-container img {
+            max-width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .review-info h2 {
+            margin: 20px 0 10px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .review-info p {
+            margin: 6px 0;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .review-rating {
+            margin-top: 10px;
+            font-size: 20px;
+            color: #f39c12;
+        }
+
+        .back-btn {
+            margin-top: 25px;
+            padding: 12px 20px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .back-btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="review-container" id="reviewContainer">
+    <p>Loading review details...</p>
+</div>
+
+<script type="module" src="js/viewReview.js"></script>
+</body>
+</html>

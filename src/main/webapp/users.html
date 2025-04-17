@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List of Users</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7fc;
+            display: flex;
+        }
+
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+            width: 100%;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        .loader, .error-message {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 16px;
+        }
+
+        .status-toggle {
+            padding: 5px 15px;
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            cursor: default;
+        }
+
+        .active {
+            background-color: #28a745;
+        }
+
+        .inactive {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+<div id="sidebar-container"></div>
+<div class="content">
+    <h1 style="text-align: center;">List of Users</h1>
+
+    <div id="loader" class="loader">Loading...</div>
+    <table id="delivery-table" style="display: none;">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Activated</th>
+            <th>Orders</th>
+
+        </tr>
+        </thead>
+        <tbody id="delivery-list"></tbody>
+    </table>
+    <div id="error-message" class="error-message" style="display: none;"></div>
+</div>
+
+<script>
+    // Load Sidebar
+    fetch('sideBar.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('sidebar-container').innerHTML = data;
+        })
+        .catch(error => console.error("Error loading sidebar: ", error));
+
+    document.addEventListener("DOMContentLoaded", async function () {
+        const loader = document.getElementById("loader");
+        const errorMessage = document.getElementById("error-message");
+        const deliveryTable = document.getElementById("delivery-table");
+        const deliveryList = document.getElementById("delivery-list");
+
+        try {
+            // Fetch data from API
+            const response = await fetch("http://localhost:8080/food_delivery_app_war_exploded/customers");
+            const result = await response.json();
+
+            loader.style.display = "none"; // Hide loader
+
+            if (response.ok && Array.isArray(result.data) && result.data.length > 0) {
+                deliveryTable.style.display = "table"; // Show table
+
+                // Populate table with data
+                result.data.forEach(person => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+<td>${person.firstName + " " + person.lastName}</td>                            <td>${person.email}</td>
+                            <td>${person.phoneNumber}</td>
+                          <td>
+        <button class="status-toggle ${
+                        (person.accountStatus || '').toUpperCase() === 'ACTIVATED' ? 'active' : 'inactive'
+                    }">
+            ${(person.accountStatus || '').toUpperCase() === 'ACTIVATED' ? 'Active' : 'Inactive'}
+        </button>
+    </td>
+                        `;
+                    deliveryList.appendChild(row);
+                });
+            } else {
+                errorMessage.textContent = "No delivery persons found.";
+                errorMessage.style.display = "block";
+            }
+        } catch (error) {
+            loader.style.display = "none"; // Hide loader
+            errorMessage.textContent = "Error fetching data!";
+            errorMessage.style.display = "block";
+        }
+    });
+</script>
+</body>
+</html>

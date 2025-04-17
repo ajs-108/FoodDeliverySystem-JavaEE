@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Categories</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to right, #9AC6F0, #34495e);
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+            width: 450px; /* Increased width */
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px; /* Slightly larger title */
+            font-weight: 600;
+        }
+
+        .category-input {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        input {
+            padding: 12px;
+            width: 85%;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: #34495e;
+            outline: none;
+            box-shadow: 0px 0px 6px rgba(52, 152, 219, 0.5);
+        }
+
+        button {
+            padding: 12px 18px;
+            font-size: 16px;
+            font-weight: 600;
+            background-color: #34495e;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #34495e;
+        }
+
+
+        #message {
+            margin-top: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <h2>Add Categories</h2>
+    <div id="category-list">
+        <div class="category-input">
+            <input type="text" placeholder="Enter category name" class="category-name">
+            <button onclick="removeCategory(this)">X</button>
+        </div>
+    </div>
+
+    <button id="add-btn">Add More</button>
+    <button id="submit-btn">Submit</button>
+    <p id="message"></p>
+</div>
+
+<script type="module" src="js/addCategory.js"></script> <!-- Load the main JavaScript file -->
+
+</body>
+</html>

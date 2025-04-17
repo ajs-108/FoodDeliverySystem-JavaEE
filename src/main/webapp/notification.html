@@ -1,0 +1,30 @@
+<div class="notification-container">
+  <h2>Notifications</h2>
+  <div id="notification-list">
+    <!-- Notifications will be dynamically inserted here -->
+  </div>
+</div>
+<body><div class="sidebar" id="sidebar-container"></div>
+</body>
+<script>
+
+  fetch('sideBar.html')
+          .then(response => response.text())
+          .then(data => {
+            document.getElementById('sidebar-container').innerHTML = data;
+          });
+  document.addEventListener("DOMContentLoaded", function () {
+    let notifications = []; // Assume this is fetched from a backend
+    let container = document.getElementById("notification-list");
+
+    if (notifications.length === 0) {
+      container.innerHTML = "<p>No new notifications</p>";
+    } else {
+      notifications.forEach(notification => {
+        let div = document.createElement("div");
+        div.textContent = notification;
+        container.appendChild(div);
+      });
+    }
+  });
+</script>

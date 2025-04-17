@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Food Item</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #9AC6F0, #34495e);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .update-container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            width: 400px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin: 12px 0 5px;
+            text-align: left;
+        }
+
+        input, select {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            transition: background 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+<div class="sidebar" id="sidebar-container"></div>
+
+<div class="update-container">
+    <h2>Update Food Item</h2>
+    <div class="error" id="error-msg"></div>
+
+    <form id="update-form">
+        <input type="hidden" id="categoryId" name="categoryId">
+
+        <label for="foodName">Food Name:</label>
+        <input type="text" id="foodName" name="foodName" required>
+
+        <label for="foodDescription">Description:</label>
+        <input type="text" id="foodDescription" name="foodDescription" required>
+
+        <label for="category">Category:</label>
+        <input type="text" id="category" name="category" disabled>
+
+        <label for="price">Price:</label>
+        <input type="text" id="price" name="price" oninput="validateNumberInput(this)" required>
+
+        <label for="discount">Discount:</label>
+        <input type="text" id="discount" name="discount" oninput="validateNumberInput(this)" required>
+
+        <label for="rating">Rating:</label>
+        <input type="number" id="rating" name="rating" step="0.1" min="0" max="5" disabled>
+
+        <label for="available">Available:</label>
+        <select id="available" name="available">
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+        </select>
+
+        <label for="image">Upload Image:</label>
+        <input type="file" id="image" accept="image/*">
+        <img id="existing-image" src="" alt="Existing Food Image" width="80" height="80"
+             style="display: none; margin-top: 10px; border-radius: 6px;">
+
+        <button type="submit">Update Food Item</button>
+    </form>
+</div>
+
+
+<script type="module" src="js/updateFood.js"></script> <!-- Load the main JavaScript file -->
+
+
+</body>
+</html>

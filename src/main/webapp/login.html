@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Food Delivery App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #9AC6F0, #34495e);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 420px;
+            width: 100%;
+            padding: 45px 50px;
+            background-color: #ffffff;
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            animation: fadeIn 0.7s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #34495e;
+            margin-bottom: 25px;
+            font-size: 28px;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s ease;
+            margin-bottom: 16px;
+        }
+
+        .input-field:focus {
+            border-color: #34495e;
+            box-shadow: 0 0 0 3px rgba(52, 73, 94, 0.15);
+        }
+
+        .login-button {
+            padding: 14px;
+            width: 100%;
+            background: linear-gradient(to right, #34495e, #337FCC);
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        .login-button:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 18px rgba(52, 73, 94, 0.3);
+        }
+
+        .footer {
+            margin-top: 25px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .footer a {
+            text-decoration: none;
+            color: #337FCC;
+            font-weight: bold;
+        }
+
+        .footer a:hover {
+            color: #2ecc71;
+        }
+
+        .response-message {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+    <h1>Login to Your Account</h1>
+
+    <!-- Login Form -->
+    <form id="login-form" class="login-form">
+        <input type="email" id="email" class="input-field" placeholder="Enter your email" required>
+        <input type="password" id="password" class="input-field" placeholder="Enter your password" required>
+        <button type="submit" class="login-button">Login</button>
+    </form>
+
+    <!-- Footer with SignUp Link -->
+    <div class="footer">
+        <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+    </div>
+
+    <!-- Message container -->
+    <div id="response-message" class="response-message"></div>
+</div>
+
+<script type="module" src="js/logIn.js"></script> <!-- Load the main JavaScript file -->
+
+
+</body>
+</html>
