@@ -7,9 +7,7 @@ import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
 import com.app.dto.APIResponse;
-import com.app.model.FoodItem;
-import com.app.model.jpa.JPAUser;
-import com.app.service.jpa.JPAFoodItemServices;
+import com.app.dto.jpa.JPAUserDTO;
 import com.app.service.jpa.JPAUserServices;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -20,7 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "getAllUsersJPA", value = "/getAllUsersJPA")
+@WebServlet(name = "getAllUsersJPA", value = "/get-all-users")
 public class GetAllUsersController extends HttpServlet {
     private JPAUserServices jpaUserServices = new JPAUserServices();
 
@@ -33,7 +31,7 @@ public class GetAllUsersController extends HttpServlet {
                 throw new ApplicationException(Message.Error.ACCESS_DENIED);
             }
             String roleId = request.getParameter("roleId");
-            List<JPAUser> users = jpaUserServices.findAll(Integer.parseInt(roleId));
+            List<JPAUserDTO> users = jpaUserServices.findAll(Integer.parseInt(roleId));
             sendResponse(response, null, null, users, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();

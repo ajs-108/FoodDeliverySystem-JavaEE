@@ -16,7 +16,7 @@ public class CategoryRepository implements ICategoryRepository {
         try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
             tx = em.getTransaction();
             TypedQuery<Category> findAllQuery =
-                    em.createQuery("SELECT c from Category c", Category.class);
+                    em.createQuery("SELECT c from category c", Category.class);
             tx.begin();
             List<Category> categories = findAllQuery.getResultList();
             tx.commit();

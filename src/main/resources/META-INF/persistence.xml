@@ -8,18 +8,14 @@
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
     <class>com.app.model.FoodItem</class>
     <class>com.app.model.Category</class>
-    <class>com.app.model.User</class>
-    <class>com.app.model.ShoppingCart</class>
-    <class>com.app.model.CartFoodItems</class>
-    <class>com.app.model.Order</class>
-    <class>com.app.model.OrderFoodItems</class>
-    <class>com.app.model.Review</class>
+    <class>com.app.model.jpa.UserRole</class>
+    <class>com.app.model.jpa.JPAUser</class>
+    <class>com.app.model.jpa.JPACart</class>
     <properties>
       <property name="jakarta.persistence.jdbc.url"   value="jdbc:mysql://localhost:3306/food_delivery_db" />
       <property name="jakarta.persistence.jdbc.driver"  value="com.mysql.cj.jdbc.Driver" />
       <property name="jakarta.persistence.jdbc.user"  value="root" />
       <property name="jakarta.persistence.jdbc.password"  value="password123#" />
-
       <property name="hibernate.dialect"  value="org.hibernate.dialect.MySQLDialect" />
       <property name="hibernate.hbm2ddl.auto"  value="validate"/>
       <property name="hibernate.show_sql"  value="true" />

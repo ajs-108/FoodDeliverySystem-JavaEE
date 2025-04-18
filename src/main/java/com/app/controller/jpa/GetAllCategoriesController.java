@@ -7,7 +7,7 @@ import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
 import com.app.dto.APIResponse;
-import com.app.model.Category;
+import com.app.dto.CategoryDTO;
 import com.app.service.jpa.JPACategoryServices;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "getAllCategoriesJPA", value = "/getAllCategoriesJPA")
+@WebServlet(name = "getAllCategoriesJPA", value = "/get-all-categories")
 public class GetAllCategoriesController extends HttpServlet {
     private JPACategoryServices jpaCategoryServices = new JPACategoryServices();
 
@@ -30,7 +30,7 @@ public class GetAllCategoriesController extends HttpServlet {
             if (!AuthUtils.isAdmin(request)) {
                 throw new ApplicationException(Message.Error.ACCESS_DENIED);
             }
-            List<Category> categories = jpaCategoryServices.findAll();
+            List<CategoryDTO> categories = jpaCategoryServices.findAll();
             sendResponse(response, null, null, categories, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();

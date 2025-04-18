@@ -7,8 +7,9 @@ import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
 import com.app.dto.APIResponse;
-import com.app.dto.FoodItemDTO;
-import com.app.service.jpa.JPAFoodItemServices;
+import com.app.dto.UserDTO;
+import com.app.dto.jpa.JPACartDTO;
+import com.app.service.jpa.JPACartServices;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,20 +19,18 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "getAllFoodItemsJPA", value = "/get-all-food-items")
-public class GetAllFoodItemsController extends HttpServlet {
-    private JPAFoodItemServices jpaFoodItemServices = new JPAFoodItemServices();
+@WebServlet(name = "get-cart", value = "/get-cart")
+public class GetCartController extends HttpServlet {
+    private JPACartServices jpaCartServices = new JPACartServices();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            if (!AuthUtils.isAdmin(request)) {
-                throw new ApplicationException(Message.Error.ACCESS_DENIED);
-            }
-            List<FoodItemDTO> foodItems = jpaFoodItemServices.findAll();
-            sendResponse(response, null, null, foodItems, HttpServletResponse.SC_OK);
+            UserDTO user = AuthUtils.getCurrentUser(request);
+            List<JPACartDTO> cart = jpaCartServices.findAll(user.getUserId());
+            sendResponse(response, null, null, cart, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

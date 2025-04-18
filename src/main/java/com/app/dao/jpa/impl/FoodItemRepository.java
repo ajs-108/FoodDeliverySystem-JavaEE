@@ -17,7 +17,7 @@ public class FoodItemRepository implements IFoodItemRepository {
         try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
             tx = em.getTransaction();
             TypedQuery<FoodItem> findAllQuery =
-                    em.createQuery("SELECT fi FROM FoodItem fi JOIN FETCH fi.category",
+                    em.createQuery("SELECT fi FROM foodItem fi JOIN FETCH fi.category",
                             FoodItem.class);
             tx.begin();
             List<FoodItem> foodItems = new ArrayList<>();

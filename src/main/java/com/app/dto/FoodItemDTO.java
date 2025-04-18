@@ -14,6 +14,7 @@ public class FoodItemDTO {
     private double price;
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private double discount;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private boolean isAvailable;
     private CategoryDTO category;
     private LocalDateTime createdOn;

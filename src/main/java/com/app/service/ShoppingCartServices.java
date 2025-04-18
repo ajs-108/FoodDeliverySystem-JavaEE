@@ -34,20 +34,28 @@ public class ShoppingCartServices {
     public ShoppingCartDTO showShoppingCart(int userId) throws DBException {
         ShoppingCartDTO shoppingCartDTO = shoppingCartMapper.toDTO(shoppingCartDAO.getShoppingCart(userId));
         List<CartFoodItemsDTO> cartFoodItemsDTOList = shoppingCartDTO.getCartFoodItemsDTOList();
-        double totalPrice = 0;
         if (cartFoodItemsDTOList != null) {
+            double totalPrice = 0;
             for (CartFoodItemsDTO cartFoodItemsDTO : cartFoodItemsDTOList) {
-                cartFoodItemsDTO.setBeforeDiscountPrice(calculatePreDiscountPrice(
-                        cartFoodItemsDTO.getFoodItemDTO().getPrice(), cartFoodItemsDTO.getQuantity()));
-                cartFoodItemsDTO.setAfterDiscountPrice(calculatePostDiscountPrice(
+
+                cartFoodItemsDTO.setBeforeDiscountPrice(
+                        calculatePreDiscountPrice(
+                                cartFoodItemsDTO.getFoodItemDTO().getPrice(),
+                                cartFoodItemsDTO.getQuantity()
+                        ));
+                cartFoodItemsDTO.setAfterDiscountPrice(
+                        calculatePostDiscountPrice(
+                                cartFoodItemsDTO.getFoodItemDTO().getPrice(),
+                                cartFoodItemsDTO.getFoodItemDTO().getDiscount(),
+                                cartFoodItemsDTO.getQuantity()
+                        ));
+                totalPrice += calculateTotalPrice(
                         cartFoodItemsDTO.getFoodItemDTO().getPrice(),
                         cartFoodItemsDTO.getFoodItemDTO().getDiscount(),
-                        cartFoodItemsDTO.getQuantity()));
-                totalPrice += calculateTotalPrice(cartFoodItemsDTO.getFoodItemDTO().getPrice(),
-                        cartFoodItemsDTO.getFoodItemDTO().getDiscount(), cartFoodItemsDTO.getQuantity());
+                        cartFoodItemsDTO.getQuantity());
             }
+            shoppingCartDTO.setTotalPrice(totalPrice);
         }
-        shoppingCartDTO.setTotalPrice(totalPrice);
         return shoppingCartDTO;
     }
 
@@ -79,6 +87,12 @@ public class ShoppingCartServices {
     public double calculateTotalPrice(double price, double discount, int quantity) {
         double totalPrice = 0;
         totalPrice += calculatePostDiscountPrice(price, discount, quantity);
+        return totalPrice;
+    }
+
+    public double calculateTotalPrice(double discountedPrice) {
+        double totalPrice = 0;
+        totalPrice += discountedPrice;
         return totalPrice;
     }
 

@@ -2,7 +2,7 @@ package com.app.model;
 
 import jakarta.persistence.*;
 
-@Entity
+@Entity(name = "category")
 @Table(name = "category")
 public class Category {
 
