@@ -56,7 +56,6 @@ document.getElementById("checkoutBtn").addEventListener("click", async function 
                 const {foodItemDTO, quantity} = item;
                 const itemPrice = foodItemDTO.price * quantity;
                 total += itemPrice;
-                img.src = `${BASE_IMG_PATH}` + review.foodItemDTO.imagePath.replace(/\\/g, "/");
 
                 cartContainer.innerHTML += `
                     <div class="cart-item" id="item-${foodItemDTO.foodItemId}">
