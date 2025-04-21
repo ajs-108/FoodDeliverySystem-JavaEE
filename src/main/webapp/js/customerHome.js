@@ -1,4 +1,12 @@
-import {GET_FOOD_ITEMS, GET_CART, REMOVE_FROM_CART, UPDATE_CART_ITEM_QUANTITY, ADD_TO_CART,LOGOUT} from './constant/config.js';
+import {
+    GET_FOOD_ITEMS,
+    GET_CART,
+    REMOVE_FROM_CART,
+    UPDATE_CART_ITEM_QUANTITY,
+    ADD_TO_CART,
+    LOGOUT,
+    BASE_IMG_PATH
+} from './constant/config.js';
 
 let allFoodItems = [];
 
@@ -25,7 +33,7 @@ function displayFoodItems(items) {
         card.id = `food-${item.foodItemId}`;
 
         card.innerHTML = `
-            <img src="http://localhost:8080/food_delivery_app_war_exploded/${item.imagePath}" alt="${item.foodName}">
+<img src="${BASE_IMG_PATH}${item.imagePath}" alt="${item.foodName}">
             <h3>${item.foodName}</h3>
             <p>${item.foodDescription}</p>
             <p class="price">₹${item.price.toFixed(2)}</p>
