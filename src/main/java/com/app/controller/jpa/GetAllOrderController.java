@@ -1,48 +1,35 @@
-package com.app.controller;
+package com.app.controller.jpa;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
-import com.app.common.util.FileUtil;
 import com.app.common.util.ObjectMapperUtil;
-import com.app.controller.validation.FoodItemValidator;
 import com.app.dto.APIResponse;
-import com.app.dto.FoodItemDTO;
-import com.app.service.FoodItemServices;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.MultipartConfig;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
+import com.app.dto.jpa.JPAOrderDTO;
+import com.app.service.jpa.JPAOrderServices;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
-@WebServlet(
-        name = "Addfooditem",
-        value = "/addFoodItem")
-@MultipartConfig
-public class AddFoodItemController extends HttpServlet {
-    private FoodItemServices foodItemServices = new FoodItemServices();
+@WebServlet(name = "getAllOrder", value = "/get-all-orders")
+public class GetAllOrderController extends HttpServlet {
+    private JPAOrderServices orderServices = new JPAOrderServices();
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
             if (!AuthUtils.isAdmin(request)) {
                 throw new ApplicationException(Message.Error.ACCESS_DENIED);
             }
-            Part foodItemPart = request.getPart("foodItem");
-            Part imagePart = request.getPart("image");
-            FoodItemDTO foodItemDTO = ObjectMapperUtil.toObject(foodItemPart.getInputStream(), FoodItemDTO.class);
-            foodItemDTO.setImagePath(FileUtil.getFilePath(AppConstant.FOOD_ITEM_IMAGE_FOLDER, imagePart));
-            FoodItemValidator.validateFoodItem(foodItemDTO);
-            foodItemServices.createFoodItem(foodItemDTO);
-            sendResponse(response, null, Message.Common.ENTRY_ADDED, null, HttpServletResponse.SC_CREATED);
+            List<JPAOrderDTO> orderList = orderServices.findAll();
+            sendResponse(response, null, null, orderList, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

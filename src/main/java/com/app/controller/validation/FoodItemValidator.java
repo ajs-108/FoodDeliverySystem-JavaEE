@@ -21,7 +21,7 @@ public class FoodItemValidator {
 
     public static void validateFoodItem(FoodItemDTO foodItemDTO) throws ApplicationException, DBException {
         commonValidations(foodItemDTO);
-        if (foodItemServices.isFoodItemExistsInMenu(foodItemDTO)) {
+        if (foodItemServices.isFoodItemExistsInMenu(foodItemDTO.getFoodItemId())) {
             throw new ApplicationException(Message.FoodItem.FOOD_ITEM_EXISTS);
         }
     }

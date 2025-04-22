@@ -1,9 +1,11 @@
 package com.app.model;
 
+import com.app.model.jpa.JPAOrder;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity(name = "foodItem")
 @Table(name = "food_item")
@@ -30,7 +32,7 @@ public class FoodItem {
     private boolean isAvailable;
 
     @ManyToOne(targetEntity = Category.class, cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY)
+            fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", referencedColumnName = "category_id",
             nullable = false)
     private Category category;
@@ -46,6 +48,9 @@ public class FoodItem {
 
     @Column(name = "rating", nullable = false)
     private double rating;
+
+    @ManyToMany(mappedBy = "foodItems")
+    private List<JPAOrder> order;
 
     public int getFoodItemId() {
         return foodItemId;
@@ -141,6 +146,14 @@ public class FoodItem {
 
     public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public List<JPAOrder> getOrder() {
+        return order;
+    }
+
+    public void setOrder(List<JPAOrder> order) {
+        this.order = order;
     }
 
     @Override

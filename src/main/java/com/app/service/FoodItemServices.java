@@ -52,20 +52,16 @@ public class FoodItemServices {
         return getFoodItem(foodItemId) != null;
     }
 
-    public boolean isFoodItemExistsInMenu(FoodItemDTO foodItemDTO) throws DBException {
-        return getFoodItemFromMenu(foodItemDTO.getFoodItemId()) != null;
-    }
-
     public void updateRatings(int foodItemId, List<Double> ratings) throws DBException {
         double preRating = getFoodItem(foodItemId).getRating();
         if (preRating == 1) {
-            foodItemDAO.updateFoodItemRating(foodItemId, ratings.get(0));
+            foodItemDAO.updateFoodItemRating(foodItemId, Math.round(ratings.get(0)));
         }
         double newRating = ratings.stream()
                 .mapToDouble(Double::doubleValue)
                 .average()
                 .orElse(1.0);
-        foodItemDAO.updateFoodItemRating(foodItemId, newRating);
+        foodItemDAO.updateFoodItemRating(foodItemId, Math.round(newRating));
     }
 
     public void removeFoodItem(int foodItemId) throws DBException {

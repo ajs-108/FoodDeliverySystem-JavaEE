@@ -31,7 +31,8 @@ public class ShoppingCartValidator {
         if (shoppingCartDTO.getCartFoodItemsDTOList().get(0).getFoodItemDTO().getFoodItemId() == 0) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
-        if (!foodItemServices.isFoodItemExistsInMenu(shoppingCartDTO.getCartFoodItemsDTOList().get(0).getFoodItemDTO())) {
+        if (!foodItemServices.isFoodItemExistsInMenu(shoppingCartDTO.getCartFoodItemsDTOList().get(0)
+                .getFoodItemDTO().getFoodItemId())) {
             throw new ApplicationException(Message.Common.RESOURCE_NOT_AVAILABLE);
         }
         if (shoppingCartServices.isFoodItemExists(shoppingCartDTO)

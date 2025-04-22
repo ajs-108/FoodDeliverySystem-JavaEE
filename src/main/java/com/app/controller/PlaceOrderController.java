@@ -28,6 +28,7 @@ public class PlaceOrderController extends HttpServlet {
         try {
             AuthUtils.checkAuthentication(request);
             int userId = AuthUtils.getCurrentUser(request).getUserId();
+
             OrderDTO orderDTO = ObjectMapperUtil.toObject(request.getReader(), OrderDTO.class);
             OrderValidator.validatePlaceOrder(userId, orderDTO);
             orderServices.placeOrder(userId, orderDTO);

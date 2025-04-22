@@ -24,9 +24,8 @@ public class CartRepository implements ICartRepository {
                                     fi.price, fi.discount, fi.image_path, c.category_id,
                                     c.category_name, sc.quantity
                                     from shopping_cart sc, user_ u, food_item fi, category c
-                                    where sc.food_item_id = fi.food_item_id
-                                    and fi.category_id = c.category_id
-                                    and u.user_id = ?1
+                                    where sc.user_id = u.user_id and sc.food_item_id = fi.food_item_id
+                                    and fi.category_id = c.category_id and u.user_id = ?1
                                     """, JPACart.class)
                     .setParameter(1, userId);
             tx = em.getTransaction();

@@ -207,7 +207,8 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
                 update food_item set is_available = ?
                 where food_item_id = ?;
                 """;
-        try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement ps = connect.prepareStatement(sql1)) {
+        try (Connection connect = DBConnector.getInstance().getConnection();
+             PreparedStatement ps = connect.prepareStatement(sql1)) {
             ps.setBoolean(1, isAvailable);
             ps.setInt(2, foodItemId);
             ps.executeUpdate();
@@ -222,7 +223,8 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
                 update food_item set rating = ?
                 where food_item_id = ?;
                 """;
-        try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement ps = connect.prepareStatement(sql1)) {
+        try (Connection connect = DBConnector.getInstance().getConnection();
+             PreparedStatement ps = connect.prepareStatement(sql1)) {
             ps.setDouble(1, rating);
             ps.setInt(2, foodItemId);
             ps.executeUpdate();
@@ -234,7 +236,8 @@ public class FoodItemDAOImpl implements IFoodItemDAO {
     @Override
     public void removeFoodItem(int foodItemId) throws DBException {
         String sql1 = "delete from menu where food_item_id = ?";
-        try (Connection connect = DBConnector.getInstance().getConnection(); PreparedStatement ps = connect.prepareStatement(sql1)) {
+        try (Connection connect = DBConnector.getInstance().getConnection();
+             PreparedStatement ps = connect.prepareStatement(sql1)) {
             ps.setInt(1, foodItemId);
             ps.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {

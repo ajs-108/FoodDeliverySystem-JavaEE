@@ -1,0 +1,1 @@
+ALTER TABLE order_food_items add PRIMARY KEY (order_id, food_item_id);
