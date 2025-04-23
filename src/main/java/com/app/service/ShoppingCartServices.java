@@ -87,13 +87,13 @@ public class ShoppingCartServices {
     public double calculateTotalPrice(double price, double discount, int quantity) {
         double totalPrice = 0;
         totalPrice += calculatePostDiscountPrice(price, discount, quantity);
-        return totalPrice;
+        return Math.round(totalPrice);
     }
 
     public double calculateTotalPrice(double discountedPrice) {
         double totalPrice = 0;
         totalPrice += discountedPrice;
-        return totalPrice;
+        return Math.round(totalPrice);
     }
 
     public double calculatePreDiscountPrice(double price, int quantity) {

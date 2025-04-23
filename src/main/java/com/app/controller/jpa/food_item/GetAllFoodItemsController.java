@@ -1,4 +1,4 @@
-package com.app.controller.jpa;
+package com.app.controller.jpa.food_item;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;

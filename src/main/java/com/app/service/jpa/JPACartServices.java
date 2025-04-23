@@ -5,6 +5,8 @@ import com.app.dao.jpa.ICartRepository;
 import com.app.dao.jpa.impl.CartRepository;
 import com.app.dto.jpa.JPACartDTO;
 import com.app.mapper.jpa.JPACartMapper;
+import com.app.model.jpa.JPACart;
+import com.app.model.jpa.JPAUser;
 import com.app.service.ShoppingCartServices;
 
 import java.util.List;
@@ -20,7 +22,11 @@ public class JPACartServices {
         cartServices = new ShoppingCartServices();
     }
 
-    public List<JPACartDTO> findAll(int userId) throws DBException {
+    void save(JPACart cart) throws DBException {
+        cartRepo.save(cart);
+    }
+
+    public List<JPACartDTO> find(int userId) throws DBException {
         List<JPACartDTO> cartDTOList = cartRepo.find(userId)
                 .stream()
                 .map(cartMapper::toDTO)
@@ -46,5 +52,17 @@ public class JPACartServices {
             }
         }
         return cartDTOList;
+    }
+
+    void remove(JPACart cart) throws DBException {
+        cartRepo.remove(cart);
+    }
+
+    void updateQuantity(JPACart cart) throws DBException {
+        cartRepo.updateQuantity(cart);
+    }
+
+    void removeCartOfUser(JPAUser user) throws DBException {
+        cartRepo.removeCartOfUser(user);
     }
 }

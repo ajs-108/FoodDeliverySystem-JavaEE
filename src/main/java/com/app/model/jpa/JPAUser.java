@@ -33,17 +33,20 @@ public class JPAUser {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "created_on", nullable = false)
+    @Column(name = "created_on", nullable = false,
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdOn;
 
-    @Column(name = "update_on")
+    @Column(name = "update_on",
+            columnDefinition = "TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime updatedOn;
 
-    @ManyToOne(targetEntity = UserRole.class, cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = UserRole.class, cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", referencedColumnName = "role_id", nullable = false)
     private UserRole role;
 
-    @Column(name = "account_status", nullable = false)
+    @Column(name = "account_status", nullable = false,
+            columnDefinition = "ENUM('ACTIVATED', 'DEACTIVATED') DEFAULT 'ACTIVATED'")
     @Enumerated(EnumType.STRING)
     private AccountStatus accountStatus;
 

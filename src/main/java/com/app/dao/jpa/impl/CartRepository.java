@@ -10,27 +10,44 @@ import com.app.model.jpa.JPAUser;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CartRepository implements ICartRepository {
     @Override
+    public void save(JPACart cart) throws DBException {
+        EntityTransaction tx = null;
+        try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
+            tx = em.getTransaction();
+            tx.begin();
+            em.persist(cart);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw new DBException(e);
+        }
+    }
+
+    @Override
     public List<JPACart> find(int userId) throws DBException {
         EntityTransaction tx = null;
         try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
             Query query = em.createNativeQuery("""
-                                    SELECT u.user_id, fi.food_item_id, fi.food_name, fi.food_description,
-                                    fi.price, fi.discount, fi.image_path, c.category_id,
-                                    c.category_name, sc.quantity
-                                    from shopping_cart sc, user_ u, food_item fi, category c
-                                    where sc.user_id = u.user_id and sc.food_item_id = fi.food_item_id
-                                    and fi.category_id = c.category_id and u.user_id = ?1
-                                    """, JPACart.class)
+                            SELECT u.user_id, fi.food_item_id, fi.food_name, fi.food_description,
+                            fi.price, fi.discount, fi.image_path, c.category_id,
+                            c.category_name, sc.quantity
+                            from shopping_cart sc, user_ u, food_item fi, category c
+                            where sc.user_id = u.user_id and sc.food_item_id = fi.food_item_id
+                            and fi.category_id = c.category_id and u.user_id = ?1
+                            """, JPACart.class)
                     .setParameter(1, userId);
             tx = em.getTransaction();
             tx.begin();
-            List<JPACart> result =  query.getResultList();
+            List<JPACart> result = query.getResultList();
             List<JPACart> cartList = new ArrayList<>();
             for (JPACart cart : result) {
                 Category category = new Category();
@@ -54,6 +71,58 @@ public class CartRepository implements ICartRepository {
             }
             tx.commit();
             return cartList;
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw new DBException(e);
+        }
+    }
+
+    @Override
+    public void remove(JPACart cart) throws DBException {
+        EntityTransaction tx = null;
+        try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
+            tx = em.getTransaction();
+            tx.begin();
+            em.remove(cart);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw new DBException(e);
+        }
+    }
+
+    @Override
+    public void updateQuantity(JPACart cart) throws DBException {
+        EntityTransaction tx = null;
+        try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
+            tx = em.getTransaction();
+            tx.begin();
+            em.merge(cart);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw new DBException(e);
+        }
+    }
+
+    @Override
+    public void removeCartOfUser(JPAUser user) throws DBException {
+        EntityTransaction tx = null;
+        try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
+            TypedQuery<JPACart> removeQuery = em.createQuery("""
+                            delete from cart c where c.user = ?1
+                            """, JPACart.class)
+                    .setParameter(1, user);
+            tx = em.getTransaction();
+            tx.begin();
+            removeQuery.executeUpdate();
+            tx.commit();
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {
                 tx.rollback();

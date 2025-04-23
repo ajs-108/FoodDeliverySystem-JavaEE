@@ -28,7 +28,8 @@ public class FoodItem {
     @Column(name = "discount")
     private double discount;
 
-    @Column(name = "is_available", nullable = false)
+    @Column(name = "is_available", nullable = false,
+            columnDefinition = "BOOLEAN DEFAULT true")
     private boolean isAvailable;
 
     @ManyToOne(targetEntity = Category.class, cascade = CascadeType.ALL,
@@ -37,16 +38,19 @@ public class FoodItem {
             nullable = false)
     private Category category;
 
-    @Column(name = "created_on", nullable = false)
+    @Column(name = "created_on", nullable = false,
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdOn;
 
-    @Column(name = "updated_on")
+    @Column(name = "updated_on",
+            columnDefinition = "TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime updatedOn;
 
     @Column(name = "image_path", nullable = false)
     private String imagePath;
 
-    @Column(name = "rating", nullable = false)
+    @Column(name = "rating", nullable = false,
+            columnDefinition = "DOUBLE DEFAULT 1")
     private double rating;
 
     @ManyToMany(mappedBy = "foodItems")

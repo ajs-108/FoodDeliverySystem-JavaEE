@@ -17,10 +17,22 @@ public class JPACategoryServices {
         categoryMapper = new CategoryMapper();
     }
 
+    public void save(CategoryDTO categoryDTO) throws DBException {
+        categoryRepo.save(categoryMapper.toCategory(categoryDTO));
+    }
+
     public List<CategoryDTO> findAll() throws DBException {
         return categoryRepo.findAll()
                 .stream()
                 .map(categoryMapper::toDTO)
                 .toList();
+    }
+
+    public CategoryDTO find(int categoryId) throws DBException {
+        return categoryMapper.toDTO(categoryRepo.find(categoryId));
+    }
+
+    public CategoryDTO find(String categoryName) throws DBException {
+        return categoryMapper.toDTO(categoryRepo.find(categoryName));
     }
 }

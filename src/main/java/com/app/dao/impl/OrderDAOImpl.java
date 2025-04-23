@@ -105,6 +105,7 @@ public class OrderDAOImpl implements IOrderDAO {
         ResultSet deliveryPersonSet = null;
         try {
             connection = DBConnector.getInstance().getConnection();
+            connection.setAutoCommit(false);
             psForUserOrder = connection.prepareStatement(orderSQL);
             orderSet = psForUserOrder.executeQuery();
             List<Order> orderList = new ArrayList<>();
@@ -151,8 +152,16 @@ public class OrderDAOImpl implements IOrderDAO {
                 order.setOrderFoodItems(orderFoodItemsList);
                 orderList.add(order);
             }
+            connection.commit();
             return orderList;
         } catch (SQLException | ClassNotFoundException | NullPointerException e) {
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                }
+            } catch (SQLException ex) {
+                throw new DBException(ex);
+            }
             throw new DBException(e);
         } finally {
             DBConnector.resourceCloser(psForUserOrder, orderSet, connection);

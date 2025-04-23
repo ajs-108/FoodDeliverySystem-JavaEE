@@ -17,12 +17,12 @@ public class JPAOrder {
     private int orderId;
 
     @ManyToOne(targetEntity = JPAUser.class, cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER)
+            fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "user_id")
     private JPAUser user;
 
     @ManyToOne(targetEntity = JPAUser.class, cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER)
+            fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_person_id", referencedColumnName = "user_id", insertable = false)
     private JPAUser deliveryPerson;
 
@@ -41,7 +41,7 @@ public class JPAOrder {
     private PaymentStatus paymentStatus;
 
     @ManyToMany(targetEntity = FoodItem.class, cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER)
+            fetch = FetchType.LAZY)
     @JoinTable(
             name = "order_food_items",
             joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "order_id"),

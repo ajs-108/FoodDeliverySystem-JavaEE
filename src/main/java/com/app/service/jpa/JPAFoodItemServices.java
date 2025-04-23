@@ -17,10 +17,45 @@ public class JPAFoodItemServices {
         foodItemMapper = new FoodItemMapper();
     }
 
+    public void save(FoodItemDTO foodItemDTO) throws DBException {
+        foodItemRepo.save(foodItemMapper.toFoodItem(foodItemDTO));
+    }
+
+    public FoodItemDTO find(int foodItemId) throws DBException {
+        return foodItemMapper.toDTO(foodItemRepo.find(foodItemId));
+    }
+
+    public FoodItemDTO findFoodItemFromMenu(int foodItemId) throws DBException {
+        return foodItemMapper.toDTO(foodItemRepo.findFoodItemFromMenu(foodItemId));
+    }
+
     public List<FoodItemDTO> findAll() throws DBException {
         return foodItemRepo.findAll()
                 .stream()
                 .map(foodItemMapper::toDTO)
                 .toList();
+    }
+
+    public List<FoodItemDTO> findMenu() throws DBException {
+        return foodItemRepo.findMenu()
+                .stream()
+                .map(foodItemMapper::toDTO)
+                .toList();
+    }
+
+    public void update(FoodItemDTO foodItemDTO) throws DBException {
+        foodItemRepo.update(foodItemMapper.toFoodItem(foodItemDTO));
+    }
+
+    public void updateAvailability(int foodItemId, boolean isAvailable) throws DBException {
+        foodItemRepo.updateAvailability(foodItemId, isAvailable);
+    }
+
+    public void updateRating(int foodItemId, double rating) throws DBException {
+        foodItemRepo.updateRating(foodItemId, rating);
+    }
+
+    public void removeFromMenu(int foodItemId) throws DBException {
+        foodItemRepo.removeFromMenu(foodItemId);
     }
 }

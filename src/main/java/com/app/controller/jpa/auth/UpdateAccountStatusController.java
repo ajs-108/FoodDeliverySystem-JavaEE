@@ -1,15 +1,17 @@
-package com.app.controller;
+package com.app.controller.jpa.auth;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
-import com.app.common.enums.Roles;
+import com.app.common.enums.AccountStatus;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
+import com.app.controller.validation.QueryParameterValidator;
+import com.app.controller.validation.UserValidator;
 import com.app.dto.APIResponse;
-import com.app.dto.UserDTO;
 import com.app.service.UserServices;
+import com.app.service.jpa.JPAUserServices;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,11 +20,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet(
-        name = "AddDeliveryperson",
-        value = "/deliveryPersonSignUp")
-public class AddDeliveryPersonController extends HttpServlet {
-    private UserServices userServices = new UserServices();
+@WebServlet(name = "update-account-status", value = "/update-account-status")
+public class UpdateAccountStatusController extends HttpServlet {
+    private JPAUserServices userServices = new JPAUserServices();
 
     public static void sendResponse(HttpServletResponse response, String techMessage, String message, Object data, int statusCode) throws IOException {
         response.setStatus(statusCode);
@@ -32,24 +32,19 @@ public class AddDeliveryPersonController extends HttpServlet {
         response.getWriter().println(ObjectMapperUtil.toString(apiResponse));
     }
 
-    /**
-     * The doPost method is used by Servlet to receive the form data from the Sign-Up form and store it in the database
-     * after verifying the data that has come.
-     *
-     * @param request  used for receiving the Http request
-     * @param response used for sending the Http response
-     */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
             if (!AuthUtils.isAdmin(request)) {
                 throw new ApplicationException(Message.Error.ACCESS_DENIED);
             }
-            UserDTO userSignUpDTO = ObjectMapperUtil.toObject(request.getReader(), UserDTO.class);
-            userServices.addDeliveryPerson(userSignUpDTO);
-            sendResponse(response, null, Message.User.DELIVERY_PERSON_REGISTERED, null, HttpServletResponse.SC_CREATED);
+            QueryParameterValidator.validateQueryParameters(request, "userId", "accountStatus");
+            String userId = request.getParameter("userId");
+            String accountStatus = request.getParameter("accountStatus");
+            userServices.updateAccountStatus(Integer.parseInt(userId), AccountStatus.toEnum(accountStatus));
+            sendResponse(response, null, Message.User.STATUS_UPDATED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

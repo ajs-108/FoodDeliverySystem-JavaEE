@@ -3,21 +3,21 @@ package com.app.model.jpa;
 import com.app.model.FoodItem;
 import jakarta.persistence.*;
 
-@Entity
+@Entity(name = "orderFoodItems")
 @Table(name = "order_food_items")
 @IdClass(OrderFoodItemsId.class)
 public class JPAOrderFoodItems {
 
     @Id
     @ManyToOne(targetEntity = JPAOrder.class, cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER)
+            fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", referencedColumnName = "order_id",
             nullable = false)
     private JPAOrder order;
 
     @Id
     @ManyToOne(targetEntity = FoodItem.class, cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER)
+            fetch = FetchType.LAZY)
     @JoinColumn(name = "food_item_id", referencedColumnName = "food_item_id",
             nullable = false)
     private FoodItem foodItem;
