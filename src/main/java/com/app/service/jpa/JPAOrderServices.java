@@ -85,7 +85,7 @@ public class JPAOrderServices {
         orderRepo.assignDeliveryPerson(orderId, deliveryPerson);
     }
 
-    public Double calculateFoodItemsTotal(FoodItem foodItem, short quantity) throws DBException {
-        return foodItem.getPrice()-(foodItem.getPrice()*(foodItem.getDiscount()/100))*quantity;
+    public Double calculateFoodItemsTotal(FoodItem foodItem, short quantity) {
+        return foodItem.getPrice() - (foodItem.getPrice() * (foodItem.getDiscount() / 100)) * quantity;
     }
 }
