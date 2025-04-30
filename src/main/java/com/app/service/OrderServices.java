@@ -8,6 +8,7 @@ import com.app.dao.impl.OrderDAOImpl;
 import com.app.dto.OrderDTO;
 import com.app.mapper.OrderMapper;
 import com.app.mapper.ShoppingCartMapper;
+import com.app.model.Order;
 import com.app.model.ShoppingCart;
 
 import java.util.List;
@@ -69,5 +70,19 @@ public class OrderServices {
 
     public OrderDTO getRecentOrderOfUser(int userId) throws DBException {
         return orderMapper.toDTO(orderDAO.getRecentOrderOfUser(userId));
+    }
+
+    public List<OrderDTO> getOrderAssignedToDP(int deliveryPersonId) throws DBException {
+        return orderDAO.getOrderAssignedToDP(deliveryPersonId)
+                .stream()
+                .map(orderMapper::toDTO)
+                .toList();
+    }
+
+    public List<OrderDTO> getCurrentOrderOfUser(int userId) throws DBException {
+        return orderDAO.getCurrentOrderOfUser(userId)
+                .stream()
+                .map(orderMapper::toDTO)
+                .toList();
     }
 }

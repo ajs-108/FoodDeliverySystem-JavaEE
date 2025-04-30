@@ -1,8 +1,9 @@
-package com.app.dto.jpa;
+package com.app.dto.jpa.order;
 
 import com.app.common.enums.OrderStatus;
 import com.app.common.enums.PaymentStatus;
 import com.app.dto.FoodItemDTO;
+import com.app.dto.jpa.JPAUserDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;

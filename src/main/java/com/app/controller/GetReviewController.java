@@ -28,7 +28,7 @@ public class GetReviewController extends HttpServlet {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            QueryParameterValidator.validateQueryParameters(request, "reviewId");
+            QueryParameterValidator.validate(request, "reviewId");
             String reviewId = request.getParameter("reviewId");
             ReviewValidator.validateGetReview(reviewId);
             ReviewDTO reviewDTO = reviewServices.getReview(Integer.parseInt(reviewId));

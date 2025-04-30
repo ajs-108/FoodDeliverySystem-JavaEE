@@ -8,7 +8,7 @@ import java.util.List;
 public interface IFoodItemRepository {
     void save(FoodItem foodItem) throws DBException;
 
-    FoodItem find(int foodItemId) throws DBException;
+    FoodItem findById(int foodItemId) throws DBException;
 
     FoodItem findFoodItemFromMenu(int foodItemId) throws DBException;
 

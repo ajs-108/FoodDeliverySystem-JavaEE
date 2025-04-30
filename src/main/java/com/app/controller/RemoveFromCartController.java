@@ -29,7 +29,7 @@ public class RemoveFromCartController extends HttpServlet {
         try {
             AuthUtils.checkAuthentication(request);
             UserDTO userDTO = AuthUtils.getCurrentUser(request);
-            QueryParameterValidator.validateQueryParameters(request, "foodItemId");
+            QueryParameterValidator.validate(request, "foodItemId");
             String foodItemId = request.getParameter("foodItemId");
             ShoppingCartValidator.validateRemoval(userDTO.getUserId(), foodItemId);
             shoppingCartServices.removeFoodItem(userDTO.getUserId(), Integer.parseInt(foodItemId));

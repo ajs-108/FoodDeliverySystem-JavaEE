@@ -36,7 +36,7 @@ public class UpdateFoodItemAvailability extends HttpServlet {
             if (!AuthUtils.isAdmin(request)) {
                 throw new ApplicationException(Message.Error.ACCESS_DENIED);
             }
-            QueryParameterValidator.validateQueryParameters(request, "foodItemId", "available");
+            QueryParameterValidator.validate(request, "foodItemId", "available");
             String foodItemId = request.getParameter("foodItemId");
             String isAvailable = request.getParameter("available");
             FoodItemValidator.validateOnAvailabilityUpdate(foodItemId, isAvailable);

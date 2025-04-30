@@ -1,4 +1,4 @@
-package com.app.controller;
+package com.app.controller.jpa.food_item;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
@@ -6,33 +6,33 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
-import com.app.controller.validation.OrderValidator;
+import com.app.controller.validation.FoodItemValidator;
+import com.app.controller.validation.QueryParameterValidator;
 import com.app.dto.APIResponse;
-import com.app.dto.OrderDTO;
-import com.app.dto.UserDTO;
-import com.app.service.OrderServices;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import com.app.dto.FoodItemDTO;
+import com.app.service.jpa.JPAFoodItemServices;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
-@WebServlet(name = "getAllOrdersOfUser", value = "/getAllOrdersOfUser")
-public class GetAllOrdersOfUserController extends HttpServlet {
-    private OrderServices orderServices = new OrderServices();
+@WebServlet(name = "remove-from-menu", value = "/remove-from-menu")
+public class RemoveFromMenuController extends HttpServlet {
+    private JPAFoodItemServices jpaFoodItemServices = new JPAFoodItemServices();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            UserDTO userDTO = AuthUtils.getCurrentUser(request);
-            OrderValidator.validateGetOrdersOfUser(userDTO);
-            List<OrderDTO> orderDTOList = orderServices.getAllOrder(userDTO.getUserId(), userDTO.getRole());
-            sendResponse(response, null, null, orderDTOList, HttpServletResponse.SC_OK);
+            if (!AuthUtils.isAdmin(request)) {
+                throw new ApplicationException(Message.Error.ACCESS_DENIED);
+            }
+            String foodItemId = request.getParameter("foodItemId");
+            QueryParameterValidator.validate(request, "foodItemId");
+            jpaFoodItemServices.removeFromMenu(Integer.parseInt(foodItemId));
+            sendResponse(response, null, Message.Common.RESOURCE_ADDED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

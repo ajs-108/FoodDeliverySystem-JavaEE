@@ -1,4 +1,4 @@
-package com.app.controller;
+package com.app.controller.order;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
@@ -6,6 +6,7 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
+import com.app.controller.validation.OrderValidator;
 import com.app.dto.APIResponse;
 import com.app.dto.OrderDTO;
 import com.app.dto.UserDTO;
@@ -17,9 +18,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.List;
 
-@WebServlet(name = "getRecentOrderOfUser", value = "/getRecentOrderOfUser")
-public class GetRecentOrderOfUserController extends HttpServlet {
+@WebServlet(name = "getAllOrdersOfUser", value = "/getAllOrdersOfUser")
+public class GetAllOrdersOfUserController extends HttpServlet {
     private OrderServices orderServices = new OrderServices();
 
     @Override
@@ -28,8 +30,9 @@ public class GetRecentOrderOfUserController extends HttpServlet {
         try {
             AuthUtils.checkAuthentication(request);
             UserDTO userDTO = AuthUtils.getCurrentUser(request);
-            OrderDTO orderDTO = orderServices.getRecentOrderOfUser(userDTO.getUserId());
-            sendResponse(response, null, null, orderDTO, HttpServletResponse.SC_OK);
+            OrderValidator.validateGetOrdersOfUser(userDTO);
+            List<OrderDTO> orderDTOList = orderServices.getAllOrder(userDTO.getUserId(), userDTO.getRole());
+            sendResponse(response, null, null, orderDTOList, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

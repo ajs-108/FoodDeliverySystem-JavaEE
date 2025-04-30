@@ -34,7 +34,7 @@ public class SearchUserController extends HttpServlet {
         try {
             AuthUtils.checkAuthentication(request);
             String searchString = request.getParameter("searchStr");
-            QueryParameterValidator.validateQueryParameters(request, "searchStr");
+            QueryParameterValidator.validate(request, "searchStr");
             List<UserDTO> users = userServices.getAllUsers(Roles.ROLE_CUSTOMER.getRoleId());
             List<UserDTO> usersAfterSearch = new ArrayList<>();
             for (UserDTO user : users) {

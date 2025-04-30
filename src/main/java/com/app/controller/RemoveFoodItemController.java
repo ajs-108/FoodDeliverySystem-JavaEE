@@ -30,7 +30,7 @@ public class RemoveFoodItemController extends HttpServlet {
             if (!AuthUtils.isAdmin(request)) {
                 throw new ApplicationException(Message.Error.ACCESS_DENIED);
             }
-            QueryParameterValidator.validateQueryParameters(request, "foodItemId");
+            QueryParameterValidator.validate(request, "foodItemId");
             String foodItemId = request.getParameter("foodItemId");
             FoodItemValidator.validateRemoval(foodItemId);
             foodItemServices.removeFoodItem(Integer.parseInt(foodItemId));

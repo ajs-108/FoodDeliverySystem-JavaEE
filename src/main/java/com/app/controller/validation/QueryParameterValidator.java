@@ -14,7 +14,7 @@ public class QueryParameterValidator {
     private QueryParameterValidator() {
     }
 
-    public static void validateQueryParameters(HttpServletRequest request, String... parameters) throws ApplicationException {
+    public static void validate(HttpServletRequest request, String... parameters) throws ApplicationException {
         Enumeration<String> parameterNames = request.getParameterNames();
         List<String> parameterNamesList = new ArrayList<>();
         int count = 0;

@@ -36,7 +36,7 @@ public class AddCategoryController extends HttpServlet {
             List<CategoryDTO> categoryDTOList = ObjectMapperUtil.toObject(request.getReader(), new TypeReference<>() {
             });
             categoryServices.saveCategory(categoryDTOList);
-            sendResponse(response, null, Message.Common.ENTRY_ADDED, null, HttpServletResponse.SC_CREATED);
+            sendResponse(response, null, Message.Common.RESOURCE_ADDED, null, HttpServletResponse.SC_CREATED);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

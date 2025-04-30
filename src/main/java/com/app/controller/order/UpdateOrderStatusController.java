@@ -1,14 +1,15 @@
-package com.app.controller;
+package com.app.controller.order;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
+import com.app.common.enums.OrderStatus;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
 import com.app.controller.validation.OrderValidator;
+import com.app.controller.validation.QueryParameterValidator;
 import com.app.dto.APIResponse;
-import com.app.dto.OrderDTO;
 import com.app.service.OrderServices;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,21 +19,21 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet(name = "placeOrder", value = "/placeOrder")
-public class PlaceOrderController extends HttpServlet {
+@WebServlet(name = "updateOrderStatus", value = "/updateOrderStatus")
+public class UpdateOrderStatusController extends HttpServlet {
     private OrderServices orderServices = new OrderServices();
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            int userId = AuthUtils.getCurrentUser(request).getUserId();
-
-            OrderDTO orderDTO = ObjectMapperUtil.toObject(request.getReader(), OrderDTO.class);
-            OrderValidator.validatePlaceOrder(userId, orderDTO);
-            orderServices.placeOrder(userId, orderDTO);
-            sendResponse(response, null, Message.Order.PLACE_ORDER, null, HttpServletResponse.SC_OK);
+            QueryParameterValidator.validate(request, "orderId", "orderStatus");
+            String orderId = request.getParameter("orderId");
+            String orderStatus = request.getParameter("orderStatus");
+            OrderValidator.validateUpdateStatus(orderId, orderStatus);
+            orderServices.updateStatus(Integer.parseInt(orderId), OrderStatus.toEnum(orderStatus));
+            sendResponse(response, null, Message.Order.ORDER_STATUS, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

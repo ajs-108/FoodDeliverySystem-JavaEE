@@ -1,6 +1,6 @@
 package com.app.mapper.jpa;
 
-import com.app.dto.jpa.JPAOrderDTO;
+import com.app.dto.jpa.order.JPAOrderDTO;
 import com.app.mapper.FoodItemMapper;
 import com.app.model.jpa.JPAOrder;
 

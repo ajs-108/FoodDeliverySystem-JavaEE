@@ -36,7 +36,7 @@ public class GetFoodItemController extends HttpServlet {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            QueryParameterValidator.validateQueryParameters(request, "foodItemId");
+            QueryParameterValidator.validate(request, "foodItemId");
             int foodItemId = Integer.parseInt(request.getParameter("foodItemId"));
             FoodItemDTO foodItemDTO = foodItemServices.getFoodItemFromMenu(foodItemId);
             sendResponse(response, null, null, foodItemDTO, HttpServletResponse.SC_OK);

@@ -1,4 +1,4 @@
-package com.app.controller.jpa.order;
+package com.app.controller.jpa.food_item;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
@@ -6,31 +6,34 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
+import com.app.controller.validation.FoodItemValidator;
+import com.app.controller.validation.QueryParameterValidator;
 import com.app.dto.APIResponse;
-import com.app.dto.jpa.order.GetOrderDTO;
-import com.app.dto.jpa.order.JPAOrderDTO;
-import com.app.service.jpa.JPAOrderServices;
+import com.app.dto.FoodItemDTO;
+import com.app.service.jpa.JPAFoodItemServices;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
-@WebServlet(name = "getAllOrder", value = "/get-all-orders")
-public class GetAllOrderController extends HttpServlet {
-    private JPAOrderServices orderServices = new JPAOrderServices();
+@WebServlet(name = "update-availability", value = "/update-availability")
+public class UpdateAvailabilityController extends HttpServlet {
+    private JPAFoodItemServices jpaFoodItemServices = new JPAFoodItemServices();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
             if (!AuthUtils.isAdmin(request)) {
                 throw new ApplicationException(Message.Error.ACCESS_DENIED);
             }
-            List<GetOrderDTO> orderList = orderServices.findAll();
-            sendResponse(response, null, null, orderList, HttpServletResponse.SC_OK);
+            String foodItemId = request.getParameter("foodItemId");
+            String available = request.getParameter("available");
+            QueryParameterValidator.validate(request, "foodItemId", "available");
+            jpaFoodItemServices.updateAvailability(Integer.parseInt(foodItemId), Boolean.parseBoolean(available));
+            sendResponse(response, null, Message.Common.RESOURCE_ADDED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

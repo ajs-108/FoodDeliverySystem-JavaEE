@@ -43,7 +43,7 @@ public class OrderDAOImpl implements IOrderDAO {
         String orderFoodItemSQL = """
                 insert into order_food_items(food_item_id, order_id, quantity, food_items_total)
                  select sc.food_item_id, o.order_id, sc.quantity,
-                  ((fi.price-(fi.price*(fi.discount/100)))*sc.quantity)
+                  round((fi.price-(fi.price*(fi.discount/100)))*sc.quantity, 2)
                  from shopping_cart sc, food_item fi, order_ o
                  where sc.user_id = o.user_id and sc.food_item_id = fi.food_item_id and order_id = ?;
                 """;
@@ -455,6 +455,151 @@ public class OrderDAOImpl implements IOrderDAO {
             throw new DBException(e);
         } finally {
             DBConnector.resourceCloser(preparedStatement, resultSet, connection);
+        }
+    }
+
+    @Override
+    public List<Order> getOrderAssignedToDP(int deliveryPersonId) throws DBException {
+        String userOrderSQL = """
+                select u.user_id, u.first_name, u.last_name, o.order_id, o.delivery_person_id,
+                o.order_status, o.order_date_time, o.total_price, o.payment_status
+                from user_ u, order_ o where u.user_id = o.user_id and o.order_status != 'DELIVERED'
+                and o.order_status != 'CANCELLED' and o.delivery_person_id = ?;
+                """;
+
+        Connection connection = null;
+        PreparedStatement psForUserOrder = null;
+        PreparedStatement psForOrderFoodItem = null;
+        PreparedStatement psForDeliveryPerson = null;
+        ResultSet orderSet = null;
+        ResultSet foodItemSet = null;
+        ResultSet deliveryPersonSet = null;
+        try {
+            connection = DBConnector.getInstance().getConnection();
+            psForUserOrder = connection.prepareStatement(userOrderSQL);
+            psForUserOrder.setInt(1, deliveryPersonId);
+            orderSet = psForUserOrder.executeQuery();
+            List<Order> orderList = new ArrayList<>();
+            while (orderSet.next()) {
+                User user = new User();
+                user.setUserId(orderSet.getInt(USER_ID));
+                user.setFirstName(orderSet.getString(FIRST_NAME));
+                user.setLastName(orderSet.getString(LAST_NAME));
+                psForDeliveryPerson = connection.prepareStatement(DELIVERY_PERSON_SQL);
+                psForDeliveryPerson.setInt(1, orderSet.getInt(DELIVERY_PERSON_ID));
+                deliveryPersonSet = psForDeliveryPerson.executeQuery();
+                User deliveryPerson = new User();
+                if (deliveryPersonSet.next()) {
+                    deliveryPerson.setUserId(orderSet.getInt(DELIVERY_PERSON_ID));
+                    deliveryPerson.setFirstName(deliveryPersonSet.getString(FIRST_NAME));
+                    deliveryPerson.setLastName(deliveryPersonSet.getString(LAST_NAME));
+                }
+                Order order = new Order();
+                order.setOrderId(orderSet.getInt(ORDER_ID));
+                order.setUser(user);
+                order.setDeliveryPerson(deliveryPerson);
+                order.setOrderStatus(OrderStatus.toEnum(orderSet.getString(ORDER_STATUS)));
+                order.setOrderDateTime(orderSet.getTimestamp(ORDER_DATE_TIME).toLocalDateTime());
+                order.setTotalPrice(orderSet.getInt(TOTAL_PRICE));
+                order.setPaymentStatus(PaymentStatus.toEnum(orderSet.getString(PAYMENT_STATUS)));
+
+                psForOrderFoodItem = connection.prepareStatement(ORDER_FOOD_ITEM_SQL);
+                psForOrderFoodItem.setInt(1, orderSet.getInt(ORDER_ID));
+                foodItemSet = psForOrderFoodItem.executeQuery();
+                List<OrderFoodItems> orderFoodItemsList = new ArrayList<>();
+                while (foodItemSet.next()) {
+                    OrderFoodItems orderFoodItems = new OrderFoodItems();
+                    FoodItem foodItem = new FoodItem();
+                    foodItem.setFoodItemId(foodItemSet.getInt(FOOD_ITEM_ID));
+                    foodItem.setFoodName(foodItemSet.getString(FOOD_NAME));
+                    orderFoodItems.setFoodItem(foodItem);
+                    orderFoodItems.setQuantity(foodItemSet.getInt(QUANTITY));
+                    orderFoodItemsList.add(orderFoodItems);
+                }
+                order.setOrderFoodItems(orderFoodItemsList);
+                orderList.add(order);
+            }
+            return orderList;
+        } catch (SQLException | ClassNotFoundException | NullPointerException e) {
+            throw new DBException(e);
+        } finally {
+            DBConnector.resourceCloser(psForUserOrder, orderSet, connection);
+            DBConnector.resourceCloser(psForDeliveryPerson, deliveryPersonSet, null);
+            DBConnector.resourceCloser(psForOrderFoodItem, foodItemSet, null);
+        }
+    }
+
+    @Override
+    public List<Order> getCurrentOrderOfUser(int userId) throws DBException {
+        String userOrderSQL = """
+                select u.user_id, u.first_name, u.last_name, o.order_id, o.delivery_person_id,
+                o.order_status, o.order_date_time, o.total_price, o.payment_status
+                from user_ u, order_ o where u.user_id = o.user_id and o.order_status != 'DELIVERED'
+                and o.order_status != 'CANCELLED' and o.user_id = ?;
+                """;
+
+        Connection connection = null;
+        PreparedStatement psForUserOrder = null;
+        PreparedStatement psForOrderFoodItem = null;
+        PreparedStatement psForDeliveryPerson = null;
+        ResultSet orderSet = null;
+        ResultSet foodItemSet = null;
+        ResultSet deliveryPersonSet = null;
+        try {
+            connection = DBConnector.getInstance().getConnection();
+            psForUserOrder = connection.prepareStatement(userOrderSQL);
+            psForUserOrder.setInt(1, userId);
+            orderSet = psForUserOrder.executeQuery();
+            List<Order> orderList = new ArrayList<>();
+            while (orderSet.next()) {
+                User user = new User();
+                user.setUserId(orderSet.getInt(USER_ID));
+                user.setFirstName(orderSet.getString(FIRST_NAME));
+                user.setLastName(orderSet.getString(LAST_NAME));
+                psForDeliveryPerson = connection.prepareStatement(DELIVERY_PERSON_SQL);
+                psForDeliveryPerson.setInt(1, orderSet.getInt(DELIVERY_PERSON_ID));
+                deliveryPersonSet = psForDeliveryPerson.executeQuery();
+                User deliveryPerson = new User();
+                if (deliveryPersonSet.next()) {
+                    deliveryPerson.setUserId(orderSet.getInt(DELIVERY_PERSON_ID));
+                    deliveryPerson.setFirstName(deliveryPersonSet.getString(FIRST_NAME));
+                    deliveryPerson.setLastName(deliveryPersonSet.getString(LAST_NAME));
+                }
+                Order order = new Order();
+                order.setOrderId(orderSet.getInt(ORDER_ID));
+                order.setUser(user);
+                order.setDeliveryPerson(deliveryPerson);
+                order.setOrderStatus(OrderStatus.toEnum(orderSet.getString(ORDER_STATUS)));
+                order.setOrderDateTime(orderSet.getTimestamp(ORDER_DATE_TIME).toLocalDateTime());
+                order.setTotalPrice(orderSet.getInt(TOTAL_PRICE));
+                order.setPaymentStatus(PaymentStatus.toEnum(orderSet.getString(PAYMENT_STATUS)));
+
+                psForOrderFoodItem = connection.prepareStatement(ORDER_FOOD_ITEM_SQL);
+                psForOrderFoodItem.setInt(1, orderSet.getInt(ORDER_ID));
+                foodItemSet = psForOrderFoodItem.executeQuery();
+                List<OrderFoodItems> orderFoodItemsList = new ArrayList<>();
+                while (foodItemSet.next()) {
+                    OrderFoodItems orderFoodItems = new OrderFoodItems();
+                    FoodItem foodItem = new FoodItem();
+                    foodItem.setFoodItemId(foodItemSet.getInt(FOOD_ITEM_ID));
+                    foodItem.setFoodName(foodItemSet.getString(FOOD_NAME));
+                    foodItem.setPrice(foodItemSet.getDouble(PRICE));
+                    foodItem.setImagePath(foodItemSet.getString(IMAGE_PATH));
+                    orderFoodItems.setFoodItem(foodItem);
+                    orderFoodItems.setQuantity(foodItemSet.getInt(QUANTITY));
+                    orderFoodItems.setFoodItemsTotal(foodItemSet.getDouble(FOOD_ITEMS_TOTAL));
+                    orderFoodItemsList.add(orderFoodItems);
+                }
+                order.setOrderFoodItems(orderFoodItemsList);
+                orderList.add(order);
+            }
+            return orderList;
+        } catch (SQLException | ClassNotFoundException | NullPointerException e) {
+            throw new DBException(e);
+        } finally {
+            DBConnector.resourceCloser(psForUserOrder, orderSet, connection);
+            DBConnector.resourceCloser(psForDeliveryPerson, deliveryPersonSet, null);
+            DBConnector.resourceCloser(psForOrderFoodItem, foodItemSet, null);
         }
     }
 }

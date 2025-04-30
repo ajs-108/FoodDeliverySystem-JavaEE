@@ -1,10 +1,7 @@
 package com.app.dto.jpa;
 
 import com.app.dto.FoodItemDTO;
-import com.app.model.FoodItem;
-import com.app.model.jpa.JPAOrder;
-import com.app.model.jpa.OrderFoodItemsId;
-import jakarta.persistence.*;
+import com.app.dto.jpa.order.JPAOrderDTO;
 
 public class JPAOrderFoodItemsDTO {
     private JPAOrderDTO order;

@@ -30,7 +30,7 @@ public class FoodItemRepository implements IFoodItemRepository {
     }
 
     @Override
-    public FoodItem find(int foodItemId) throws DBException {
+    public FoodItem findById(int foodItemId) throws DBException {
         EntityTransaction tx = null;
         try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
             tx = em.getTransaction();

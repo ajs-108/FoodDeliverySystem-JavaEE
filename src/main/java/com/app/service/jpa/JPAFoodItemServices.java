@@ -21,8 +21,8 @@ public class JPAFoodItemServices {
         foodItemRepo.save(foodItemMapper.toFoodItem(foodItemDTO));
     }
 
-    public FoodItemDTO find(int foodItemId) throws DBException {
-        return foodItemMapper.toDTO(foodItemRepo.find(foodItemId));
+    public FoodItemDTO findById(int foodItemId) throws DBException {
+        return foodItemMapper.toDTO(foodItemRepo.findById(foodItemId));
     }
 
     public FoodItemDTO findFoodItemFromMenu(int foodItemId) throws DBException {

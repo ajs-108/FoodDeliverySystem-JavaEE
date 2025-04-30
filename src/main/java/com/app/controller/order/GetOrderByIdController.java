@@ -1,4 +1,4 @@
-package com.app.controller;
+package com.app.controller.order;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
@@ -25,7 +25,7 @@ public class GetOrderByIdController extends HttpServlet {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            QueryParameterValidator.validateQueryParameters(request, "orderId");
+            QueryParameterValidator.validate(request, "orderId");
             int orderId = Integer.parseInt(request.getParameter("orderId"));
             OrderDTO orderDTO = orderServices.getOrder(orderId);
             sendResponse(response, null, null, orderDTO, HttpServletResponse.SC_OK);

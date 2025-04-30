@@ -39,7 +39,7 @@ public class UpdateAccountStatusController extends HttpServlet {
             if (!AuthUtils.isAdmin(request)) {
                 throw new ApplicationException(Message.Error.ACCESS_DENIED);
             }
-            QueryParameterValidator.validateQueryParameters(request, "userId", "accountStatus");
+            QueryParameterValidator.validate(request, "userId", "accountStatus");
             String userId = request.getParameter("userId");
             String accountStatus = request.getParameter("accountStatus");
             UserValidator.validateAccountStatusUpdate(userId, accountStatus);

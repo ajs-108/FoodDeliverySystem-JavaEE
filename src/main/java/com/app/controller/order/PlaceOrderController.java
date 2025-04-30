@@ -1,4 +1,4 @@
-package com.app.controller;
+package com.app.controller.order;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
@@ -6,6 +6,7 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
+import com.app.controller.validation.OrderValidator;
 import com.app.dto.APIResponse;
 import com.app.dto.OrderDTO;
 import com.app.service.OrderServices;
@@ -16,22 +17,22 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.List;
 
-@WebServlet(name = "getAllOrders", value = "/getAllOrders")
-public class GetAllOrdersController extends HttpServlet {
+@WebServlet(name = "placeOrder", value = "/placeOrder")
+public class PlaceOrderController extends HttpServlet {
     private OrderServices orderServices = new OrderServices();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            if (!AuthUtils.isAdmin(request)) {
-                throw new ApplicationException(Message.Error.ACCESS_DENIED);
-            }
-            List<OrderDTO> orderDTOList = orderServices.getAllOrder();
-            sendResponse(response, null, null, orderDTOList, HttpServletResponse.SC_OK);
+            int userId = AuthUtils.getCurrentUser(request).getUserId();
+
+            OrderDTO orderDTO = ObjectMapperUtil.toObject(request.getReader(), OrderDTO.class);
+            OrderValidator.validatePlaceOrder(userId, orderDTO);
+            orderServices.placeOrder(userId, orderDTO);
+            sendResponse(response, null, Message.Order.PLACE_ORDER, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
