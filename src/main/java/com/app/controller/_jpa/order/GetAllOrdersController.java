@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.List;
 
 @WebServlet(name = "getAllOrder", value = "/get-all-orders")
-public class GetAllOrderController extends HttpServlet {
+public class GetAllOrdersController extends HttpServlet {
     private JPAOrderServices orderServices = new JPAOrderServices();
 
     @Override

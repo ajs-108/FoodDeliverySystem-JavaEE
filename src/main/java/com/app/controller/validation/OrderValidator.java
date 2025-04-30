@@ -8,6 +8,8 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.dto.OrderDTO;
 import com.app.dto.UserDTO;
+import com.app.dto.jpa.JPAUserDTO;
+import com.app.dto.jpa.order.JPAOrderDTO;
 import com.app.model.User;
 import com.app.service.OrderServices;
 import com.app.service.ShoppingCartServices;
@@ -26,6 +28,27 @@ public class OrderValidator {
     }
 
     public static void validatePlaceOrder(int userId, OrderDTO orderDTO) throws DBException, ApplicationException {
+        if (userServices.getUser(userId) == null) {
+            throw new ApplicationException(Message.User.NO_SUCH_USER);
+        }
+        if (orderDTO.getOrderStatus() == null) {
+            throw new ApplicationException(Message.Common.MANDATORY);
+        }
+        if (!OrderStatus.isOrderStatus(orderDTO.getOrderStatus().name())) {
+            throw new ApplicationException(Message.Order.NOT_A_ORDER_STATUS);
+        }
+        if (orderDTO.getPaymentStatus() == null) {
+            throw new ApplicationException(Message.Common.MANDATORY);
+        }
+        if (!PaymentStatus.isPaymentStatus(orderDTO.getPaymentStatus().name())) {
+            throw new ApplicationException(Message.Order.NOT_A_PAYMENT_STATUS);
+        }
+        if (cartServices.isCartEmpty(userId)) {
+            throw new ApplicationException(Message.ShoppingCart.CART_IS_EMPTY);
+        }
+    }
+
+    public static void validatePlaceOrder(int userId, JPAOrderDTO orderDTO) throws DBException, ApplicationException {
         if (userServices.getUser(userId) == null) {
             throw new ApplicationException(Message.User.NO_SUCH_USER);
         }
@@ -101,6 +124,12 @@ public class OrderValidator {
     }
 
     public static void validateGetOrdersOfUser(UserDTO userDTO) throws ApplicationException, DBException {
+        if (userServices.getUser(userDTO.getEmail()) == null) {
+            throw new ApplicationException(Message.User.NO_SUCH_USER);
+        }
+    }
+
+    public static void validateGetOrdersOfUser(JPAUserDTO userDTO) throws ApplicationException, DBException {
         if (userServices.getUser(userDTO.getEmail()) == null) {
             throw new ApplicationException(Message.User.NO_SUCH_USER);
         }

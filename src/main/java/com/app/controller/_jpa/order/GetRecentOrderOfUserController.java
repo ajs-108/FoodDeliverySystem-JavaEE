@@ -1,34 +1,37 @@
-package com.app.controller.order;
+package com.app.controller._jpa.order;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
+import com.app.common.util.JPAuthUtils;
 import com.app.common.util.ObjectMapperUtil;
 import com.app.dto.APIResponse;
 import com.app.dto.OrderDTO;
 import com.app.dto.UserDTO;
+import com.app.dto.jpa.JPAUserDTO;
+import com.app.dto.jpa.order.GetOrderDTO;
 import com.app.service.OrderServices;
+import com.app.service.jpa.JPAOrderServices;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
-@WebServlet(name = "getOrdersAssignedToDP", value = "/getOrdersAssignedToDP")
-public class GetOrderAssignedToDP extends HttpServlet {
-    private OrderServices orderServices = new OrderServices();
+@WebServlet(name = "get-recent-order-of-user-controller", value = "/get-recent-order-of-user-controller")
+public class GetRecentOrderOfUserController extends HttpServlet {
+    private JPAOrderServices orderServices = new JPAOrderServices();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            UserDTO userDTO = AuthUtils.getCurrentUser(request);
-            List<OrderDTO> orderDTOList = orderServices.getOrderAssignedToDP(userDTO.getUserId());
-            sendResponse(response, null, null, orderDTOList, HttpServletResponse.SC_OK);
+            JPAUserDTO userDTO = JPAuthUtils.getCurrentUser(request);
+            GetOrderDTO orderDTO = orderServices.findRecentOrderOfUser(userDTO.getUserId());
+            sendResponse(response, null, null, orderDTO, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

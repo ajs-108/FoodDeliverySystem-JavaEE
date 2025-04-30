@@ -6,6 +6,7 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
+import com.app.controller.validation.FoodItemValidator;
 import com.app.controller.validation.QueryParameterValidator;
 import com.app.dto.APIResponse;
 import com.app.service.jpa.JPAFoodItemServices;
@@ -29,6 +30,7 @@ public class RemoveFromMenuController extends HttpServlet {
             }
             String foodItemId = request.getParameter("foodItemId");
             QueryParameterValidator.validate(request, "foodItemId");
+            FoodItemValidator.validateRemoval(foodItemId);
             jpaFoodItemServices.removeFromMenu(Integer.parseInt(foodItemId));
             sendResponse(response, null, Message.Common.RESOURCE_ADDED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {

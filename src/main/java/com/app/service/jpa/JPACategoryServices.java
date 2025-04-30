@@ -1,6 +1,8 @@
 package com.app.service.jpa;
 
+import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
+import com.app.controller.validation.CategoryValidator;
 import com.app.dao.jpa.ICategoryRepository;
 import com.app.dao.jpa.impl.CategoryRepository;
 import com.app.dto.CategoryDTO;
@@ -17,8 +19,9 @@ public class JPACategoryServices {
         categoryMapper = new CategoryMapper();
     }
 
-    public void save(List<CategoryDTO> categoryDTOList) throws DBException {
+    public void save(List<CategoryDTO> categoryDTOList) throws DBException, ApplicationException {
         for (CategoryDTO categoryDTO : categoryDTOList) {
+            CategoryValidator.validateCategory(categoryDTO);
             categoryRepo.save(categoryMapper.toCategory(categoryDTO));
         }
     }

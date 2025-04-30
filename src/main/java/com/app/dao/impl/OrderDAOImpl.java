@@ -485,15 +485,8 @@ public class OrderDAOImpl implements IOrderDAO {
                 user.setUserId(orderSet.getInt(USER_ID));
                 user.setFirstName(orderSet.getString(FIRST_NAME));
                 user.setLastName(orderSet.getString(LAST_NAME));
-                psForDeliveryPerson = connection.prepareStatement(DELIVERY_PERSON_SQL);
-                psForDeliveryPerson.setInt(1, orderSet.getInt(DELIVERY_PERSON_ID));
-                deliveryPersonSet = psForDeliveryPerson.executeQuery();
                 User deliveryPerson = new User();
-                if (deliveryPersonSet.next()) {
-                    deliveryPerson.setUserId(orderSet.getInt(DELIVERY_PERSON_ID));
-                    deliveryPerson.setFirstName(deliveryPersonSet.getString(FIRST_NAME));
-                    deliveryPerson.setLastName(deliveryPersonSet.getString(LAST_NAME));
-                }
+                deliveryPerson.setUserId(orderSet.getInt(DELIVERY_PERSON_ID));
                 Order order = new Order();
                 order.setOrderId(orderSet.getInt(ORDER_ID));
                 order.setUser(user);

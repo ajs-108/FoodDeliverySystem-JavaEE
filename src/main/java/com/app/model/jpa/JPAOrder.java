@@ -16,12 +16,12 @@ public class JPAOrder {
     @Column(name = "order_id", nullable = false)
     private int orderId;
 
-    @ManyToOne(targetEntity = JPAUser.class, cascade = CascadeType.ALL,
+    @ManyToOne(targetEntity = JPAUser.class, cascade = CascadeType.REFRESH,
             fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "user_id")
     private JPAUser user;
 
-    @ManyToOne(targetEntity = JPAUser.class, cascade = CascadeType.ALL,
+    @ManyToOne(targetEntity = JPAUser.class, cascade = CascadeType.REFRESH,
             fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_person_id", referencedColumnName = "user_id", insertable = false)
     private JPAUser deliveryPerson;

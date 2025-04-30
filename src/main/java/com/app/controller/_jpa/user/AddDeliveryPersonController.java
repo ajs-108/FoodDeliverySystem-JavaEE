@@ -40,7 +40,7 @@ public class AddDeliveryPersonController extends HttpServlet {
                 throw new ApplicationException(Message.Error.ACCESS_DENIED);
             }
             JPAUserDTO userDTO = ObjectMapperUtil.toObject(request.getReader(), JPAUserDTO.class);
-            UserValidator.validateJPASignUp(userDTO);
+            UserValidator.validateSignUp(userDTO);
             userServices.saveDeliveryPerson(userDTO);
             sendResponse(response, null, Message.User.DELIVERY_PERSON_REGISTERED, null, HttpServletResponse.SC_CREATED);
         } catch (DBException e) {

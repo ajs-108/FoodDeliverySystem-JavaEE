@@ -40,7 +40,7 @@ public class ChangePasswordController extends HttpServlet {
         try {
             AuthUtils.checkAuthentication(request);
             JPAUserDTO userDTO = ObjectMapperUtil.toObject(request.getReader(), JPAUserDTO.class);
-            UserValidator.validateJPAChangePassword(userDTO);
+            UserValidator.validateChangePassword(userDTO);
             userServices.updatePassword(userDTO.getEmail(), userDTO.getNewPassword());
             sendResponse(response, null, Message.User.PASSWORD_UPDATED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {

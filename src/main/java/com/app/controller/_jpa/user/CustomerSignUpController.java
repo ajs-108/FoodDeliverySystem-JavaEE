@@ -37,7 +37,7 @@ public class CustomerSignUpController extends HttpServlet {
         try {
             AuthUtils.checkAuthentication(request);
             JPAUserDTO userDTO = ObjectMapperUtil.toObject(request.getReader(), JPAUserDTO.class);
-            UserValidator.validateJPASignUp(userDTO);
+            UserValidator.validateSignUp(userDTO);
             userServices.registerCustomer(userDTO);
             sendResponse(response, null, Message.User.DELIVERY_PERSON_REGISTERED, null, HttpServletResponse.SC_CREATED);
         } catch (DBException e) {

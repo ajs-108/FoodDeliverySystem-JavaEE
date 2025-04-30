@@ -44,7 +44,7 @@ public class UserValidator {
         }
     }
 
-    public static void validateJPALogin(JPAUserDTO userDTO) throws ApplicationException, DBException {
+    public static void validateLogin(JPAUserDTO userDTO) throws ApplicationException, DBException {
         if (!userServices.isUserValid(userDTO.getEmail())) {
             throw new ApplicationException(Message.User.NO_SUCH_USER);
         }
@@ -111,7 +111,7 @@ public class UserValidator {
         }
     }
 
-    public static void validateJPASignUp(JPAUserDTO signUpDTO) throws ApplicationException, DBException {
+    public static void validateSignUp(JPAUserDTO signUpDTO) throws ApplicationException, DBException {
         if (signUpDTO.getFirstName() == null || signUpDTO.getFirstName().isBlank()) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
@@ -136,10 +136,10 @@ public class UserValidator {
         if (userServices.isEmailExists(signUpDTO.getEmail(), signUpDTO.getRole().getRoleId())) {
             throw new ApplicationException(Message.User.EMAIL_EXISTS);
         }
-        validateJPASignUpInternal(signUpDTO);
+        validateSignUpInternal(signUpDTO);
     }
 
-    private static void validateJPASignUpInternal(JPAUserDTO signUpDTO) throws ApplicationException, DBException {
+    private static void validateSignUpInternal(JPAUserDTO signUpDTO) throws ApplicationException, DBException {
         if (signUpDTO.getPassword() == null || signUpDTO.getPassword().isBlank()) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
@@ -184,7 +184,7 @@ public class UserValidator {
         }
     }
 
-    public static void validateJPAUpdate(JPAUserDTO userDTO) throws ApplicationException {
+    public static void validateUpdate(JPAUserDTO userDTO) throws ApplicationException {
         if (userDTO.getFirstName() == null || userDTO.getFirstName().isBlank()) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }
@@ -228,7 +228,7 @@ public class UserValidator {
         }
     }
 
-    public static void validateJPAChangePassword(JPAUserDTO userDTO) throws ApplicationException, DBException {
+    public static void validateChangePassword(JPAUserDTO userDTO) throws ApplicationException, DBException {
         UserDTO userFromDB = userServices.getUserLoginCredentials(userDTO.getEmail());
 
         if (!userServices.isUserValid(userDTO.getEmail())) {

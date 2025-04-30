@@ -33,7 +33,7 @@ public class LoginController extends HttpServlet {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             JPAUserDTO userLogin = ObjectMapperUtil.toObject(request.getReader(), JPAUserDTO.class);
-            UserValidator.validateJPALogin(userLogin);
+            UserValidator.validateLogin(userLogin);
             JPAUserDTO userDTO = userServices.find(userLogin.getEmail());
             HttpSession session = request.getSession();
             session.setAttribute("user", userDTO);

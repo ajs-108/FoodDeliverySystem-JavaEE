@@ -1,4 +1,4 @@
-package com.app.controller._jpa.user;
+package com.app.controller.order;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
@@ -6,11 +6,10 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
-import com.app.controller.validation.UserValidator;
 import com.app.dto.APIResponse;
+import com.app.dto.OrderDTO;
 import com.app.dto.UserDTO;
-import com.app.dto.jpa.JPAUserDTO;
-import com.app.service.jpa.JPAUserServices;
+import com.app.service.OrderServices;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,22 +17,20 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.List;
 
-@WebServlet(name = "update-user", value = "/update-user")
-public class UpdateUserController extends HttpServlet {
-    private JPAUserServices userServices = new JPAUserServices();
+@WebServlet(name = "GetCurrentOrderOfUserController" , value = "/getCurrentOrderOfUser")
+public class GetCurrentOrderOfUserController extends HttpServlet {
+    private OrderServices orderServices = new OrderServices();
 
     @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
-
         try {
             AuthUtils.checkAuthentication(request);
-            UserDTO currentUserDTO = AuthUtils.getCurrentUser(request);
-            JPAUserDTO userDTO = ObjectMapperUtil.toObject(request.getReader(), JPAUserDTO.class);
-            UserValidator.validateUpdate(userDTO);
-            userServices.update(currentUserDTO.getUserId(), userDTO);
-            sendResponse(response, null, Message.User.USER_INFO_UPDATED, null, HttpServletResponse.SC_OK);
+            UserDTO userDTO = AuthUtils.getCurrentUser(request);
+            List<OrderDTO> orderDTOList = orderServices.getCurrentOrderOfUser(userDTO.getUserId());
+            sendResponse(response, null, null, orderDTOList, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -46,11 +43,11 @@ public class UpdateUserController extends HttpServlet {
         }
     }
 
-    public void sendResponse(HttpServletResponse response, String techMessage, String message, Object data, int statusCode) throws IOException {
-        response.setStatus(statusCode);
+    public void sendResponse(HttpServletResponse response, String techMessage, String message, Object data, int status) throws IOException {
         APIResponse apiResponse = new APIResponse();
         apiResponse.setMessage(message);
         apiResponse.setData(data);
-        response.getWriter().println(ObjectMapperUtil.toString(apiResponse));
+        response.setStatus(status);
+        response.getWriter().write(ObjectMapperUtil.toString(apiResponse));
     }
 }

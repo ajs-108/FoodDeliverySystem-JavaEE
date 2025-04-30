@@ -1,4 +1,4 @@
-package com.app.dto.jpa;
+package com.app.dto.jpa.order_food_items;
 
 import com.app.dto.FoodItemDTO;
 import com.app.dto.jpa.order.JPAOrderDTO;
