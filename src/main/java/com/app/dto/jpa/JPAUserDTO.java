@@ -15,6 +15,7 @@ public class JPAUserDTO {
     private String lastName;
     private String email;
     private String password;
+    private String newPassword;
     private String phoneNumber;
     private String address;
     private LocalDateTime createdOn;
@@ -60,6 +61,14 @@ public class JPAUserDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 
     public String getPhoneNumber() {
