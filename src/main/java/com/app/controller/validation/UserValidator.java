@@ -111,8 +111,80 @@ public class UserValidator {
         }
     }
 
-    public static void validateUpdate(UserDTO userDTO) throws ApplicationException {
+    public static void validateJPASignUp(JPAUserDTO signUpDTO) throws ApplicationException, DBException {
+        if (signUpDTO.getFirstName() == null || signUpDTO.getFirstName().isBlank()) {
+            throw new ApplicationException(Message.Common.MANDATORY);
+        }
+        if (signUpDTO.getFirstName().length() > NAME_LENGTH) {
+            throw new ApplicationException(Message.User.NAME_LENGTH);
+        }
+        if (signUpDTO.getLastName() == null || signUpDTO.getLastName().isBlank()) {
+            throw new ApplicationException(Message.Common.MANDATORY);
+        }
+        if (signUpDTO.getLastName().length() > NAME_LENGTH) {
+            throw new ApplicationException(Message.User.NAME_LENGTH);
+        }
+        if (signUpDTO.getEmail() == null || signUpDTO.getEmail().isBlank()) {
+            throw new ApplicationException(Message.Common.MANDATORY);
+        }
+        if (!validate.checkEmail(signUpDTO.getEmail())) {
+            throw new ApplicationException(Message.User.INVALID_EMAIL);
+        }
+        if (signUpDTO.getEmail().length() > EMAIL_LENGTH) {
+            throw new ApplicationException(Message.User.EMAIL_LENGTH);
+        }
+        if (userServices.isEmailExists(signUpDTO.getEmail(), signUpDTO.getRole().getRoleId())) {
+            throw new ApplicationException(Message.User.EMAIL_EXISTS);
+        }
+        validateJPASignUpInternal(signUpDTO);
+    }
 
+    private static void validateJPASignUpInternal(JPAUserDTO signUpDTO) throws ApplicationException, DBException {
+        if (signUpDTO.getPassword() == null || signUpDTO.getPassword().isBlank()) {
+            throw new ApplicationException(Message.Common.MANDATORY);
+        }
+        if (!validate.checkPassword(signUpDTO.getPassword())) {
+            throw new ApplicationException(Message.User.INVALID_PASSWORD);
+        }
+        if (signUpDTO.getPhoneNumber() == null || signUpDTO.getPhoneNumber().isBlank()) {
+            throw new ApplicationException(Message.Common.MANDATORY);
+        }
+        if (!validate.checkPhoneNo(signUpDTO.getPhoneNumber())) {
+            throw new ApplicationException(Message.User.INVALID_PHONE_NUMBER);
+        }
+        if (userServices.isPhoneNumberExists(signUpDTO.getPhoneNumber(), signUpDTO.getRole().getRoleId())) {
+            throw new ApplicationException(Message.User.PHONE_NUMBER_EXISTS);
+        }
+        if (signUpDTO.getAddress().length() >= ADDRESS_LENGTH) {
+            throw new ApplicationException(Message.User.ADDRESS_LENGTH);
+        }
+    }
+
+    public static void validateUpdate(UserDTO userDTO) throws ApplicationException {
+        if (userDTO.getFirstName() == null || userDTO.getFirstName().isBlank()) {
+            throw new ApplicationException(Message.Common.MANDATORY);
+        }
+        if (userDTO.getFirstName().length() > NAME_LENGTH) {
+            throw new ApplicationException(Message.User.NAME_LENGTH);
+        }
+        if (userDTO.getLastName() == null || userDTO.getLastName().isBlank()) {
+            throw new ApplicationException(Message.Common.MANDATORY);
+        }
+        if (userDTO.getLastName().length() > NAME_LENGTH) {
+            throw new ApplicationException(Message.User.NAME_LENGTH);
+        }
+        if (userDTO.getPhoneNumber() == null || userDTO.getPhoneNumber().isBlank()) {
+            throw new ApplicationException(Message.Common.MANDATORY);
+        }
+        if (!validate.checkPhoneNo(userDTO.getPhoneNumber())) {
+            throw new ApplicationException(Message.User.INVALID_PHONE_NUMBER);
+        }
+        if (userDTO.getAddress().length() >= ADDRESS_LENGTH) {
+            throw new ApplicationException(Message.User.ADDRESS_LENGTH);
+        }
+    }
+
+    public static void validateJPAUpdate(JPAUserDTO userDTO) throws ApplicationException {
         if (userDTO.getFirstName() == null || userDTO.getFirstName().isBlank()) {
             throw new ApplicationException(Message.Common.MANDATORY);
         }

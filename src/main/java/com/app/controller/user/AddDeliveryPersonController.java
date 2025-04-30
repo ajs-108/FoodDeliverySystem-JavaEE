@@ -1,10 +1,11 @@
-package com.app.controller;
+package com.app.controller.user;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
 import com.app.common.enums.Roles;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
+import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
 import com.app.dto.APIResponse;
 import com.app.dto.UserDTO;
@@ -17,13 +18,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-/**
- * Sign up Servlet is used for creating an account for the user.
- */
 @WebServlet(
-        name = "Customersignup",
-        value = "/customerSignUp")
-public class CustomerSignUpController extends HttpServlet {
+        name = "AddDeliveryperson",
+        value = "/deliveryPersonSignUp")
+public class AddDeliveryPersonController extends HttpServlet {
     private UserServices userServices = new UserServices();
 
     public static void sendResponse(HttpServletResponse response, String techMessage, String message, Object data, int statusCode) throws IOException {
@@ -45,10 +43,13 @@ public class CustomerSignUpController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
+            AuthUtils.checkAuthentication(request);
+            if (!AuthUtils.isAdmin(request)) {
+                throw new ApplicationException(Message.Error.ACCESS_DENIED);
+            }
             UserDTO userSignUpDTO = ObjectMapperUtil.toObject(request.getReader(), UserDTO.class);
-            userSignUpDTO.setRole(Roles.ROLE_CUSTOMER);
-            userServices.signUp(userSignUpDTO);
-            sendResponse(response, null, Message.User.USER_REGISTERED, null, HttpServletResponse.SC_CREATED);
+            userServices.addDeliveryPerson(userSignUpDTO);
+            sendResponse(response, null, Message.User.DELIVERY_PERSON_REGISTERED, null, HttpServletResponse.SC_CREATED);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

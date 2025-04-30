@@ -1,4 +1,4 @@
-package com.app.controller._jpa.auth;
+package com.app.controller.auth;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
@@ -10,7 +10,7 @@ import com.app.common.util.ObjectMapperUtil;
 import com.app.controller.validation.QueryParameterValidator;
 import com.app.controller.validation.UserValidator;
 import com.app.dto.APIResponse;
-import com.app.service.jpa.JPAUserServices;
+import com.app.service.UserServices;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,9 +19,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet(name = "update-account-status", value = "/update-account-status")
+@WebServlet(name = "updateAccountStatus", value = "/updateAccountStatus")
 public class UpdateAccountStatusController extends HttpServlet {
-    private JPAUserServices userServices = new JPAUserServices();
+    private UserServices userServices = new UserServices();
 
     public static void sendResponse(HttpServletResponse response, String techMessage, String message, Object data, int statusCode) throws IOException {
         response.setStatus(statusCode);

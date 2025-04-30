@@ -5,6 +5,7 @@ import com.app.common.exception.DBException;
 import com.app.dao.jpa.IUserRepository;
 import com.app.dao.jpa.impl.UserRepository;
 import com.app.dto.jpa.JPAUserDTO;
+import com.app.dto.jpa.UserRoleDTO;
 import com.app.mapper.jpa.JPAUserMapper;
 
 import java.util.List;
@@ -18,7 +19,19 @@ public class JPAUserServices {
         userMapper = new JPAUserMapper();
     }
 
-    public void save(JPAUserDTO userDTO) throws DBException {
+    public void registerCustomer(JPAUserDTO userDTO) throws DBException {
+        UserRoleDTO userRoleDTO = new UserRoleDTO();
+        userRoleDTO.setRoleId(1002);
+        userRoleDTO.setUserRole("ROLE_CUSTOMER");
+        userDTO.setRole(userRoleDTO);
+        userRepo.save(userMapper.toUser(userDTO));
+    }
+
+    public void saveDeliveryPerson(JPAUserDTO userDTO) throws DBException {
+        UserRoleDTO userRoleDTO = new UserRoleDTO();
+        userRoleDTO.setRoleId(1003);
+        userRoleDTO.setUserRole("ROLE_DELIVERY_PERSON");
+        userDTO.setRole(userRoleDTO);
         userRepo.save(userMapper.toUser(userDTO));
     }
 

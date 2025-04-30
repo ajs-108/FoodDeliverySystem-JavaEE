@@ -1,4 +1,4 @@
-package com.app.controller;
+package com.app.controller.review;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
@@ -6,11 +6,11 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
-import com.app.controller.validation.ShoppingCartValidator;
+import com.app.controller.validation.QueryParameterValidator;
+import com.app.controller.validation.ReviewValidator;
 import com.app.dto.APIResponse;
-import com.app.dto.ShoppingCartDTO;
-import com.app.dto.UserDTO;
-import com.app.service.ShoppingCartServices;
+import com.app.dto.ReviewDTO;
+import com.app.service.ReviewServices;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,27 +19,20 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet(name = "Update Quantity", value = "/updateQuantity")
-public class UpdateQuantityController extends HttpServlet {
-    private ShoppingCartServices shoppingCartServices = new ShoppingCartServices();
+@WebServlet(name = "getReview", value = "/getReview")
+public class GetReviewController extends HttpServlet {
+    private ReviewServices reviewServices = new ReviewServices();
 
     @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            UserDTO userDTO = AuthUtils.getCurrentUser(request);
-            ShoppingCartDTO shoppingCartDTO = ObjectMapperUtil.toObject(request.getReader(), ShoppingCartDTO.class);
-            if (shoppingCartDTO.getCartFoodItemsDTOList().get(0).getQuantity() == 0) {
-                shoppingCartServices.removeFoodItem(userDTO.getUserId(),
-                        shoppingCartDTO.getCartFoodItemsDTOList().get(0).getFoodItemDTO().getFoodItemId());
-                sendResponse(response, null, Message.ShoppingCart.FOOD_ITEM_REMOVED, null, HttpServletResponse.SC_OK);
-                return;
-            }
-            shoppingCartDTO.setUserId(userDTO.getUserId());
-            ShoppingCartValidator.validateQuantityUpdate(shoppingCartDTO);
-            shoppingCartServices.updateQuantity(shoppingCartDTO);
-            sendResponse(response, null, Message.ShoppingCart.QUANTITY_UPDATED, null, HttpServletResponse.SC_OK);
+            QueryParameterValidator.validate(request, "reviewId");
+            String reviewId = request.getParameter("reviewId");
+            ReviewValidator.validateGetReview(reviewId);
+            ReviewDTO reviewDTO = reviewServices.getReview(Integer.parseInt(reviewId));
+            sendResponse(response, null, null, reviewDTO, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

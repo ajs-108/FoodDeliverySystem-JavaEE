@@ -1,4 +1,4 @@
-package com.app.controller;
+package com.app.controller.review;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
@@ -8,27 +8,30 @@ import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
 import com.app.dto.APIResponse;
 import com.app.dto.ReviewDTO;
-import com.app.dto.UserDTO;
 import com.app.service.ReviewServices;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import com.fasterxml.jackson.core.type.TypeReference;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "getAllReviewOfUser", value = "/getAllReviewOfUser")
-public class GetAllReviewsOfUser extends HttpServlet {
+@WebServlet(name = "postReview", value = "/postReview")
+public class PostReviewController extends HttpServlet {
     private ReviewServices reviewServices = new ReviewServices();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            UserDTO userDTO = AuthUtils.getCurrentUser(request);
-            List<ReviewDTO> userReviewsDTOList = reviewServices.getAllReviewsOfUser(userDTO.getUserId());
-            sendResponse(response, null, null, userReviewsDTOList, HttpServletResponse.SC_OK);
+            List<ReviewDTO> reviewDTOList = ObjectMapperUtil.toObject(request.getReader(), new TypeReference<>() {
+            });
+            reviewServices.postReview(reviewDTOList);
+            sendResponse(response, null, Message.Review.REVIEW_POSTED, null, HttpServletResponse.SC_CREATED);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

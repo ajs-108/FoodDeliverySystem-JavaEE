@@ -1,4 +1,4 @@
-package com.app.controller;
+package com.app.controller.cart;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;

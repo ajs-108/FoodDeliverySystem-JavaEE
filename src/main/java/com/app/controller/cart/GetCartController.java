@@ -1,4 +1,4 @@
-package com.app.controller;
+package com.app.controller.cart;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
@@ -6,10 +6,11 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
-import com.app.controller.validation.UserValidator;
+import com.app.controller.validation.ShoppingCartValidator;
 import com.app.dto.APIResponse;
+import com.app.dto.ShoppingCartDTO;
 import com.app.dto.UserDTO;
-import com.app.service.UserServices;
+import com.app.service.ShoppingCartServices;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,29 +19,19 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet(
-        name = "Changepassword",
-        value = "/changePassword")
-public class ChangePasswordController extends HttpServlet {
-    private UserServices userServices = new UserServices();
-
-    public static void sendResponse(HttpServletResponse response, String techMessage, String message, Object data, int statusCode) throws IOException {
-        response.setStatus(statusCode);
-        APIResponse apiResponse = new APIResponse();
-        apiResponse.setMessage(message);
-        apiResponse.setData(data);
-        response.getWriter().println(ObjectMapperUtil.toString(apiResponse));
-    }
+@WebServlet(name = "getCart", value = "/getCart")
+public class GetCartController extends HttpServlet {
+    private ShoppingCartServices shoppingCartServices = new ShoppingCartServices();
 
     @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            UserDTO userDTO = ObjectMapperUtil.toObject(request.getReader(), UserDTO.class);
-            UserValidator.validateChangePassword(userDTO);
-            userServices.changePassword(userDTO);
-            sendResponse(response, null, Message.User.PASSWORD_UPDATED, null, HttpServletResponse.SC_OK);
+            UserDTO userDTO = AuthUtils.getCurrentUser(request);
+            ShoppingCartValidator.validateShowCart(userDTO.getUserId());
+            ShoppingCartDTO shoppingCartDTO = shoppingCartServices.showShoppingCart(userDTO.getUserId());
+            sendResponse(response, null, null, shoppingCartDTO, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -51,5 +42,13 @@ public class ChangePasswordController extends HttpServlet {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public void sendResponse(HttpServletResponse response, String techMessage, String message, Object data, int status) throws IOException {
+        APIResponse apiResponse = new APIResponse();
+        apiResponse.setMessage(message);
+        apiResponse.setData(data);
+        response.setStatus(status);
+        response.getWriter().write(ObjectMapperUtil.toString(apiResponse));
     }
 }

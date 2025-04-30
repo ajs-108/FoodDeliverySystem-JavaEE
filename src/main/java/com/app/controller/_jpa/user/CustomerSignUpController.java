@@ -6,6 +6,7 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
+import com.app.controller.validation.UserValidator;
 import com.app.dto.APIResponse;
 import com.app.dto.jpa.JPAUserDTO;
 import com.app.dto.jpa.UserRoleDTO;
@@ -36,11 +37,8 @@ public class CustomerSignUpController extends HttpServlet {
         try {
             AuthUtils.checkAuthentication(request);
             JPAUserDTO userDTO = ObjectMapperUtil.toObject(request.getReader(), JPAUserDTO.class);
-            UserRoleDTO userRoleDTO = new UserRoleDTO();
-            userRoleDTO.setRoleId(1002);
-            userRoleDTO.setUserRole("ROLE_CUSTOMER");
-            userDTO.setRole(userRoleDTO);
-            userServices.save(userDTO);
+            UserValidator.validateJPASignUp(userDTO);
+            userServices.registerCustomer(userDTO);
             sendResponse(response, null, Message.User.DELIVERY_PERSON_REGISTERED, null, HttpServletResponse.SC_CREATED);
         } catch (DBException e) {
             e.printStackTrace();

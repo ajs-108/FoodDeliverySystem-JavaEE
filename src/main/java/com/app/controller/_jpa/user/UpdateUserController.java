@@ -6,6 +6,7 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
+import com.app.controller.validation.UserValidator;
 import com.app.dto.APIResponse;
 import com.app.dto.UserDTO;
 import com.app.dto.jpa.JPAUserDTO;
@@ -30,6 +31,7 @@ public class UpdateUserController extends HttpServlet {
             AuthUtils.checkAuthentication(request);
             UserDTO currentUserDTO = AuthUtils.getCurrentUser(request);
             JPAUserDTO userDTO = ObjectMapperUtil.toObject(request.getReader(), JPAUserDTO.class);
+            UserValidator.validateJPAUpdate(userDTO);
             userServices.update(currentUserDTO.getUserId(), userDTO);
             sendResponse(response, null, Message.User.USER_INFO_UPDATED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {

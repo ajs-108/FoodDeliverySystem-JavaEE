@@ -1,4 +1,4 @@
-package com.app.controller;
+package com.app.controller.cart;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
@@ -6,9 +6,11 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
+import com.app.controller.validation.ShoppingCartValidator;
 import com.app.dto.APIResponse;
-import com.app.dto.ReviewDTO;
-import com.app.service.ReviewServices;
+import com.app.dto.ShoppingCartDTO;
+import com.app.dto.UserDTO;
+import com.app.service.ShoppingCartServices;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -16,22 +18,24 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.List;
 
-@WebServlet(name = "getAllReview", value = "/getAllReview")
-public class GetAllReviewController extends HttpServlet {
-    private ReviewServices reviewServices = new ReviewServices();
+@WebServlet(
+        name = "addToCart",
+        value = "/addToCart")
+public class AddToCartController extends HttpServlet {
+    private ShoppingCartServices shoppingCartServices = new ShoppingCartServices();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            if (!AuthUtils.isAdmin(request)) {
-                throw new ApplicationException(Message.Error.ACCESS_DENIED);
-            }
-            List<ReviewDTO> reviewDTOList = reviewServices.getAllReviews();
-            sendResponse(response, null, null, reviewDTOList, HttpServletResponse.SC_OK);
+            ShoppingCartDTO shoppingCartDTO = ObjectMapperUtil.toObject(request.getReader(), ShoppingCartDTO.class);
+            UserDTO userDTO = AuthUtils.getCurrentUser(request);
+            shoppingCartDTO.setUserId(userDTO.getUserId());
+            ShoppingCartValidator.validateAddToCart(shoppingCartDTO);
+            shoppingCartServices.addFoodItem(shoppingCartDTO);
+            sendResponse(response, null, Message.ShoppingCart.FOOD_ITEM_ADDED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

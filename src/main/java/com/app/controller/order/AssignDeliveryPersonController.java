@@ -1,4 +1,4 @@
-package com.app.controller;
+package com.app.controller.order;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
@@ -6,11 +6,10 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
-import com.app.controller.validation.ShoppingCartValidator;
+import com.app.controller.validation.OrderValidator;
+import com.app.controller.validation.QueryParameterValidator;
 import com.app.dto.APIResponse;
-import com.app.dto.ShoppingCartDTO;
-import com.app.dto.UserDTO;
-import com.app.service.ShoppingCartServices;
+import com.app.service.OrderServices;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,19 +18,24 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet(name = "getCart", value = "/getCart")
-public class GetCartController extends HttpServlet {
-    private ShoppingCartServices shoppingCartServices = new ShoppingCartServices();
+@WebServlet(name = "assignDeliveryPerson", value = "/assignDeliveryPerson")
+public class AssignDeliveryPersonController extends HttpServlet {
+    private OrderServices orderServices = new OrderServices();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            UserDTO userDTO = AuthUtils.getCurrentUser(request);
-            ShoppingCartValidator.validateShowCart(userDTO.getUserId());
-            ShoppingCartDTO shoppingCartDTO = shoppingCartServices.showShoppingCart(userDTO.getUserId());
-            sendResponse(response, null, null, shoppingCartDTO, HttpServletResponse.SC_OK);
+            if (!AuthUtils.isAdmin(request)) {
+                throw new ApplicationException(Message.Error.ACCESS_DENIED);
+            }
+            QueryParameterValidator.validate(request, "orderId", "deliveryPersonId");
+            String orderId = request.getParameter("orderId");
+            String deliveryPersonId = request.getParameter("deliveryPersonId");
+            OrderValidator.validateAssignDeliveryPerson(orderId, deliveryPersonId);
+            orderServices.assignDeliveryPerson(Integer.parseInt(orderId), Integer.parseInt(deliveryPersonId));
+            sendResponse(response, null, Message.Order.DELIVERY_PERSON_ASSIGNED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
