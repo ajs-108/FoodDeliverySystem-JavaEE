@@ -144,8 +144,8 @@ public class ReviewDAOImpl implements IReviewDAO {
     @Override
     public Review getReview(int reviewId) throws DBException {
         String sql = """
-                select r.review_id, u.user_id, u.first_name,
-                fi.food_item_id, fi.food_name, fi.is_available, fi.image_path, r.order_id, r.rating, r.review
+                select r.review_id, u.user_id, u.first_name, fi.food_item_id,
+                fi.food_name, fi.is_available, fi.image_path, r.order_id, r.rating, r.review
                 from review_rating_table r, user_ u, food_item fi
                 where u.user_id = r.user_id and fi.food_item_id = r.food_item_id and review_id = ?
                 """;

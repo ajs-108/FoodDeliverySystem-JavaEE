@@ -15,6 +15,11 @@ public class GetReviewDTO {
     public GetReviewDTO() {
     }
 
+    public GetReviewDTO(Integer reviewId, Short rating) {
+        this.reviewId = reviewId;
+        this.rating = rating;
+    }
+
     public GetReviewDTO(Integer reviewId, Integer userId, String firstName, Integer foodItemId, String foodName,
                         Boolean isAvailable, String imagePath, Integer orderId, Short rating, String userReview) {
         this.reviewId = reviewId;

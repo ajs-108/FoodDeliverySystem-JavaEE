@@ -4,6 +4,7 @@ import com.app.common.Message;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.dto.jdbc.ShoppingCartDTO;
+import com.app.dto.jpa.JPACartDTO;
 import com.app.service.common.FoodItemServices;
 import com.app.service.jdbc.ShoppingCartServices;
 import com.app.service.jdbc.UserServices;
@@ -47,6 +48,27 @@ public class ShoppingCartValidator {
         }
     }
 
+    public static void validateAddToCart(JPACartDTO shoppingCartDTO) throws ApplicationException, DBException {
+        validateUserId(shoppingCartDTO.getUser().getUserId());
+        if (shoppingCartDTO.getFoodItem().getFoodItemId() == 0) {
+            throw new ApplicationException(Message.Common.MANDATORY);
+        }
+        if (!foodItemServices.isFoodItemExistsInMenu(shoppingCartDTO.getFoodItem().getFoodItemId())) {
+            throw new ApplicationException(Message.Common.RESOURCE_NOT_AVAILABLE);
+        }
+//        TODO:Check this out and change it
+//        if (shoppingCartServices.isFoodItemExists(shoppingCartDTO)
+//                && shoppingCartServices.isUserExists(shoppingCartDTO)) {
+//            throw new ApplicationException(Message.ShoppingCart.FOOD_ITEM_EXISTS);
+//        }
+//        if (shoppingCartDTO.getCartFoodItemsDTOList().get(0).getQuantity() == 0) {
+//            throw new ApplicationException(Message.ShoppingCart.MIN_QUANTITY_VALUE);
+//        }
+//        if (shoppingCartDTO.getCartFoodItemsDTOList().get(0).getQuantity() > 15) {
+//            throw new ApplicationException(Message.ShoppingCart.QUANTITY_VALUE);
+//        }
+    }
+
     public static void validateShowCart(int userId) throws ApplicationException, DBException {
         validateUserId(userId);
         if (shoppingCartServices.isCartEmpty(userId)) {
@@ -83,6 +105,26 @@ public class ShoppingCartValidator {
             throw new ApplicationException(Message.Common.RESOURCE_NOT_AVAILABLE);
         }
         if (shoppingCartDTO.getCartFoodItemsDTOList().get(0).getQuantity() > 15) {
+            throw new ApplicationException(Message.ShoppingCart.QUANTITY_VALUE);
+        }
+    }
+
+    public static void validateQuantityUpdate(JPACartDTO cartDTO) throws ApplicationException,
+            DBException {
+        if (cartDTO.getUser().getUserId() == 0) {
+            throw new ApplicationException(Message.Error.GENERIC_ERROR);
+        }
+        if (userServices.getUser(cartDTO.getUser().getUserId()) == null) {
+            throw new ApplicationException(Message.User.NO_SUCH_USER);
+        }
+        if (cartDTO.getFoodItem().getFoodItemId() == 0) {
+            throw new ApplicationException(Message.Common.MANDATORY);
+        }
+        if (!foodItemServices.isFoodItemExistsInMenu(
+                cartDTO.getFoodItem().getFoodItemId())) {
+            throw new ApplicationException(Message.Common.RESOURCE_NOT_AVAILABLE);
+        }
+        if (cartDTO.getQuantity() > 15) {
             throw new ApplicationException(Message.ShoppingCart.QUANTITY_VALUE);
         }
     }

@@ -1,38 +1,38 @@
-package com.app.controller.jpa.order;
+package com.app.controller.jpa.cart;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
-import com.app.common.util.JPAuthUtils;
 import com.app.common.util.ObjectMapperUtil;
-import com.app.controller.common.validation.OrderValidator;
+import com.app.controller.common.validation.QueryParameterValidator;
+import com.app.controller.common.validation.ShoppingCartValidator;
 import com.app.dto.common.APIResponse;
-import com.app.dto.jpa.JPAUserDTO;
-import com.app.dto.jpa.order.CartAndOrderDTO;
-import com.app.service.jpa.JPAOrderServices;
+import com.app.dto.jdbc.UserDTO;
+import com.app.dto.jpa.JPACartDTO;
+import com.app.model.jpa.JPACart;
+import com.app.service.jdbc.ShoppingCartServices;
+import com.app.service.jpa.JPACartServices;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 
-@WebServlet(name = "place-order", value = "/place-order")
-public class PlaceOrderController extends HttpServlet {
-    private JPAOrderServices orderServices = new JPAOrderServices();
+@WebServlet(name = "remove-from-cart", value = "/remove-from-cart")
+public class RemoveFromCartController extends HttpServlet {
+    private JPACartServices cartServices = new JPACartServices();
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            JPAUserDTO userDTO = JPAuthUtils.getCurrentUser(request);
-            CartAndOrderDTO cartAndOrder = ObjectMapperUtil.toObject(request.getReader(), CartAndOrderDTO.class);
-            cartAndOrder.getCart().setUser(userDTO);
-            OrderValidator.validatePlaceOrder(userDTO.getUserId(), cartAndOrder.getOrder());
-            orderServices.save(cartAndOrder.getOrder(), cartAndOrder.getCart());
-            sendResponse(response, null, Message.Order.PLACE_ORDER, null, HttpServletResponse.SC_OK);
+            JPACartDTO cartDTO = ObjectMapperUtil.toObject(request.getReader(), JPACartDTO.class);
+            //ToDo: make a validation for this
+            cartServices.removeFoodItem(cartDTO);
+            sendResponse(response, null, Message.ShoppingCart.FOOD_ITEM_REMOVED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

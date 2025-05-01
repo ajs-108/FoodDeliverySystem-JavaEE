@@ -21,5 +21,5 @@ public interface IReviewRepository {
 
     void update(JPAReview review) throws DBException;
 
-    void delete(int reviewId) throws DBException;
+    void delete(JPAReview review) throws DBException;
 }

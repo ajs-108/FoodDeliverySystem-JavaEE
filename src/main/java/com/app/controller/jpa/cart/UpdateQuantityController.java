@@ -1,34 +1,46 @@
-package com.app.controller.jdbc.review;
+package com.app.controller.jpa.cart;
 
 import com.app.common.AppConstant;
 import com.app.common.Message;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
+import com.app.common.util.JPAuthUtils;
 import com.app.common.util.ObjectMapperUtil;
+import com.app.controller.common.validation.ShoppingCartValidator;
 import com.app.dto.common.APIResponse;
-import com.app.dto.jdbc.ReviewDTO;
+import com.app.dto.jdbc.ShoppingCartDTO;
 import com.app.dto.jdbc.UserDTO;
-import com.app.service.jdbc.ReviewServices;
+import com.app.dto.jpa.JPACartDTO;
+import com.app.dto.jpa.JPAUserDTO;
+import com.app.service.jdbc.ShoppingCartServices;
+import com.app.service.jpa.JPACartServices;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
-@WebServlet(name = "getAllReviewOfUser", value = "/getAllReviewOfUser")
-public class GetAllReviewsOfUser extends HttpServlet {
-    private ReviewServices reviewServices = new ReviewServices();
+@WebServlet(name = "update-quantity", value = "/update-quantity")
+public class UpdateQuantityController extends HttpServlet {
+    private JPACartServices cartServices = new JPACartServices();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            UserDTO userDTO = AuthUtils.getCurrentUser(request);
-            List<ReviewDTO> userReviewsDTOList = reviewServices.getAllReviewsOfUser(userDTO.getUserId());
-            sendResponse(response, null, null, userReviewsDTOList, HttpServletResponse.SC_OK);
+            JPAUserDTO userDTO = JPAuthUtils.getCurrentUser(request);
+            JPACartDTO cartDTO = ObjectMapperUtil.toObject(request.getReader(), JPACartDTO.class);
+            cartDTO.setUser(userDTO);
+            if (cartDTO.getQuantity() == 0) {
+                cartServices.removeFoodItem(cartDTO);
+                sendResponse(response, null, Message.ShoppingCart.FOOD_ITEM_REMOVED, null, HttpServletResponse.SC_OK);
+                return;
+            }
+            ShoppingCartValidator.validateQuantityUpdate(cartDTO);
+            cartServices.updateQuantity(cartDTO);
+            sendResponse(response, null, Message.ShoppingCart.QUANTITY_UPDATED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();
             sendResponse(response, e.getMessage(), Message.Error.GENERIC_ERROR, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

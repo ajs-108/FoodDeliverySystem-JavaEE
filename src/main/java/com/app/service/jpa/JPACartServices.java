@@ -4,7 +4,9 @@ import com.app.common.exception.DBException;
 import com.app.dao.jpa.ICartRepository;
 import com.app.dao.jpa.impl.CartRepository;
 import com.app.dto.jpa.JPACartDTO;
+import com.app.dto.jpa.JPAUserDTO;
 import com.app.mapper.jpa.JPACartMapper;
+import com.app.mapper.jpa.JPAUserMapper;
 import com.app.model.jpa.JPACart;
 import com.app.model.jpa.JPAUser;
 import com.app.service.jdbc.ShoppingCartServices;
@@ -14,16 +16,16 @@ import java.util.List;
 public class JPACartServices {
     private ICartRepository cartRepo;
     private JPACartMapper cartMapper;
-    private ShoppingCartServices cartServices;
+    private JPAUserMapper userMapper;
 
     public JPACartServices() {
         cartRepo = new CartRepository();
         cartMapper = new JPACartMapper();
-        cartServices = new ShoppingCartServices();
+        userMapper = new JPAUserMapper();
     }
 
-    void save(JPACart cart) throws DBException {
-        cartRepo.save(cart);
+    public void addFoodItem(JPACartDTO cartDTO) throws DBException {
+        cartRepo.save(cartMapper.toCart(cartDTO));
     }
 
     public List<JPACartDTO> find(int userId) throws DBException {
@@ -35,17 +37,17 @@ public class JPACartServices {
             double totalPrice = 0;
             for(JPACartDTO cartDTO : cartDTOList) {
                 cartDTO.setBeforeDiscountPrice(
-                        cartServices.calculatePreDiscountPrice(
+                        calculatePreDiscountPrice(
                                 cartDTO.getFoodItem().getPrice(),
                                 cartDTO.getQuantity()
                         ));
                 cartDTO.setAfterDiscountPrice(
-                        cartServices.calculatePostDiscountPrice(
+                        calculatePostDiscountPrice(
                                 cartDTO.getFoodItem().getPrice(),
                                 cartDTO.getFoodItem().getDiscount(),
                                 cartDTO.getQuantity()
                         ));
-                totalPrice += cartServices.calculateTotalPrice(cartDTO.getAfterDiscountPrice());
+                totalPrice += calculateTotalPrice(cartDTO.getAfterDiscountPrice());
             }
             for (JPACartDTO cartDTO : cartDTOList) {
                 cartDTO.setTotalPrice(totalPrice);
@@ -54,15 +56,36 @@ public class JPACartServices {
         return cartDTOList;
     }
 
-    void remove(JPACart cart) throws DBException {
-        cartRepo.remove(cart);
+    public void removeFoodItem(JPACartDTO cartDTO) throws DBException {
+        cartRepo.remove(cartMapper.toCart(cartDTO));
     }
 
-    void updateQuantity(JPACart cart) throws DBException {
-        cartRepo.updateQuantity(cart);
+    public void updateQuantity(JPACartDTO cartDTO) throws DBException {
+        cartRepo.updateQuantity(cartMapper.toCart(cartDTO));
     }
 
-    void removeCartOfUser(JPAUser user) throws DBException {
-        cartRepo.removeCartOfUser(user);
+    //TODO:Make use of this
+    public void removeCartOfUser(JPAUserDTO userDTO) throws DBException {
+        cartRepo.removeCartOfUser(userMapper.toUser(userDTO));
+    }
+
+    public double calculateTotalPrice(double price, double discount, int quantity) {
+        double totalPrice = 0;
+        totalPrice += calculatePostDiscountPrice(price, discount, quantity);
+        return Math.round(totalPrice);
+    }
+
+    public double calculateTotalPrice(double discountedPrice) {
+        double totalPrice = 0;
+        totalPrice += discountedPrice;
+        return Math.round(totalPrice);
+    }
+
+    public double calculatePreDiscountPrice(double price, int quantity) {
+        return Math.round(price * quantity);
+    }
+
+    public double calculatePostDiscountPrice(double price, double discount, int quantity) {
+        return Math.round((price - (price * (discount / 100))) * quantity);
     }
 }

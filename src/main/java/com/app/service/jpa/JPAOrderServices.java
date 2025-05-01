@@ -22,12 +22,14 @@ public class JPAOrderServices {
     private IOrderFoodItemRepository orderFoodItemRepo;
     private JPAOrderMapper orderMapper;
     private FoodItemMapper foodItemMapper;
+    private JPACartServices cartServices;
 
     public JPAOrderServices() {
         orderRepo = new OrderRepository();
         orderFoodItemRepo = new OrderFoodItemsRepository();
         orderMapper = new JPAOrderMapper();
         foodItemMapper = new FoodItemMapper();
+        cartServices = new JPACartServices();
     }
 
     public void save(JPAOrderDTO orderDTO, JPACartDTO cartDTO) throws DBException {
@@ -40,6 +42,7 @@ public class JPAOrderServices {
                 foodItemMapper.toFoodItem(cartDTO.getFoodItem()),
                 cartDTO.getQuantity()));
         orderFoodItemRepo.save(orderFoodItems);
+        cartServices.removeCartOfUser(cartDTO.getUser());
     }
 
     public List<GetOrderDTO> findAll() throws DBException {

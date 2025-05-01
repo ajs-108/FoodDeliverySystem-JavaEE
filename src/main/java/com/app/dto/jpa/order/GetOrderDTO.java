@@ -11,7 +11,7 @@ public class GetOrderDTO {
     private Integer orderId;
     private Integer userId;
     private String firstName;
-    private String lastNAme;
+    private String lastName;
     private Integer deliveryPersonId;
     private String dpFirstName;
     private String dpLastName;
@@ -24,6 +24,25 @@ public class GetOrderDTO {
     public GetOrderDTO() {
     }
 
+    public GetOrderDTO(Integer orderId, Double totalPrice) {
+        this.orderId = orderId;
+        this.totalPrice = totalPrice;
+    }
+
+    public GetOrderDTO(Integer orderId, Integer userId, String firstName, String lastName,
+                       Integer deliveryPersonId, Double totalPrice, OrderStatus orderStatus,
+                       LocalDateTime orderDateTimes, PaymentStatus paymentStatus) {
+        this.orderId = orderId;
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.deliveryPersonId = deliveryPersonId;
+        this.totalPrice = totalPrice;
+        this.orderStatus = orderStatus;
+        this.orderDateTimes = orderDateTimes;
+        this.paymentStatus = paymentStatus;
+    }
+
     public GetOrderDTO(Integer orderId, Integer userId, String firstName, String lastNAme,
                        Integer deliveryPersonId, String dpFirstName, String dpLastName,
                        Double totalPrice, OrderStatus orderStatus, LocalDateTime orderDateTimes,
@@ -31,7 +50,7 @@ public class GetOrderDTO {
         this.orderId = orderId;
         this.userId = userId;
         this.firstName = firstName;
-        this.lastNAme = lastNAme;
+        this.lastName = lastNAme;
         this.deliveryPersonId = deliveryPersonId;
         this.dpFirstName = dpFirstName;
         this.dpLastName = dpLastName;
@@ -65,12 +84,12 @@ public class GetOrderDTO {
         this.firstName = firstName;
     }
 
-    public String getLastNAme() {
-        return lastNAme;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLastNAme(String lastNAme) {
-        this.lastNAme = lastNAme;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public Integer getDeliveryPersonId() {
@@ -143,7 +162,7 @@ public class GetOrderDTO {
                 "orderId=" + orderId +
                 ", userId=" + userId +
                 ", firstName='" + firstName + '\'' +
-                ", lastNAme='" + lastNAme + '\'' +
+                ", lastNAme='" + lastName + '\'' +
                 ", deliveryPersonId=" + deliveryPersonId +
                 ", dpFirstName='" + dpFirstName + '\'' +
                 ", dpLastName='" + dpLastName + '\'' +
