@@ -27,7 +27,7 @@ public class GetAllOrdersOfUserController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
-            AuthUtils.checkAuthentication(request);
+            JPAuthUtils.checkAuthentication(request);
             JPAUserDTO userDTO = JPAuthUtils.getCurrentUser(request);
             OrderValidator.validateGetOrdersOfUser(userDTO);
             List<GetOrderDTO> orderDTOList = orderServices.findAllPreviousOrdersOfUser(

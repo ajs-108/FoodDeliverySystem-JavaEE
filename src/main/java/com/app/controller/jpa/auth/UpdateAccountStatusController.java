@@ -6,6 +6,7 @@ import com.app.common.enums.AccountStatus;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
+import com.app.common.util.JPAuthUtils;
 import com.app.common.util.ObjectMapperUtil;
 import com.app.controller.common.validation.QueryParameterValidator;
 import com.app.controller.common.validation.UserValidator;
@@ -35,8 +36,8 @@ public class UpdateAccountStatusController extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
-            AuthUtils.checkAuthentication(request);
-            if (!AuthUtils.isAdmin(request)) {
+            JPAuthUtils.checkAuthentication(request);
+            if (!JPAuthUtils.isAdmin(request)) {
                 throw new ApplicationException(Message.Error.ACCESS_DENIED);
             }
             QueryParameterValidator.validate(request, "userId", "accountStatus");

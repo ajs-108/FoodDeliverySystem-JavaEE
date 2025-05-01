@@ -9,7 +9,7 @@ public class JPAReviewDTO {
     private JPAUserDTO user;
     private FoodItemDTO foodItem;
     private JPAOrderDTO order;
-    private short rating;
+    private byte rating;
     private String userReview;
 
     public int getReviewId() {
@@ -44,11 +44,11 @@ public class JPAReviewDTO {
         this.order = order;
     }
 
-    public short getRating() {
+    public byte getRating() {
         return rating;
     }
 
-    public void setRating(short rating) {
+    public void setRating(byte rating) {
         this.rating = rating;
     }
 

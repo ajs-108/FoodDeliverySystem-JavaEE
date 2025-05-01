@@ -29,7 +29,7 @@ public class UpdateQuantityController extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
-            AuthUtils.checkAuthentication(request);
+            JPAuthUtils.checkAuthentication(request);
             JPAUserDTO userDTO = JPAuthUtils.getCurrentUser(request);
             JPACartDTO cartDTO = ObjectMapperUtil.toObject(request.getReader(), JPACartDTO.class);
             cartDTO.setUser(userDTO);

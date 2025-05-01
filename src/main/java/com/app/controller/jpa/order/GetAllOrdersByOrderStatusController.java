@@ -6,6 +6,7 @@ import com.app.common.enums.OrderStatus;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
+import com.app.common.util.JPAuthUtils;
 import com.app.common.util.ObjectMapperUtil;
 import com.app.controller.common.validation.OrderValidator;
 import com.app.controller.common.validation.QueryParameterValidator;
@@ -27,7 +28,7 @@ public class GetAllOrdersByOrderStatusController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
-            AuthUtils.checkAuthentication(request);
+            JPAuthUtils.checkAuthentication(request);
             QueryParameterValidator.validate(request, "orderStatus");
             String orderStatus = request.getParameter("orderStatus");
             OrderValidator.validateGetOrdersByStatus(orderStatus);

@@ -9,19 +9,19 @@ public class GetReviewDTO {
     private Boolean isAvailable;
     private String imagePath;
     private Integer orderId;
-    private Short rating;
+    private Byte rating;
     private String userReview;
 
     public GetReviewDTO() {
     }
 
-    public GetReviewDTO(Integer reviewId, Short rating) {
+    public GetReviewDTO(Integer reviewId, Byte rating) {
         this.reviewId = reviewId;
         this.rating = rating;
     }
 
     public GetReviewDTO(Integer reviewId, Integer userId, String firstName, Integer foodItemId, String foodName,
-                        Boolean isAvailable, String imagePath, Integer orderId, Short rating, String userReview) {
+                        Boolean isAvailable, String imagePath, Integer orderId, Byte rating, String userReview) {
         this.reviewId = reviewId;
         this.userId = userId;
         this.firstName = firstName;
@@ -98,11 +98,11 @@ public class GetReviewDTO {
         this.orderId = orderId;
     }
 
-    public Short getRating() {
+    public Byte getRating() {
         return rating;
     }
 
-    public void setRating(Short rating) {
+    public void setRating(Byte rating) {
         this.rating = rating;
     }
 

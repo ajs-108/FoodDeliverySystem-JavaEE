@@ -6,6 +6,7 @@ import com.app.common.enums.OrderStatus;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
+import com.app.common.util.JPAuthUtils;
 import com.app.common.util.ObjectMapperUtil;
 import com.app.controller.common.validation.OrderValidator;
 import com.app.controller.common.validation.QueryParameterValidator;
@@ -25,7 +26,7 @@ public class UpdateOrderStatusController extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
-            AuthUtils.checkAuthentication(request);
+            JPAuthUtils.checkAuthentication(request);
             QueryParameterValidator.validate(request, "orderId", "orderStatus");
             String orderId = request.getParameter("orderId");
             String orderStatus = request.getParameter("orderStatus");

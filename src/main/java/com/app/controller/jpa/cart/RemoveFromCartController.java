@@ -5,6 +5,7 @@ import com.app.common.Message;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
+import com.app.common.util.JPAuthUtils;
 import com.app.common.util.ObjectMapperUtil;
 import com.app.controller.common.validation.QueryParameterValidator;
 import com.app.controller.common.validation.ShoppingCartValidator;
@@ -28,7 +29,7 @@ public class RemoveFromCartController extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
-            AuthUtils.checkAuthentication(request);
+            JPAuthUtils.checkAuthentication(request);
             JPACartDTO cartDTO = ObjectMapperUtil.toObject(request.getReader(), JPACartDTO.class);
             //ToDo: make a validation for this
             cartServices.removeFoodItem(cartDTO);

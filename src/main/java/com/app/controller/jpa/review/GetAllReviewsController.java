@@ -5,6 +5,7 @@ import com.app.common.Message;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
+import com.app.common.util.JPAuthUtils;
 import com.app.common.util.ObjectMapperUtil;
 import com.app.dto.common.APIResponse;
 import com.app.dto.jdbc.ReviewDTO;
@@ -26,8 +27,8 @@ public class GetAllReviewsController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
-            AuthUtils.checkAuthentication(request);
-            if (!AuthUtils.isAdmin(request)) {
+            JPAuthUtils.checkAuthentication(request);
+            if (!JPAuthUtils.isAdmin(request)) {
                 throw new ApplicationException(Message.Error.ACCESS_DENIED);
             }
             List<GetReviewDTO> reviewDTOList = reviewServices.findAll();

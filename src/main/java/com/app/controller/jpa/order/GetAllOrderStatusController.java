@@ -5,6 +5,7 @@ import com.app.common.Message;
 import com.app.common.enums.OrderStatus;
 import com.app.common.exception.ApplicationException;
 import com.app.common.util.AuthUtils;
+import com.app.common.util.JPAuthUtils;
 import com.app.common.util.ObjectMapperUtil;
 import com.app.dto.common.APIResponse;
 import jakarta.servlet.ServletException;
@@ -21,7 +22,7 @@ public class GetAllOrderStatusController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
-            AuthUtils.checkAuthentication(request);
+            JPAuthUtils.checkAuthentication(request);
             sendResponse(response, null, null, OrderStatus.getAllOrderStatus(), HttpServletResponse.SC_OK);
         } catch (ApplicationException e) {
             e.printStackTrace();

@@ -26,7 +26,7 @@ public class GetOrderAssignedToDPController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
-            AuthUtils.checkAuthentication(request);
+            JPAuthUtils.checkAuthentication(request);
             JPAUserDTO userDTO = JPAuthUtils.getCurrentUser(request);
             List<GetOrderDTO> orderDTOList = orderServices.findOrderAssignedToDP(userDTO.getUserId());
             sendResponse(response, null, null, orderDTOList, HttpServletResponse.SC_OK);

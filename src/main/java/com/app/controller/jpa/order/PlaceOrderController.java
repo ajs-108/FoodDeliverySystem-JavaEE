@@ -26,7 +26,7 @@ public class PlaceOrderController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
-            AuthUtils.checkAuthentication(request);
+            JPAuthUtils.checkAuthentication(request);
             JPAUserDTO userDTO = JPAuthUtils.getCurrentUser(request);
             CartAndOrderDTO cartAndOrder = ObjectMapperUtil.toObject(request.getReader(), CartAndOrderDTO.class);
             cartAndOrder.getCart().setUser(userDTO);

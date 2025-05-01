@@ -5,6 +5,7 @@ import com.app.common.Message;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
+import com.app.common.util.JPAuthUtils;
 import com.app.common.util.ObjectMapperUtil;
 import com.app.controller.common.validation.QueryParameterValidator;
 import com.app.dto.common.APIResponse;
@@ -26,7 +27,7 @@ public class GetMenuFoodItemController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
-            AuthUtils.checkAuthentication(request);
+            JPAuthUtils.checkAuthentication(request);
             String foodItemId = request.getParameter("foodItemId");
             QueryParameterValidator.validate(request, "foodItemId");
             FoodItemDTO foodItem = jpaFoodItemServices.findFoodItemFromMenu(Integer.parseInt(foodItemId));

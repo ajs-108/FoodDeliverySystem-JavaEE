@@ -32,7 +32,7 @@ public class JPAReview {
     private JPAOrder order;
 
     @Column(name = "rating")
-    private short rating;
+    private byte rating;
 
     @Column(name = "review", length = 250)
     private String userReview;
@@ -69,11 +69,11 @@ public class JPAReview {
         this.order = order;
     }
 
-    public short getRating() {
+    public byte getRating() {
         return rating;
     }
 
-    public void setRating(short rating) {
+    public void setRating(byte rating) {
         this.rating = rating;
     }
 

@@ -114,20 +114,12 @@ public class JPAUser {
         this.createdOn = createdOn;
     }
 
-    public void setCreatedOn(Timestamp createdOn) {
-        this.createdOn = createdOn == null ? null : createdOn.toLocalDateTime();
-    }
-
     public LocalDateTime getUpdatedOn() {
         return updatedOn;
     }
 
     public void setUpdatedOn(LocalDateTime updatedOn) {
         this.updatedOn = updatedOn;
-    }
-
-    public void setUpdatedOn(Timestamp updatedOn) {
-        this.updatedOn = updatedOn == null ? null : updatedOn.toLocalDateTime();
     }
 
     public UserRole getRole() {

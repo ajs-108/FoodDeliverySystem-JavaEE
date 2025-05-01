@@ -41,8 +41,10 @@ public class UserRepository implements IUserRepository {
         try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
             tx = em.getTransaction();
             TypedQuery<JPAUser> findAll =
-                    em.createQuery("SELECT u FROM user u join  WHERE role.roleId = :roleId",
-                                    JPAUser.class)
+                    em.createQuery("""
+                                    SELECT u FROM user u JOIN u.role r
+                                    WHERE r.roleId = :roleId
+                                    """, JPAUser.class)
                             .setParameter("roleId", roleId);
             tx.begin();
             List<JPAUser> jpaUsers = findAll.getResultList();
@@ -61,8 +63,13 @@ public class UserRepository implements IUserRepository {
         EntityTransaction tx = null;
         try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
             tx = em.getTransaction();
+            TypedQuery<JPAUser> find = em.createQuery("""
+                            SELECT u FROM user u JOIN FETCH role r
+                            WHERE u.userId = :id
+                            """, JPAUser.class)
+                    .setParameter("id", userId);
             tx.begin();
-            JPAUser jpaUser = em.find(JPAUser.class, userId);
+            JPAUser jpaUser = find.getSingleResult();
             tx.commit();
             return jpaUser;
         } catch (Exception e) {
@@ -78,10 +85,11 @@ public class UserRepository implements IUserRepository {
         EntityTransaction tx = null;
         try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
             tx = em.getTransaction();
-            TypedQuery<JPAUser> find =
-                    em.createQuery("SELECT u FROM user u WHERE email = :email",
-                                    JPAUser.class)
-                            .setParameter(EMAIL, email);
+            TypedQuery<JPAUser> find = em.createQuery("""
+                            SELECT u FROM user u JOIN FETCH role r
+                            WHERE u.email = :email
+                            """, JPAUser.class)
+                    .setParameter(EMAIL, email);
             tx.begin();
             JPAUser jpaUser = find.getSingleResult();
             tx.commit();
@@ -101,9 +109,9 @@ public class UserRepository implements IUserRepository {
             tx = em.getTransaction();
             TypedQuery<JPAUser> find =
                     em.createQuery("""
-                            SELECT u.email, u.password FROM user u
-                            WHERE email = :email
-                            """, JPAUser.class)
+                                    SELECT u.email, u.password FROM user u
+                                    WHERE email = :email
+                                    """, JPAUser.class)
                             .setParameter(EMAIL, email);
             tx.begin();
             JPAUser jpaUser = find.getSingleResult();
