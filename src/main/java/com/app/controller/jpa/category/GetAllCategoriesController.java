@@ -4,7 +4,6 @@ import com.app.common.AppConstant;
 import com.app.common.Message;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
-import com.app.common.util.AuthUtils;
 import com.app.common.util.JPAuthUtils;
 import com.app.common.util.ObjectMapperUtil;
 import com.app.dto.common.APIResponse;

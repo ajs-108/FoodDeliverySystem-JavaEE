@@ -20,9 +20,16 @@ public class UserRepository implements IUserRepository {
         EntityTransaction tx = null;
         try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
             Query query = em.createNativeQuery("""
-                    insert into user_(first_name, last_name, email, password_, phone_number, address, role_id)
-                    values (?1,?2,?3,?4,?5,?6,?7)
-                    """, JPAUser.class);
+                            insert into user_(first_name, last_name, email, password_, phone_number, address, role_id)
+                            values (?1,?2,?3,?4,?5,?6,?7)
+                            """, JPAUser.class)
+                    .setParameter(1, user.getFirstName())
+                    .setParameter(2, user.getLastName())
+                    .setParameter(3, user.getEmail())
+                    .setParameter(4, user.getPassword())
+                    .setParameter(5, user.getPhoneNumber())
+                    .setParameter(6, user.getAddress())
+                    .setParameter(7, user.getRole().getRoleId());
             tx = em.getTransaction();
             tx.begin();
             query.executeUpdate();
@@ -42,7 +49,7 @@ public class UserRepository implements IUserRepository {
             tx = em.getTransaction();
             TypedQuery<JPAUser> findAll =
                     em.createQuery("""
-                                    SELECT u FROM user u JOIN u.role r
+                                    SELECT u FROM user u JOIN FETCH role r
                                     WHERE r.roleId = :roleId
                                     """, JPAUser.class)
                             .setParameter("roleId", roleId);
@@ -130,12 +137,12 @@ public class UserRepository implements IUserRepository {
         EntityTransaction tx = null;
         try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
             tx = em.getTransaction();
-            TypedQuery<JPAUser> update =
+            Query update =
                     em.createQuery("""
                                     UPDATE user u set u.firstName = ?1, u.lastName = ?2, u.phoneNumber = ?3,
                                     u.address = ?4
                                     WHERE u.userId = ?5
-                                    """, JPAUser.class)
+                                    """)
                             .setParameter(1, user.getFirstName())
                             .setParameter(2, user.getLastName())
                             .setParameter(3, user.getPhoneNumber())
@@ -157,11 +164,11 @@ public class UserRepository implements IUserRepository {
         EntityTransaction tx = null;
         try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
             tx = em.getTransaction();
-            TypedQuery<JPAUser> update =
+            Query update =
                     em.createQuery("""
                                     UPDATE user u set u.password = :pass
                                     WHERE u.email = :email
-                                    """, JPAUser.class)
+                                    """)
                             .setParameter("pass", newPassword)
                             .setParameter(EMAIL, email);
             tx.begin();
@@ -180,11 +187,11 @@ public class UserRepository implements IUserRepository {
         EntityTransaction tx = null;
         try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
             tx = em.getTransaction();
-            TypedQuery<JPAUser> update =
+            Query update =
                     em.createQuery("""
                                     UPDATE user u set u.accountStatus = :status
                                     WHERE u.userId = :id
-                                    """, JPAUser.class)
+                                    """)
                             .setParameter("status", accountStatus)
                             .setParameter("id", userId);
             tx.begin();

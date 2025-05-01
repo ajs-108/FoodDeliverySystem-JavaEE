@@ -9,6 +9,7 @@ import com.app.model.jpa.JPAOrder;
 import com.app.model.jpa.JPAUser;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;
@@ -64,14 +65,14 @@ public class OrderRepository implements IOrderRepository {
             tx = em.getTransaction();
             TypedQuery<GetOrderDTO> findAllQuery =
                     em.createQuery("""
-                            select o.orderId, u.userId, u.firstName, u.lastName, dp.userId,
-                            dp.firstName, dp.lastName, o.totalPrice, o.orderStatus, o.orderDateTime,
-                            o.paymentStatus
-                            from order o
-                            join o.user u
-                            join o.deliveryPerson dp
-                            where o.orderStatus = ?1
-                            """, GetOrderDTO.class)
+                                    select o.orderId, u.userId, u.firstName, u.lastName, dp.userId,
+                                    dp.firstName, dp.lastName, o.totalPrice, o.orderStatus, o.orderDateTime,
+                                    o.paymentStatus
+                                    from order o
+                                    join o.user u
+                                    join o.deliveryPerson dp
+                                    where o.orderStatus = ?1
+                                    """, GetOrderDTO.class)
                             .setParameter(1, orderStatus);
             tx.begin();
             List<GetOrderDTO> orderList = findAllQuery.getResultList();
@@ -92,14 +93,14 @@ public class OrderRepository implements IOrderRepository {
             tx = em.getTransaction();
             TypedQuery<GetOrderDTO> findAllQuery =
                     em.createQuery("""
-                            select o.orderId, u.userId, u.firstName, u.lastName, dp.userId,
-                            dp.firstName, dp.lastName, o.totalPrice, o.orderStatus, o.orderDateTime,
-                            o.paymentStatus
-                            from order o
-                            join o.user u
-                            join o.deliveryPerson dp
-                            where u.userId = ?1 and u.role.roleId = ?2
-                            """, GetOrderDTO.class)
+                                    select o.orderId, u.userId, u.firstName, u.lastName, dp.userId,
+                                    dp.firstName, dp.lastName, o.totalPrice, o.orderStatus, o.orderDateTime,
+                                    o.paymentStatus
+                                    from order o
+                                    join o.user u
+                                    join o.deliveryPerson dp
+                                    where u.userId = ?1 and u.role.roleId = ?2
+                                    """, GetOrderDTO.class)
                             .setParameter(1, userId)
                             .setParameter(2, roleId);
             tx.begin();
@@ -121,65 +122,19 @@ public class OrderRepository implements IOrderRepository {
             tx = em.getTransaction();
             TypedQuery<GetOrderDTO> findQuery =
                     em.createQuery("""
-                            select o.orderId, u.userId, u.firstName, u.lastName, dp.userId,
-                            dp.firstName, dp.lastName, o.totalPrice, o.orderStatus, o.orderDateTime,
-                            o.paymentStatus
-                            from order o
-                            join o.user u
-                            join o.deliveryPerson dp
-                            where o.orderId = ?1
-                            """, GetOrderDTO.class)
+                                    select o.orderId, u.userId, u.firstName, u.lastName, dp.userId,
+                                    dp.firstName, dp.lastName, o.totalPrice, o.orderStatus, o.orderDateTime,
+                                    o.paymentStatus
+                                    from order o
+                                    join o.user u
+                                    join o.deliveryPerson dp
+                                    where o.orderId = ?1
+                                    """, GetOrderDTO.class)
                             .setParameter(1, orderId);
             tx.begin();
             GetOrderDTO order = findQuery.getSingleResult();
             tx.commit();
             return order;
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw new DBException(e);
-        }
-    }
-
-    @Override
-    public void updateStatus(int orderId, OrderStatus orderStatus) throws DBException {
-        EntityTransaction tx = null;
-        try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
-            tx = em.getTransaction();
-            TypedQuery<GetOrderDTO> updateStatusQuery =
-                    em.createQuery("""
-                            update order o set o.orderStatus = ?1
-                            where o.orderId = ?2
-                            """, GetOrderDTO.class)
-                            .setParameter(1, orderStatus)
-                            .setParameter(2, orderId);
-            tx.begin();
-            updateStatusQuery.executeUpdate();
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw new DBException(e);
-        }
-    }
-
-    @Override
-    public void assignDeliveryPerson(int orderId, JPAUser deliveryPerson) throws DBException {
-        EntityTransaction tx = null;
-        try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
-            tx = em.getTransaction();
-            TypedQuery<GetOrderDTO> updateDPQuery =
-                    em.createQuery("""
-                            update order o set o.deliveryPerson = ?1
-                            where o.orderId = ?2
-                            """, GetOrderDTO.class)
-                            .setParameter(1, deliveryPerson)
-                            .setParameter(2, orderId);
-            tx.begin();
-            updateDPQuery.executeUpdate();
-            tx.commit();
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {
                 tx.rollback();
@@ -195,12 +150,12 @@ public class OrderRepository implements IOrderRepository {
             tx = em.getTransaction();
             TypedQuery<GetOrderDTO> findQuery =
                     em.createQuery("""
-                            select o.orderId, o.totalPrice
-                            from order o
-                            join o.user u
-                            where o.orderStatus = "ORDER_RECEIVED" and o.user.userId = ?1
-                            order by o.orderId desc
-                            """, GetOrderDTO.class)
+                                    select o.orderId, o.totalPrice
+                                    from order o
+                                    join o.user u
+                                    where o.orderStatus = "ORDER_RECEIVED" and o.user.userId = ?1
+                                    order by o.orderId desc
+                                    """, GetOrderDTO.class)
                             .setParameter(1, userId)
                             .setMaxResults(1);
             tx.begin();
@@ -222,13 +177,13 @@ public class OrderRepository implements IOrderRepository {
             tx = em.getTransaction();
             TypedQuery<GetOrderDTO> findQuery =
                     em.createQuery("""
-                            select o.orderId, u.userId, u.firstName, u.lastName, dp.userId,
-                            o.totalPrice, o.orderStatus, o.orderDateTime, o.paymentStatus
-                            from order o
-                            join o.user u
-                            join o.deliveryPerson dp
-                            where o.deliveryPerson.userId = ?1
-                            """, GetOrderDTO.class)
+                                    select o.orderId, u.userId, u.firstName, u.lastName, dp.userId,
+                                    o.totalPrice, o.orderStatus, o.orderDateTime, o.paymentStatus
+                                    from order o
+                                    join o.user u
+                                    join o.deliveryPerson dp
+                                    where o.deliveryPerson.userId = ?1
+                                    """, GetOrderDTO.class)
                             .setParameter(1, deliveryPersonId);
             tx.begin();
             List<GetOrderDTO> orderList = findQuery.getResultList();
@@ -249,20 +204,66 @@ public class OrderRepository implements IOrderRepository {
             tx = em.getTransaction();
             TypedQuery<GetOrderDTO> findQuery =
                     em.createQuery("""
-                            select o.orderId, u.userId, u.firstName, u.lastName, dp.userId,
-                            dp.firstName, dp.lastName, o.totalPrice, o.orderStatus,
-                            o.orderDateTime, o.paymentStatus
-                            from order o
-                            join o.user u
-                            join o.deliveryPerson dp
-                            where o.orderStatus != "DELIVERED" and o.orderStatus != "CANCELLED"
-                            and  o.user.userId = ?1
-                            """, GetOrderDTO.class)
+                                    select o.orderId, u.userId, u.firstName, u.lastName, dp.userId,
+                                    dp.firstName, dp.lastName, o.totalPrice, o.orderStatus,
+                                    o.orderDateTime, o.paymentStatus
+                                    from order o
+                                    join o.user u
+                                    join o.deliveryPerson dp
+                                    where o.orderStatus != "DELIVERED" and o.orderStatus != "CANCELLED"
+                                    and  o.user.userId = ?1
+                                    """, GetOrderDTO.class)
                             .setParameter(1, userId);
             tx.begin();
             List<GetOrderDTO> orderList = findQuery.getResultList();
             tx.commit();
             return orderList;
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw new DBException(e);
+        }
+    }
+
+    @Override
+    public void updateStatus(int orderId, OrderStatus orderStatus) throws DBException {
+        EntityTransaction tx = null;
+        try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
+            tx = em.getTransaction();
+            Query updateStatusQuery =
+                    em.createQuery("""
+                                    update order o set o.orderStatus = ?1
+                                    where o.orderId = ?2
+                                    """)
+                            .setParameter(1, orderStatus)
+                            .setParameter(2, orderId);
+            tx.begin();
+            updateStatusQuery.executeUpdate();
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw new DBException(e);
+        }
+    }
+
+    @Override
+    public void assignDeliveryPerson(int orderId, JPAUser deliveryPerson) throws DBException {
+        EntityTransaction tx = null;
+        try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
+            tx = em.getTransaction();
+            Query updateDPQuery =
+                    em.createQuery("""
+                                    update order o set o.deliveryPerson = ?1
+                                    where o.orderId = ?2
+                                    """)
+                            .setParameter(1, deliveryPerson)
+                            .setParameter(2, orderId);
+            tx.begin();
+            updateDPQuery.executeUpdate();
+            tx.commit();
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {
                 tx.rollback();

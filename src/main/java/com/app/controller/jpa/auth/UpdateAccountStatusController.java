@@ -5,11 +5,9 @@ import com.app.common.Message;
 import com.app.common.enums.AccountStatus;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
-import com.app.common.util.AuthUtils;
 import com.app.common.util.JPAuthUtils;
 import com.app.common.util.ObjectMapperUtil;
 import com.app.controller.common.validation.QueryParameterValidator;
-import com.app.controller.common.validation.UserValidator;
 import com.app.dto.common.APIResponse;
 import com.app.service.jpa.JPAUserServices;
 import jakarta.servlet.ServletException;
@@ -43,7 +41,7 @@ public class UpdateAccountStatusController extends HttpServlet {
             QueryParameterValidator.validate(request, "userId", "accountStatus");
             String userId = request.getParameter("userId");
             String accountStatus = request.getParameter("accountStatus");
-            UserValidator.validateAccountStatusUpdate(userId, accountStatus);
+//            UserValidator.validateAccountStatusUpdate(userId, accountStatus);TODO:check this
             userServices.updateAccountStatus(Integer.parseInt(userId), AccountStatus.toEnum(accountStatus));
             sendResponse(response, null, Message.User.STATUS_UPDATED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {

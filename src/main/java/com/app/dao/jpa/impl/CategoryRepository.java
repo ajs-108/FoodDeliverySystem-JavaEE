@@ -69,7 +69,7 @@ public class CategoryRepository implements ICategoryRepository {
             tx = em.getTransaction();
             TypedQuery<Category> find =
                     em.createQuery("SELECT c from category c where categoryName = :name",
-                            Category.class)
+                                    Category.class)
                             .setParameter("name", categoryName);
             tx.begin();
             Category category = find.getSingleResult();

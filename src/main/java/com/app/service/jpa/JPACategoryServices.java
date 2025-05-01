@@ -21,7 +21,7 @@ public class JPACategoryServices {
 
     public void save(List<CategoryDTO> categoryDTOList) throws DBException, ApplicationException {
         for (CategoryDTO categoryDTO : categoryDTOList) {
-            CategoryValidator.validateCategory(categoryDTO);
+//            CategoryValidator.validateCategory(categoryDTO);TODO:check this
             categoryRepo.save(categoryMapper.toCategory(categoryDTO));
         }
     }

@@ -4,20 +4,17 @@ import com.app.common.AppConstant;
 import com.app.common.Message;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
-import com.app.common.util.AuthUtils;
 import com.app.common.util.JPAuthUtils;
 import com.app.common.util.ObjectMapperUtil;
-import com.app.controller.common.validation.ShoppingCartValidator;
 import com.app.dto.common.APIResponse;
-import com.app.dto.jdbc.ShoppingCartDTO;
-import com.app.dto.jdbc.UserDTO;
 import com.app.dto.jpa.JPACartDTO;
 import com.app.dto.jpa.JPAUserDTO;
-import com.app.service.jdbc.ShoppingCartServices;
 import com.app.service.jpa.JPACartServices;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
@@ -33,7 +30,7 @@ public class AddToCartController extends HttpServlet {
             JPAUserDTO userDTO = JPAuthUtils.getCurrentUser(request);
             JPACartDTO cartDTO = ObjectMapperUtil.toObject(request.getReader(), JPACartDTO.class);
             cartDTO.setUser(userDTO);
-            ShoppingCartValidator.validateAddToCart(cartDTO);
+//            ShoppingCartValidator.validateAddToCart(cartDTO);TODO:check this
             cartServices.addFoodItem(cartDTO);
             sendResponse(response, null, Message.ShoppingCart.FOOD_ITEM_ADDED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {

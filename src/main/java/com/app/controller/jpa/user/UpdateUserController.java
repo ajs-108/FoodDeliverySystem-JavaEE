@@ -4,12 +4,9 @@ import com.app.common.AppConstant;
 import com.app.common.Message;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
-import com.app.common.util.AuthUtils;
 import com.app.common.util.JPAuthUtils;
 import com.app.common.util.ObjectMapperUtil;
-import com.app.controller.common.validation.UserValidator;
 import com.app.dto.common.APIResponse;
-import com.app.dto.jdbc.UserDTO;
 import com.app.dto.jpa.JPAUserDTO;
 import com.app.service.jpa.JPAUserServices;
 import jakarta.servlet.ServletException;
@@ -30,9 +27,9 @@ public class UpdateUserController extends HttpServlet {
 
         try {
             JPAuthUtils.checkAuthentication(request);
-            UserDTO currentUserDTO = AuthUtils.getCurrentUser(request);
+            JPAUserDTO currentUserDTO = JPAuthUtils.getCurrentUser(request);
             JPAUserDTO userDTO = ObjectMapperUtil.toObject(request.getReader(), JPAUserDTO.class);
-            UserValidator.validateUpdate(userDTO);
+//            UserValidator.validateUpdate(userDTO);TODO:check this
             userServices.update(currentUserDTO.getUserId(), userDTO);
             sendResponse(response, null, Message.User.USER_INFO_UPDATED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {

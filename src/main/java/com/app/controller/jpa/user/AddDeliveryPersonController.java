@@ -4,10 +4,8 @@ import com.app.common.AppConstant;
 import com.app.common.Message;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
-import com.app.common.util.AuthUtils;
 import com.app.common.util.JPAuthUtils;
 import com.app.common.util.ObjectMapperUtil;
-import com.app.controller.common.validation.UserValidator;
 import com.app.dto.common.APIResponse;
 import com.app.dto.jpa.JPAUserDTO;
 import com.app.service.jpa.JPAUserServices;
@@ -40,7 +38,7 @@ public class AddDeliveryPersonController extends HttpServlet {
                 throw new ApplicationException(Message.Error.ACCESS_DENIED);
             }
             JPAUserDTO userDTO = ObjectMapperUtil.toObject(request.getReader(), JPAUserDTO.class);
-            UserValidator.validateSignUp(userDTO);
+//            UserValidator.validateSignUp(userDTO);TODO:check this
             userServices.saveDeliveryPerson(userDTO);
             sendResponse(response, null, Message.User.DELIVERY_PERSON_REGISTERED, null, HttpServletResponse.SC_CREATED);
         } catch (DBException e) {

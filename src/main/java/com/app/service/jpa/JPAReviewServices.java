@@ -21,6 +21,7 @@ public class JPAReviewServices {
 
     public void save(List<JPAReviewDTO> reviewDTOList) throws DBException {
         for (JPAReviewDTO reviewDTO : reviewDTOList) {
+            //TODO: Make validation for this
             reviewRepo.save(reviewMapper.toReview(reviewDTO));
         }
     }

@@ -157,13 +157,12 @@ public class FoodItemRepository implements IFoodItemRepository {
         EntityTransaction tx = null;
         try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
             tx = em.getTransaction();
-            TypedQuery<FoodItem> update =
-                    em.createQuery("""
-                                    UPDATE foodItem fi set fi.isAvailable = ?1
-                                    WHERE fi.foodItemId = ?2
-                                    """, FoodItem.class)
-                            .setParameter(1, isAvailable)
-                            .setParameter(2, foodItemId);
+            Query update = em.createQuery("""
+                            UPDATE foodItem fi set fi.isAvailable = ?1
+                            WHERE fi.foodItemId = ?2
+                            """)
+                    .setParameter(1, isAvailable)
+                    .setParameter(2, foodItemId);
 
             tx.begin();
             update.executeUpdate();
@@ -181,13 +180,12 @@ public class FoodItemRepository implements IFoodItemRepository {
         EntityTransaction tx = null;
         try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
             tx = em.getTransaction();
-            TypedQuery<FoodItem> update =
-                    em.createQuery("""
-                                    UPDATE foodItem fi set fi.rating = ?1
-                                    WHERE fi.foodItemId = ?2
-                                    """, FoodItem.class)
-                            .setParameter(1, rating)
-                            .setParameter(2, foodItemId);
+            Query update = em.createQuery("""
+                            UPDATE foodItem fi set fi.rating = ?1
+                            WHERE fi.foodItemId = ?2
+                            """)
+                    .setParameter(1, rating)
+                    .setParameter(2, foodItemId);
 
             tx.begin();
             update.executeUpdate();
@@ -206,8 +204,9 @@ public class FoodItemRepository implements IFoodItemRepository {
         try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
             tx = em.getTransaction();
             Query query = em.createNativeQuery("""
-                    delete from menu where food_item_id = ?1
-                    """).setParameter(1, foodItemId);
+                            delete from menu where food_item_id = ?1
+                            """)
+                    .setParameter(1, foodItemId);
             tx.begin();
             query.executeUpdate();
             tx.commit();

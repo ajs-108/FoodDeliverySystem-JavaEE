@@ -5,16 +5,16 @@ import com.app.common.Message;
 import com.app.common.enums.OrderStatus;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
-import com.app.common.util.AuthUtils;
 import com.app.common.util.JPAuthUtils;
 import com.app.common.util.ObjectMapperUtil;
-import com.app.controller.common.validation.OrderValidator;
 import com.app.controller.common.validation.QueryParameterValidator;
 import com.app.dto.common.APIResponse;
 import com.app.service.jpa.JPAOrderServices;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
@@ -30,7 +30,7 @@ public class UpdateOrderStatusController extends HttpServlet {
             QueryParameterValidator.validate(request, "orderId", "orderStatus");
             String orderId = request.getParameter("orderId");
             String orderStatus = request.getParameter("orderStatus");
-            OrderValidator.validateUpdateStatus(orderId, orderStatus);
+//            OrderValidator.validateUpdateStatus(orderId, orderStatus);TODO:check this
             orderServices.updateOrderStatus(Integer.parseInt(orderId), OrderStatus.toEnum(orderStatus));
             sendResponse(response, null, Message.Order.ORDER_STATUS, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {

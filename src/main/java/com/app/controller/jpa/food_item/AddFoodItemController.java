@@ -4,10 +4,8 @@ import com.app.common.AppConstant;
 import com.app.common.Message;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
-import com.app.common.util.AuthUtils;
 import com.app.common.util.JPAuthUtils;
 import com.app.common.util.ObjectMapperUtil;
-import com.app.controller.common.validation.FoodItemValidator;
 import com.app.dto.common.APIResponse;
 import com.app.dto.common.FoodItemDTO;
 import com.app.service.jpa.JPAFoodItemServices;
@@ -33,7 +31,7 @@ public class AddFoodItemController extends HttpServlet {
             }
             //TODO:make it multiPart (image part)
             FoodItemDTO foodItemDTO = ObjectMapperUtil.toObject(request.getReader(), FoodItemDTO.class);
-            FoodItemValidator.validateFoodItem(foodItemDTO);
+//            FoodItemValidator.validateFoodItem(foodItemDTO);TODO:check this
             jpaFoodItemServices.save(foodItemDTO);
             sendResponse(response, null, Message.Common.RESOURCE_ADDED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {

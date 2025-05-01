@@ -9,9 +9,12 @@ import com.app.controller.common.validation.UserValidator;
 import com.app.dto.common.APIResponse;
 import com.app.dto.jpa.JPAUserDTO;
 import com.app.service.jpa.JPAUserServices;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 

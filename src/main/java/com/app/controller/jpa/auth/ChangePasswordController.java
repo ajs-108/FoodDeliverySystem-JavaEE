@@ -4,10 +4,8 @@ import com.app.common.AppConstant;
 import com.app.common.Message;
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
-import com.app.common.util.AuthUtils;
 import com.app.common.util.JPAuthUtils;
 import com.app.common.util.ObjectMapperUtil;
-import com.app.controller.common.validation.UserValidator;
 import com.app.dto.common.APIResponse;
 import com.app.dto.jpa.JPAUserDTO;
 import com.app.service.jpa.JPAUserServices;
@@ -39,7 +37,7 @@ public class ChangePasswordController extends HttpServlet {
         try {
             JPAuthUtils.checkAuthentication(request);
             JPAUserDTO userDTO = ObjectMapperUtil.toObject(request.getReader(), JPAUserDTO.class);
-            UserValidator.validateChangePassword(userDTO);
+//            UserValidator.validateChangePassword(userDTO);TODO:check this
             userServices.updatePassword(userDTO.getEmail(), userDTO.getNewPassword());
             sendResponse(response, null, Message.User.PASSWORD_UPDATED, null, HttpServletResponse.SC_OK);
         } catch (DBException e) {
