@@ -1,8 +1,8 @@
 package com.app.test;
 
-import com.app.dto.CartFoodItemsDTO;
-import com.app.dto.FoodItemDTO;
-import com.app.service.ShoppingCartServices;
+import com.app.dto.jdbc.CartFoodItemsDTO;
+import com.app.dto.common.FoodItemDTO;
+import com.app.service.jdbc.ShoppingCartServices;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -7,7 +7,7 @@ import com.app.dto.jpa.JPACartDTO;
 import com.app.mapper.jpa.JPACartMapper;
 import com.app.model.jpa.JPACart;
 import com.app.model.jpa.JPAUser;
-import com.app.service.ShoppingCartServices;
+import com.app.service.jdbc.ShoppingCartServices;
 
 import java.util.List;
 

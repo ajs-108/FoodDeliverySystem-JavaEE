@@ -2,7 +2,7 @@ package com.app.model.jpa;
 
 import com.app.common.enums.OrderStatus;
 import com.app.common.enums.PaymentStatus;
-import com.app.model.FoodItem;
+import com.app.model.common.FoodItem;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

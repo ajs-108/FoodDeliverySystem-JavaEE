@@ -1,6 +1,6 @@
 package com.app.dto.jpa.review;
 
-import com.app.dto.FoodItemDTO;
+import com.app.dto.common.FoodItemDTO;
 import com.app.dto.jpa.JPAUserDTO;
 import com.app.dto.jpa.order.JPAOrderDTO;
 

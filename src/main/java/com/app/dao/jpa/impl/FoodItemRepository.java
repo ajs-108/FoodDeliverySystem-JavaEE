@@ -3,7 +3,7 @@ package com.app.dao.jpa.impl;
 import com.app.common.exception.DBException;
 import com.app.common.util.EntityManagerFactoryUtil;
 import com.app.dao.jpa.IFoodItemRepository;
-import com.app.model.FoodItem;
+import com.app.model.common.FoodItem;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;

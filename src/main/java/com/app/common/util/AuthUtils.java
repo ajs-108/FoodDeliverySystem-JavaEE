@@ -3,7 +3,7 @@ package com.app.common.util;
 import com.app.common.Message;
 import com.app.common.enums.Roles;
 import com.app.common.exception.ApplicationException;
-import com.app.dto.UserDTO;
+import com.app.dto.jdbc.UserDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 

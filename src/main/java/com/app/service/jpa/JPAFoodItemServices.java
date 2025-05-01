@@ -3,8 +3,8 @@ package com.app.service.jpa;
 import com.app.common.exception.DBException;
 import com.app.dao.jpa.IFoodItemRepository;
 import com.app.dao.jpa.impl.FoodItemRepository;
-import com.app.dto.FoodItemDTO;
-import com.app.mapper.FoodItemMapper;
+import com.app.dto.common.FoodItemDTO;
+import com.app.mapper.common.FoodItemMapper;
 
 import java.util.List;
 

@@ -2,7 +2,7 @@ package com.app.test;
 
 import com.app.common.exception.DBException;
 import com.app.config.DBConnector;
-import com.app.service.FoodItemServices;
+import com.app.service.common.FoodItemServices;
 
 import java.io.IOException;
 import java.sql.Connection;

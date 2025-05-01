@@ -2,11 +2,11 @@ package com.app.service.jpa;
 
 import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
-import com.app.controller.validation.CategoryValidator;
+import com.app.controller.common.validation.CategoryValidator;
 import com.app.dao.jpa.ICategoryRepository;
 import com.app.dao.jpa.impl.CategoryRepository;
-import com.app.dto.CategoryDTO;
-import com.app.mapper.CategoryMapper;
+import com.app.dto.common.CategoryDTO;
+import com.app.mapper.common.CategoryMapper;
 
 import java.util.List;
 

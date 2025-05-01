@@ -1,6 +1,6 @@
 package com.app.model.jpa;
 
-import com.app.model.FoodItem;
+import com.app.model.common.FoodItem;
 
 import java.io.Serializable;
 import java.util.Objects;

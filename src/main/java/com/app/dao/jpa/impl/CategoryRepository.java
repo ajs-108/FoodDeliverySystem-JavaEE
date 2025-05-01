@@ -3,7 +3,7 @@ package com.app.dao.jpa.impl;
 import com.app.common.exception.DBException;
 import com.app.common.util.EntityManagerFactoryUtil;
 import com.app.dao.jpa.ICategoryRepository;
-import com.app.model.Category;
+import com.app.model.common.Category;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;

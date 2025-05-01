@@ -9,9 +9,9 @@ import com.app.dao.jpa.impl.OrderRepository;
 import com.app.dto.jpa.JPACartDTO;
 import com.app.dto.jpa.order.GetOrderDTO;
 import com.app.dto.jpa.order.JPAOrderDTO;
-import com.app.mapper.FoodItemMapper;
+import com.app.mapper.common.FoodItemMapper;
 import com.app.mapper.jpa.JPAOrderMapper;
-import com.app.model.FoodItem;
+import com.app.model.common.FoodItem;
 import com.app.model.jpa.JPAOrderFoodItems;
 import com.app.model.jpa.JPAUser;
 

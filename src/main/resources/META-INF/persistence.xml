@@ -6,8 +6,8 @@
              version="3.0">
   <persistence-unit name="FoodDeliveryPersistentUnit">
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-    <class>com.app.model.FoodItem</class>
-    <class>com.app.model.Category</class>
+    <class>com.app.model.common.FoodItem</class>
+    <class>com.app.model.common.Category</class>
     <class>com.app.model.jpa.UserRole</class>
     <class>com.app.model.jpa.JPAUser</class>
     <class>com.app.model.jpa.JPACart</class>

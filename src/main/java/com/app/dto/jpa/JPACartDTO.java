@@ -1,6 +1,6 @@
 package com.app.dto.jpa;
 
-import com.app.dto.FoodItemDTO;
+import com.app.dto.common.FoodItemDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)

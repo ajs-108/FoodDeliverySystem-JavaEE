@@ -1,7 +1,7 @@
 package com.app.mapper.jpa;
 
 import com.app.dto.jpa.JPACartDTO;
-import com.app.mapper.FoodItemMapper;
+import com.app.mapper.common.FoodItemMapper;
 import com.app.model.jpa.JPACart;
 
 public class JPACartMapper {
