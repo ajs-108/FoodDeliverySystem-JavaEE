@@ -8,7 +8,6 @@ import com.app.model.jpa.JPAOrderFoodItems;
 import java.util.List;
 
 public interface IOrderFoodItemRepository {
-
     void save(JPAOrderFoodItems orderFoodItems) throws DBException;
 
     List<GetOrderFoodItemsDTO> findByOrder(int orderId) throws DBException;

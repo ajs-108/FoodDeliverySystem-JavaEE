@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(
-        name = "Changepassword",
+        name = "change-password",
         value = "/change-password")
 public class ChangePasswordController extends HttpServlet {
     private JPAUserServices userServices = new JPAUserServices();

@@ -14,16 +14,9 @@ import java.util.List;
 public class OrderFoodItemsRepository implements IOrderFoodItemRepository {
     @Override
     public void save(JPAOrderFoodItems orderFoodItems) throws DBException {
-        EntityTransaction tx = null;
         try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
-            tx = em.getTransaction();
-            tx.begin();
-            em.persist(orderFoodItems);
-            tx.commit();
+            em.merge(orderFoodItems);
         } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
             throw new DBException(e);
         }
     }

@@ -7,9 +7,7 @@ import com.app.dto.jpa.JPACartDTO;
 import com.app.dto.jpa.JPAUserDTO;
 import com.app.mapper.jpa.JPACartMapper;
 import com.app.mapper.jpa.JPAUserMapper;
-import com.app.model.jpa.JPACart;
-import com.app.model.jpa.JPAUser;
-import com.app.service.jdbc.ShoppingCartServices;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -24,6 +22,7 @@ public class JPACartServices {
         userMapper = new JPAUserMapper();
     }
 
+    @Transactional
     public void addFoodItem(JPACartDTO cartDTO) throws DBException {
         cartRepo.save(cartMapper.toCart(cartDTO));
     }
@@ -35,7 +34,7 @@ public class JPACartServices {
                 .toList();
         if (cartDTOList != null) {
             double totalPrice = 0;
-            for(JPACartDTO cartDTO : cartDTOList) {
+            for (JPACartDTO cartDTO : cartDTOList) {
                 cartDTO.setBeforeDiscountPrice(
                         calculatePreDiscountPrice(
                                 cartDTO.getFoodItem().getPrice(),
@@ -64,7 +63,6 @@ public class JPACartServices {
         cartRepo.updateQuantity(cartMapper.toCart(cartDTO));
     }
 
-    //TODO:Make use of this
     public void removeCartOfUser(JPAUserDTO userDTO) throws DBException {
         cartRepo.removeCartOfUser(userMapper.toUser(userDTO));
     }

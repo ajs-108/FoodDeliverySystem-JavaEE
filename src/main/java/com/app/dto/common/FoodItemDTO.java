@@ -12,7 +12,6 @@ public class FoodItemDTO {
     private String foodDescription;
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private double price;
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private double discount;
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private boolean isAvailable;

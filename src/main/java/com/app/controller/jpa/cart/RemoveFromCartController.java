@@ -8,6 +8,7 @@ import com.app.common.util.JPAuthUtils;
 import com.app.common.util.ObjectMapperUtil;
 import com.app.dto.common.APIResponse;
 import com.app.dto.jpa.JPACartDTO;
+import com.app.dto.jpa.JPAUserDTO;
 import com.app.service.jpa.JPACartServices;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -26,7 +27,9 @@ public class RemoveFromCartController extends HttpServlet {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             JPAuthUtils.checkAuthentication(request);
+            JPAUserDTO userDTO = JPAuthUtils.getCurrentUser(request);
             JPACartDTO cartDTO = ObjectMapperUtil.toObject(request.getReader(), JPACartDTO.class);
+            cartDTO.setUser(userDTO);
             //ToDo: make a validation for this
             cartServices.removeFoodItem(cartDTO);
             sendResponse(response, null, Message.ShoppingCart.FOOD_ITEM_REMOVED, null, HttpServletResponse.SC_OK);

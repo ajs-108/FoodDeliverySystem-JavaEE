@@ -10,6 +10,7 @@ import com.app.common.util.ObjectMapperUtil;
 import com.app.dto.common.APIResponse;
 import com.app.dto.jdbc.UserDTO;
 import com.app.dto.jpa.JPACartDTO;
+import com.app.dto.jpa.JPAUserDTO;
 import com.app.service.jpa.JPACartServices;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -29,8 +30,8 @@ public class GetCartController extends HttpServlet {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             JPAuthUtils.checkAuthentication(request);
-            UserDTO user = AuthUtils.getCurrentUser(request);
-            List<JPACartDTO> cart = jpaCartServices.find(user.getUserId());
+            JPAUserDTO userDTO = JPAuthUtils.getCurrentUser(request);
+            List<JPACartDTO> cart = jpaCartServices.find(userDTO.getUserId());
             sendResponse(response, null, null, cart, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();

@@ -30,6 +30,7 @@ public class PlaceOrderController extends HttpServlet {
             JPAUserDTO userDTO = JPAuthUtils.getCurrentUser(request);
             CartAndOrderDTO cartAndOrder = ObjectMapperUtil.toObject(request.getReader(), CartAndOrderDTO.class);
             cartAndOrder.getCart().setUser(userDTO);
+            cartAndOrder.getOrder().setUser(userDTO);
 //            OrderValidator.validatePlaceOrder(userDTO.getUserId(), cartAndOrder.getOrder());TODO:check this
             orderServices.save(cartAndOrder.getOrder(), cartAndOrder.getCart());
             sendResponse(response, null, Message.Order.PLACE_ORDER, null, HttpServletResponse.SC_OK);

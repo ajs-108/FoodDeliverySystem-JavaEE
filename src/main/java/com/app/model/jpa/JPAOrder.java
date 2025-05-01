@@ -26,14 +26,15 @@ public class JPAOrder {
     @JoinColumn(name = "delivery_person_id", referencedColumnName = "user_id", insertable = false)
     private JPAUser deliveryPerson;
 
-    @Column(name = "total_price", nullable = false, insertable = false)
+    @Column(name = "total_price", nullable = false)
     private double totalPrice;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status")
     private OrderStatus orderStatus;
 
-    @Column(name = "order_date_time")
+    @Column(name = "order_date_time", nullable = false, insertable = false,
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime orderDateTime;
 
     @Enumerated(EnumType.STRING)

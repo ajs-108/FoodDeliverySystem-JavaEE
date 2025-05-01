@@ -9,13 +9,15 @@ import com.app.model.jpa.JPAUser;
 import java.util.List;
 
 public interface IOrderRepository {
-    void save(JPAOrder order) throws DBException;
+    Integer save(JPAOrder order) throws DBException;
 
     List<GetOrderDTO> findAll() throws DBException;
 
     List<GetOrderDTO> findAll(OrderStatus orderStatus) throws DBException;
 
     List<GetOrderDTO> findAllPreviousOrdersOfUser(int userId, int roleId) throws DBException;
+
+    JPAOrder find(int orderId) throws DBException;
 
     GetOrderDTO findById(int orderId) throws DBException;
 

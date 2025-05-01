@@ -17,13 +17,14 @@ import java.util.List;
 public class OrderRepository implements IOrderRepository {
 
     @Override
-    public void save(JPAOrder order) throws DBException {
+    public Integer save(JPAOrder order) throws DBException {
         EntityTransaction tx = null;
         try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
             tx = em.getTransaction();
             tx.begin();
             em.persist(order);
             tx.commit();
+            return order.getOrderId();
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {
                 tx.rollback();
@@ -107,6 +108,23 @@ public class OrderRepository implements IOrderRepository {
             List<GetOrderDTO> orderList = findAllQuery.getResultList();
             tx.commit();
             return orderList;
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw new DBException(e);
+        }
+    }
+
+    @Override
+    public JPAOrder find(int orderId) throws DBException {
+        EntityTransaction tx = null;
+        try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
+            tx = em.getTransaction();
+            tx.begin();
+            JPAOrder order = em.find(JPAOrder.class, orderId);
+            tx.commit();
+            return order;
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {
                 tx.rollback();

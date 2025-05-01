@@ -70,13 +70,8 @@ public class UserRepository implements IUserRepository {
         EntityTransaction tx = null;
         try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
             tx = em.getTransaction();
-            TypedQuery<JPAUser> find = em.createQuery("""
-                            SELECT u FROM user u JOIN FETCH role r
-                            WHERE u.userId = :id
-                            """, JPAUser.class)
-                    .setParameter("id", userId);
             tx.begin();
-            JPAUser jpaUser = find.getSingleResult();
+            JPAUser jpaUser = em.find(JPAUser.class, userId);
             tx.commit();
             return jpaUser;
         } catch (Exception e) {

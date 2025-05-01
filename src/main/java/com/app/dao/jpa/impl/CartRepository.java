@@ -22,7 +22,7 @@ public class CartRepository implements ICartRepository {
         try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
             tx = em.getTransaction();
             tx.begin();
-            em.persist(cart);
+            em.merge(cart);
             tx.commit();
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {
@@ -85,7 +85,8 @@ public class CartRepository implements ICartRepository {
         try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
             tx = em.getTransaction();
             tx.begin();
-            em.remove(cart);
+            JPACart cart1= em.merge(cart);
+            em.remove(cart1);
             tx.commit();
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {
@@ -113,20 +114,13 @@ public class CartRepository implements ICartRepository {
 
     @Override
     public void removeCartOfUser(JPAUser user) throws DBException {
-        EntityTransaction tx = null;
         try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
-            TypedQuery<JPACart> removeQuery = em.createQuery("""
+            Query removeQuery = em.createQuery("""
                             delete from cart c where c.user = ?1
-                            """, JPACart.class)
+                            """)
                     .setParameter(1, user);
-            tx = em.getTransaction();
-            tx.begin();
             removeQuery.executeUpdate();
-            tx.commit();
         } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
             throw new DBException(e);
         }
     }

@@ -9,14 +9,14 @@ import jakarta.persistence.*;
 public class JPACart {
 
     @Id
-    @OneToOne(targetEntity = JPAUser.class, cascade = CascadeType.ALL,
+    @OneToOne(targetEntity = JPAUser.class, cascade = CascadeType.REFRESH,
             fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id",
             nullable = false)
     private JPAUser user;
 
     @Id
-    @OneToOne(targetEntity = FoodItem.class, cascade = CascadeType.ALL,
+    @OneToOne(targetEntity = FoodItem.class, cascade = CascadeType.REFRESH,
             fetch = FetchType.LAZY)
     @JoinColumn(name = "food_item_id", referencedColumnName = "food_item_id",
             nullable = false)
