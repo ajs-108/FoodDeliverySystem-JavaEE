@@ -6,20 +6,19 @@ import com.app.common.exception.ApplicationException;
 import com.app.common.exception.DBException;
 import com.app.common.util.AuthUtils;
 import com.app.common.util.ObjectMapperUtil;
+import com.app.controller.common.validation.QueryParameterValidator;
 import com.app.dto.common.APIResponse;
 import com.app.dto.jdbc.UserDTO;
 import com.app.dto.jpa.JPAUserDTO;
 import com.app.service.jpa.JPAUserServices;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 
 @WebServlet(name = "get-user", value = "/get-user")
-public class GetUserController extends HttpServlet {
+public class GetUserByIdController extends HttpServlet {
     private JPAUserServices jpaUserServices = new JPAUserServices();
 
     @Override
@@ -27,8 +26,9 @@ public class GetUserController extends HttpServlet {
         response.setContentType(AppConstant.APPLICATION_JSON);
         try {
             AuthUtils.checkAuthentication(request);
-            UserDTO userDTO = AuthUtils.getCurrentUser(request);
-            JPAUserDTO user = jpaUserServices.find(userDTO.getUserId());
+            QueryParameterValidator.validate(request, "userId");
+            String userId = request.getParameter("userId");
+            JPAUserDTO user = jpaUserServices.find(Integer.parseInt(userId));
             sendResponse(response, null, null, user, HttpServletResponse.SC_OK);
         } catch (DBException e) {
             e.printStackTrace();

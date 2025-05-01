@@ -16,7 +16,7 @@ import jakarta.servlet.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "get-menu-controller", value = "/get-menu-controller")
+@WebServlet(name = "get-menu", value = "/get-menu")
 public class GetMenuController extends HttpServlet {
     private JPAFoodItemServices jpaFoodItemServices = new JPAFoodItemServices();
 

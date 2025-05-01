@@ -17,7 +17,7 @@ import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 
-@WebServlet(name = "get-recent-order-of-user-controller", value = "/get-recent-order-of-user-controller")
+@WebServlet(name = "get-recent-order-of-user", value = "/get-recent-order-of-user")
 public class GetRecentOrderOfUserController extends HttpServlet {
     private JPAOrderServices orderServices = new JPAOrderServices();
 

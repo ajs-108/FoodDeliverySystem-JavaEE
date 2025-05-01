@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet(name = "getAllOrderStatus", value = "/getAllOrderStatus")
+@WebServlet(name = "getAllOrderStatus", value = "/get-all-order-status")
 public class GetAllOrderStatusController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

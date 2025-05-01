@@ -20,7 +20,7 @@ import java.io.IOException;
 
 @WebServlet(
         name = "Changepassword",
-        value = "/changePassword")
+        value = "/change-password")
 public class ChangePasswordController extends HttpServlet {
     private JPAUserServices userServices = new JPAUserServices();
 

@@ -16,7 +16,7 @@ import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 
-@WebServlet(name = "get-order-by-id-controller", value = "/get-order-by-id-controller")
+@WebServlet(name = "get-order", value = "/get-order")
 public class GetOrderByIdController extends HttpServlet {
     private JPAOrderServices orderServices = new JPAOrderServices();
 
