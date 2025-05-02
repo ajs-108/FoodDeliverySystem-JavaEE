@@ -121,8 +121,19 @@ public class OrderRepository implements IOrderRepository {
         EntityTransaction tx = null;
         try (EntityManager em = EntityManagerFactoryUtil.getEmfInstance().createEntityManager()) {
             tx = em.getTransaction();
+            TypedQuery<JPAOrder> find = em.createQuery("""
+                            SELECT o FROM order o
+                            JOIN FETCH o.user u
+                            JOIN FETCH u.role r
+                            JOIN FETCH o.deliveryPerson dp
+                            JOIN FETCH dp.role dpr
+                            JOIN FETCH o.foodItems fi
+                            JOIN FETCH fi.category c
+                            WHERE o.orderId = :id
+                            """, JPAOrder.class)
+                    .setParameter("id", orderId);
             tx.begin();
-            JPAOrder order = em.find(JPAOrder.class, orderId);
+            JPAOrder order = find.getSingleResultOrNull();
             tx.commit();
             return order;
         } catch (Exception e) {
